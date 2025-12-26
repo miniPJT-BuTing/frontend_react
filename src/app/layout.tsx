@@ -1,18 +1,14 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import Providers from "./providers";
+import type { Metadata } from 'next';
+import './globals.css';
+import Providers from './providers';
 
 export const metadata: Metadata = {
-  title: "My App",
-  manifest: "/manifest.json",
-  themeColor: "#ffffff",
+  title: 'BuTing',
+  manifest: '/manifest.json',
+  themeColor: '#ffffff',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
       <body>
