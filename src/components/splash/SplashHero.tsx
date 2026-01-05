@@ -38,7 +38,7 @@ export default function SplashHero({ onLogoBurst }: Props) {
           />
         </button>
 
-        <h1 className="mt-6 text-4xl font-semibold tracking-tight text-foreground">
+        <h1 className="mt-6 text-4xl font-dnf tracking-tight text-foreground">
           <span className="text-primary">B</span>u<span className="text-primary">T</span>ing
         </h1>
 
