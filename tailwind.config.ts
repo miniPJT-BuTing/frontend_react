@@ -1,12 +1,14 @@
 import type { Config } from 'tailwindcss';
 import scrollbarHide from 'tailwind-scrollbar-hide';
-import { colors, fonts, borderRadius, boxShadow } from './styles';
+import { colors, fonts, borderRadius, boxShadow } from './src/shared/styles';
 
 const config: Config = {
   content: [
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/entities/**/*.{js,ts,jsx,tsx,mdx}',
     './src/features/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/shared/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/widgets/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
