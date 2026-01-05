@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import SplashClient from './SplashClient';
+import Splash from './Splash';
 
 export default async function SplashPage() {
   const cookieStore = await cookies();
@@ -14,5 +14,5 @@ export default async function SplashPage() {
     redirect('/');
   }
 
-  return <SplashClient />;
+  return <Splash />;
 }
