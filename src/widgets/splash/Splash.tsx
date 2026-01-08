@@ -1,3 +1,6 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import SplashButtons from '@/widgets/splash/ui/SplashButtons';
 
@@ -6,6 +9,16 @@ import logo from '@/assets/logos/buting-logo.png';
 import logoTitle from '@/assets/logos/buting-logo-title.png';
 
 export default function Splash() {
+  const router = useRouter();
+
+  const handleKakaoSignup = () => {
+    router.push('/signup/step-1');
+  };
+
+  const handleLogin = () => {
+    router.push('/login');
+  };
+
   return (
     <div className="relative h-screen w-full overflow-hidden text-slate-900">
       <div
@@ -32,7 +45,7 @@ export default function Splash() {
         </div>
 
         <div className="px-6 pb-10">
-          <SplashButtons />
+          <SplashButtons onKakaoSignup={handleKakaoSignup} onLogin={handleLogin} />
         </div>
       </div>
     </div>

@@ -1,3 +1,21 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+import EmailVerifyForm from '@/features/signup/ui/parts/EmailVerifyForm';
+import { SignupStepLayout } from '@/widgets/signup-layout/SignupStepLayout';
+
 export default function Step1Page() {
-  return <div className="p-6">카카오 로그인 후</div>;
+  const router = useRouter();
+
+  return (
+    <SignupStepLayout
+      step={1}
+      totalSteps={4}
+      title={<>학교 인증하고{'\n'}부팅을 시작해볼까요?</>}
+      subtitle="대학교 이메일 인증을 통해 안전한 미팅을 할 수 있어요."
+      onNext={() => router.push('/signup/step-2')}
+    >
+      <EmailVerifyForm />
+    </SignupStepLayout>
+  );
 }

@@ -1,3 +1,19 @@
+import React from 'react';
+import { useSignupStore } from '../../model/signup.store';
+
 export default function CollegeSelect() {
-  return <div className="p-6">대학교</div>;
+  const { college, setProfile } = useSignupStore();
+
+  return (
+    <div className="flex flex-col gap-2">
+      <label className="text-lg font-bold">소속 단과대</label>
+      <input
+        type="text"
+        value={college}
+        onChange={(e) => setProfile({ college: e.target.value })}
+        placeholder="ex) 공과대"
+        className="h-14 w-full rounded-xl border-2 border-black px-4 text-lg outline-none focus:bg-gray-50"
+      />
+    </div>
+  );
 }

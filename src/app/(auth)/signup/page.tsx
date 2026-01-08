@@ -1,3 +1,14 @@
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
 export default function SignupPage() {
-  return <div className="p-6">step 라우팅 컨테이너</div>;
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace('/signup/step-1');
+  }, [router]);
+
+  return null;
 }
