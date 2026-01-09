@@ -54,7 +54,6 @@ export default function EmailVerifyForm() {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Email Field */}
       <div className="flex flex-col gap-2">
         <label className="text-base font-bold">이메일 인증</label>
         <div className="relative">
