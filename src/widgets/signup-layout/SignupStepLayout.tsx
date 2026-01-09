@@ -45,7 +45,7 @@ export const SignupStepLayout = ({
         <div className="flex-1 flex flex-col gap-8 pb-24">
           {(title || subtitle) && (
             <div className="bg-white rounded-2xl rounded-tl-none p-6 border-2 border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] animate-fade-in">
-              {title && <h1 className="text-2xl font-black whitespace-pre-wrap">{title}</h1>}
+              {title && <h1 className="text-xl font-black whitespace-pre-wrap">{title}</h1>}
               {subtitle && <p className="text-gray-500 mt-2">{subtitle}</p>}
             </div>
           )}
@@ -53,7 +53,7 @@ export const SignupStepLayout = ({
           <div className="animate-fade-in-up">{children}</div>
         </div>
 
-        <div className="fixed bottom-6 left-0 right-0 px-6 max-w-[480px] mx-auto z-10">
+        <div className="fixed bottom-10 left-0 right-0 px-6 max-w-[480px] mx-auto z-10">
           <RetroButton
             fullWidth
             onClick={onNext}
