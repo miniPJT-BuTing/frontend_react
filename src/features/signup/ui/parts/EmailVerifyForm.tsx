@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useSignupStore } from '../../model/signup.store';
 import { RetroButton } from '@/shared/ui/RetroButton';
 import { BottomToast } from '@/shared/ui/BottomToast';
@@ -20,6 +20,10 @@ export default function EmailVerifyForm() {
   const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
     setToast({ visible: true, message, type });
   };
+
+  const handleToastClose = useCallback(() => {
+    setToast((prev) => ({ ...prev, visible: false }));
+  }, []);
 
   const handleSendEmail = () => {
     if (!email) {
@@ -106,7 +110,7 @@ export default function EmailVerifyForm() {
         message={toast.message}
         isVisible={toast.visible}
         type={toast.type}
-        onClose={() => setToast((prev) => ({ ...prev, visible: false }))}
+        onClose={handleToastClose}
       />
     </div>
   );
