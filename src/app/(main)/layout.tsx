@@ -7,11 +7,15 @@ export default function MainLayout({ children }: { children: ReactNode }) {
     <div
       className="min-h-dvh"
       style={{
-        background: `linear-gradient(180deg,
-          #EAF4FF 0%,
-          #D7F8FF 45%,
-          #79A5E2 120%
-        )`,
+        background: `
+      repeating-linear-gradient(
+        180deg,
+        #EAF4FF 0px,
+        #EAF4FF 120px,
+        #E3F0FF 120px,
+        #E3F0FF 240px
+      )
+    `,
       }}
     >
       <MainHeader />
