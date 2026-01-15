@@ -1,3 +1,12 @@
+'use client';
+
+import { Suspense } from 'react';
+import HomeWidget from '@/widgets/home/ui/HomeWidget';
+
 export default function HomePage() {
-  return <div className="p-6">메인 (추천+매칭성공 카드)</div>;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomeWidget />
+    </Suspense>
+  );
 }
