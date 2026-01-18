@@ -1,1 +1,3 @@
-// auth 공통 레이아웃 (프로그래스 바 등)
+export default function ChatRoomPage() {
+  return <div>Chat Room</div>;
+}

@@ -1,1 +1,11 @@
-// main 공통 레이아웃 (하단 탭바 포함 아이콘 등)
+import { PropsWithChildren } from 'react';
+import BottomNav from '@/widgets/bottom-nav/BottomNav';
+
+export default function MainLayout({ children }: PropsWithChildren) {
+  return (
+    <>
+      <main className="flex-1 pb-[calc(60px+env(safe-area-inset-bottom))]">{children}</main>
+      <BottomNav />
+    </>
+  );
+}
