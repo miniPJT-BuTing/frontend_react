@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { Share2 } from 'lucide-react';
-import ProfileIcon from '@/assets/icons/profile.png'; // Fallback avatar
+// import ProfileIcon from '@/assets/icons/profile.png'; // Fallback avatar
 
 export interface TeamCardProps {
   id: number;
@@ -66,7 +66,8 @@ export default function TeamCard({
               className="relative h-10 w-10 overflow-hidden rounded-full border-2 border-white bg-gray-100"
             >
               <Image
-                src={memberImages[index] || ProfileIcon}
+                // src={memberImages[index] || ProfileIcon}
+                src={memberImages[index]}
                 alt={`Member ${index + 1}`}
                 fill
                 className="object-cover"

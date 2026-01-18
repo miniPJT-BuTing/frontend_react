@@ -1,42 +1,42 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
-import { Bell } from 'lucide-react';
-import LogoTitle from '@/assets/logos/buting-logo-title.png';
-import ProfileIcon from '@/assets/icons/profile.png';
+import { Bell, Plus } from 'lucide-react';
+import ButingLogoTitle from '@/assets/logos/buting-logo-title.png';
 
 export default function MainHeader() {
   return (
-    <header className="relative z-20 flex h-[60px] items-center justify-between px-5 pt-2">
-      <Link href="/home" className="w-[100px]">
-        <Image
-          src={LogoTitle}
-          alt="BUTING"
-          width={100}
-          height={40}
-          className="object-contain"
-          priority
-        />
-      </Link>
-      <div className="flex items-center gap-4">
-        <Link href="/notifications" className="relative text-gray-700 transition-colors hover:text-black">
-          <Bell size={24} />
-          {/* Notification Badge */}
-          <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-[#F7ABCF] ring-2 ring-white" />
-        </Link>
-        <Link
-          href="/profile"
-          className="overflow-hidden rounded-full border border-gray-200 bg-white"
-        >
-          <Image
-            src={ProfileIcon}
-            alt="Profile"
-            width={32}
-            height={32}
-            className="object-cover"
-          />
-        </Link>
+    <header className="sticky top-0 z-50 w-full">
+      <div className="mx-auto flex h-14 max-w-[420px] items-center px-5 pt-3">
+        <div className="flex items-center">
+          <Image src={ButingLogoTitle} alt="부팅" priority className="h-10 w-auto" />
+        </div>
+
+        <div className="ml-auto flex items-center gap-2">
+          <button
+            type="button"
+            className="flex h-8 items-center justify-center rounded-full bg-[#FFE1EE] px-3 text-[13px] font-extrabold text-[#FF6FAE]"
+          >
+            팀
+          </button>
+
+          <button
+            type="button"
+            aria-label="팀 추가"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FFE1EE] text-[#FF6FAE]"
+          >
+            <Plus size={18} strokeWidth={2.5} />
+          </button>
+
+          <button
+            type="button"
+            aria-label="알림"
+            className="relative flex h-8 w-8 items-center justify-center"
+          >
+            <Bell size={22} className="text-[#0F172A]" />
+            <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-[#FF6FAE]" />
+          </button>
+        </div>
       </div>
     </header>
   );

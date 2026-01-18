@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useSignupStore } from '../../model/signup.store';
 import { RetroButton } from '@/shared/ui/RetroButton';
 import { BottomToast } from '@/shared/ui/BottomToast';
@@ -20,6 +20,10 @@ export default function EmailVerifyForm() {
   const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
     setToast({ visible: true, message, type });
   };
+
+  const handleToastClose = useCallback(() => {
+    setToast((prev) => ({ ...prev, visible: false }));
+  }, []);
 
   const handleSendEmail = () => {
     if (!email) {
@@ -54,22 +58,21 @@ export default function EmailVerifyForm() {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Email Field */}
       <div className="flex flex-col gap-2">
-        <label className="text-lg font-bold">이메일 인증</label>
+        <label className="text-base font-bold">이메일 인증</label>
         <div className="relative">
           <input
             type="email"
             value={email}
             onChange={(e) => setProfile({ email: e.target.value })}
             placeholder="이메일 입력"
-            className="h-14 w-full rounded-xl border-2 border-black px-4 pr-24 text-lg outline-none focus:bg-gray-50 transition-colors"
+            className="h-14 w-full rounded-full border border-black px-4 pr-24 text-base outline-none focus:bg-gray-50 transition-colors"
           />
-          <div className="absolute right-2 top-1/2 -translate-y-1/2">
+          <div className="absolute right-3 top-1/2 -translate-y-1/2">
             <RetroButton
               type="button"
               variant="neutral"
-              className="h-10 px-4 text-sm !bg-[#F7ABCF] whitespace-nowrap"
+              className="h-9 px-4 text-sm !bg-[#F7ABCF] whitespace-nowrap"
               onClick={handleSendEmail}
             >
               {isEmailSent ? '재전송' : '전송'}
@@ -80,20 +83,20 @@ export default function EmailVerifyForm() {
 
       {isEmailSent && (
         <div className="flex flex-col gap-2 animate-fade-in-up">
-          <label className="text-lg font-bold">인증번호</label>
+          <label className="text-base font-bold">인증번호</label>
           <div className="relative">
             <input
               type="text"
               value={authCode}
               onChange={(e) => setAuthCode(e.target.value)}
               placeholder="인증번호 6자리"
-              className="h-14 w-full rounded-xl border-2 border-black px-4 pr-24 text-lg outline-none focus:bg-gray-50 transition-colors"
+              className="h-14 w-full rounded-full border border-black px-4 pr-24 text-base outline-none focus:bg-gray-50 transition-colors"
             />
-            <div className="absolute right-2 top-1/2 -translate-y-1/2">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2">
               <RetroButton
                 type="button"
                 variant="neutral"
-                className="h-10 px-4 text-sm !bg-[#F7ABCF] whitespace-nowrap"
+                className="h-9 px-4 text-sm !bg-[#F7ABCF] whitespace-nowrap"
                 onClick={handleVerifyCode}
               >
                 확인
@@ -107,7 +110,7 @@ export default function EmailVerifyForm() {
         message={toast.message}
         isVisible={toast.visible}
         type={toast.type}
-        onClose={() => setToast((prev) => ({ ...prev, visible: false }))}
+        onClose={handleToastClose}
       />
     </div>
   );

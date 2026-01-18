@@ -7,13 +7,13 @@ export default function GenderForm() {
 
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-lg font-bold">성별</label>
+      <label className="text-base font-bold">성별</label>
       <div className="flex flex-col gap-4">
         <RetroButton
           type="button"
           variant="neutral"
-          className={`h-14 w-full text-lg ${gender === 'male' ? '!bg-[#F7ABCF]' : ''}`}
-          isActive={gender === 'male'}
+          className={`h-14 w-full text-base ${gender === 'male' ? '!bg-[#F7ABCF]' : ''}`}
+          // isActive={gender === 'male'}
           onClick={() => setProfile({ gender: 'male' })}
         >
           남성
@@ -21,8 +21,8 @@ export default function GenderForm() {
         <RetroButton
           type="button"
           variant="neutral"
-          className={`h-14 w-full text-lg ${gender === 'female' ? '!bg-[#F7ABCF]' : ''}`}
-          isActive={gender === 'female'}
+          className={`h-14 w-full text-base ${gender === 'female' ? '!bg-[#F7ABCF]' : ''}`}
+          // isActive={gender === 'female'}
           onClick={() => setProfile({ gender: 'female' })}
         >
           여성

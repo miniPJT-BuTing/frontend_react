@@ -1,82 +1,67 @@
 'use client';
 
-import Link from 'next/link';
-
-import Image, { StaticImageData } from 'next/image';
-
-import { usePathname } from 'next/navigation';
-
+import Image from 'next/image';
 import type { Route } from 'next';
+import { usePathname, useRouter } from 'next/navigation';
 
-// Import icons statically to avoid path issues
+import HomeIcon from '@/assets/icons/home-nav.png';
+import MatchingIcon from '@/assets/icons/matching-nav.png';
+import ChatIcon from '@/assets/icons/chat-nav.png';
+import ProfileIcon from '@/assets/icons/profile-nav.png';
 
-import HomeIcon from '@/assets/icons/home.png';
-
-import MatchingIcon from '@/assets/icons/matching.png';
-
-import ChatIcon from '@/assets/icons/chat.png';
-
-import ProfileIcon from '@/assets/icons/profile.png';
-
-interface NavItem {
-  label: string;
-
-  href: Route;
-
-  icon: StaticImageData;
-}
-
-const NAV_ITEMS: NavItem[] = [
+const NAV_ITEMS = [
   { label: '홈', href: '/home', icon: HomeIcon },
-
   { label: '매칭', href: '/matching', icon: MatchingIcon },
-
   { label: '채팅', href: '/chats', icon: ChatIcon },
-
   { label: '프로필', href: '/profile', icon: ProfileIcon },
-];
+] as const satisfies ReadonlyArray<{
+  label: string;
+  href: Route;
+  icon: typeof HomeIcon;
+}>;
 
 export default function BottomNav() {
   const pathname = usePathname();
+  const router = useRouter();
 
   return (
-    <nav className="fixed bottom-0 left-1/2 z-50 w-full max-w-[480px] -translate-x-1/2 bg-surface rounded-t-[20px] shadow-[0_-4px_20px_rgba(0,0,0,0.05)] pb-[env(safe-area-inset-bottom)]">
-      <ul className="flex h-[70px] items-center justify-around px-4">
-        {NAV_ITEMS.map((item) => {
-          const isActive = pathname.startsWith(item.href);
+    <nav className="fixed bottom-0 left-0 right-0 z-50">
+      <div className="w-full">
+        <div className="flex h-[72px] items-center justify-around rounded-t-[22px] bg-white px-3 shadow-[0_-4px_10px_rgba(0,0,0,0.08)]">
+          {NAV_ITEMS.map(({ label, href, icon }) => {
+            const isActive = pathname === href || pathname.startsWith(`${href}/`);
 
-          return (
-            <li key={item.href} className="flex-1">
-              <Link
-                href={item.href}
-                className="flex h-full w-full flex-col items-center justify-center gap-1"
+            return (
+              <button
+                key={href}
+                type="button"
+                onClick={() => router.push(href)}
+                className="flex flex-col items-center justify-center gap-1.5 px-2"
               >
-                <div
-                  className={`relative transition-all duration-200 ${
-                    isActive ? 'scale-110' : 'opacity-50'
-                  }`}
-                >
-                  <Image
-                    src={item.icon}
-                    alt={item.label}
-                    width={28}
-                    height={28}
-                    className="object-contain"
-                  />
-                </div>
-
+                <Image
+                  src={icon}
+                  alt={label}
+                  width={30}
+                  height={30}
+                  priority={isActive}
+                  className={[
+                    'pixelated transition-transform duration-150',
+                    isActive ? 'opacity-100 scale-[1.06]' : 'icon-inactive scale-100',
+                  ].join(' ')}
+                />
                 <span
-                  className={`text-[11px] font-medium leading-none transition-colors duration-200 ${
-                    isActive ? 'text-[#F7ABCF]' : 'text-gray-400'
-                  }`}
+                  className={[
+                    "font-['DNFBit'] text-[12px] leading-none",
+                    isActive ? 'text-[#FF6FAE]' : 'text-[#94A3B8]',
+                  ].join(' ')}
                 >
-                  {item.label}
+                  {label}
                 </span>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
+              </button>
+            );
+          })}
+        </div>
+      </div>
     </nav>
   );
 }

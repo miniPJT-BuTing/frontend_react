@@ -1,12 +1,13 @@
-'use client';
-
-import { Suspense } from 'react';
-import HomeWidget from '@/widgets/home/ui/HomeWidget';
+import MyMeetingSection from '@/widgets/home/MyMeetingSection';
+import TodayPickSection from '@/widgets/home/TodayPickSection';
+import { SearchBar } from '@/shared/ui/SearchBar';
 
 export default function HomePage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <HomeWidget />
-    </Suspense>
+    <div className="space-y-8">
+      <SearchBar placeholder="키워드로 미팅 상대 찾기" />
+      <MyMeetingSection />
+      <TodayPickSection />
+    </div>
   );
 }

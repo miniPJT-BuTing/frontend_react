@@ -88,3 +88,12 @@ body {
   font-style: normal;
   font-display: swap;
 }
+
+.pixelated {
+  image-rendering: pixelated;
+}
+
+.icon-inactive {
+  filter: grayscale(0.15) saturate(0.2) brightness(1.15);
+  opacity: 0.55;
+}
