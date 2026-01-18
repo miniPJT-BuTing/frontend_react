@@ -1,8 +1,8 @@
 export const colors = {
   /* Brand */
-  primary: '#FFAFAF',
-  primaryHover: '#FF9A9A',
-  primaryActive: '#FF8585',
+  primary: '#F7ABCF',
+  primaryHover: '#F596C2', // Adjusted slightly darker for hover
+  primaryActive: '#F281B5', // Adjusted for active
 
   /* Accent (보조 핑크) */
   accent: '#FFD6D6',
