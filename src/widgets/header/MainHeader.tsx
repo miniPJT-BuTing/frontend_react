@@ -7,7 +7,7 @@ import ButingLogoTitle from '@/assets/logos/buting-logo-title.png';
 export default function MainHeader() {
   return (
     <header className="sticky top-0 z-50 w-full">
-      <div className="mx-auto flex h-14 max-w-[420px] items-center px-5 pt-3">
+      <div className="mx-auto flex h-14 max-w-[480px] items-center px-5 pt-3">
         <div className="flex items-center">
           <Image src={ButingLogoTitle} alt="부팅" priority className="h-10 w-auto" />
         </div>
