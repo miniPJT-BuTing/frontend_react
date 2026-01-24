@@ -1,52 +1,59 @@
 'use client';
-
 import { Suspense } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Search, SlidersHorizontal, X } from 'lucide-react';
-import MainHeader from '@/widgets/header/MainHeader';
-import TeamCard, { TeamCardProps } from '@/widgets/team-card/TeamCard';
-
-import HomeBackground from '@/assets/images/home_background.png';
+import TeamPickCard from '@/widgets/home/ui/TeamPickCard';
 
 // Dummy Data
-const DUMMY_TEAMS: TeamCardProps[] = [
+const picks = [
   {
-    id: 1,
+    id: 't1',
+    title: '동아대 디자인과랑 4:4 미팅해요',
+    meta: ['4:4', '동아대 등', '23학번', '22세'],
+    members: 4,
+    bookmarked: false,
+    status: 'idle' as const,
+  },
+  {
+    id: 't2',
+    title: '동아대 디자인과랑 4:4 미팅해요',
+    meta: ['4:4', '동아대 등', '23학번', '22세'],
+    members: 4,
+    bookmarked: true,
+    status: 'waiting' as const,
+  },
+  {
+    id: 't3',
     title: '코딩 좋아하는 사람 모여라',
-    schoolName: '서울과기대',
-    averageId: 23,
-    averageAge: 23,
-    memberCount: 3,
-    gender: 'MALE',
+    meta: ['4:4', '동아대 등', '23학번', '22세'],
+    members: 4,
+    bookmarked: true,
+    status: 'idle' as const,
   },
   {
-    id: 2,
+    id: 't4',
     title: '맛집 탐방 동아리',
-    schoolName: '이화여대',
-    averageId: 21,
-    averageAge: 21,
-    memberCount: 4,
-    gender: 'FEMALE',
+    meta: ['4:4', '동아대 등', '23학번', '22세'],
+    members: 4,
+    bookmarked: true,
+    status: 'idle' as const,
   },
   {
-    id: 3,
+    id: 't5',
     title: '롤 5인큐 구함 (플레 이상)',
-    schoolName: '고려대',
-    averageId: 20,
-    averageAge: 24,
-    memberCount: 3,
-    gender: 'MALE',
+    meta: ['4:4', '동아대 등', '23학번', '22세'],
+    members: 4,
+    bookmarked: true,
+    status: 'idle' as const,
   },
   {
-    id: 4,
+    id: 't6',
     title: '여행 가고 싶다',
-    schoolName: '연세대',
-    averageId: 22,
-    averageAge: 22,
-    memberCount: 2,
-    gender: 'FEMALE',
+    meta: ['4:4', '동아대 등', '23학번', '22세'],
+    members: 4,
+    bookmarked: true,
+    status: 'idle' as const,
   },
 ];
 
@@ -92,24 +99,17 @@ export default function MatchingListWidget() {
 
   return (
     <div className="relative flex h-full flex-col">
-      {/* Background Image */}
-      <div className="fixed top-0 left-1/2 z-0 h-full w-full max-w-[480px] -translate-x-1/2 pointer-events-none">
-        <Image src={HomeBackground} alt="Home Background" fill priority className="h-full w-full" />
-      </div>
-
-      {/* Main Header */}
-      <MainHeader />
-
       {/* Search & Filter Section */}
-      <div className="relative z-10 px-5 mt-4 mb-2">
-        <Link href={`/matching/filter?${searchParams.toString()}`} className="relative block drop-shadow-sm">
-          <div className="w-full rounded-2xl bg-white/90 backdrop-blur-sm py-3.5 pl-11 pr-4 text-sm text-gray-400">
-            관심사, 제목 검색
-          </div>
-          <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+      <div className="relative z-10 mb-2">
+        <Link
+          href={`/matching/filter?${searchParams.toString()}`}
+          className="relative flex items-center gap-2 rounded-full border-2 border-[#5863D6] bg-white px-4 py-3 shadow-[0_6px_0_rgba(88,99,214,0.15)]"
+        >
+          <Search size={20} className="opacity-70 text-gray-400" />
+          <span className="w-full text-[14px] text-[#9AA3B2]">관심사, 제목 검색</span>
           {hasFilters && (
             <div className="absolute right-4 top-1/2 -translate-y-1/2">
-               <SlidersHorizontal size={20} className="text-[#F7ABCF]" />
+              <SlidersHorizontal size={20} className="text-[#F7ABCF]" />
             </div>
           )}
         </Link>
@@ -150,16 +150,25 @@ export default function MatchingListWidget() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex-1 overflow-y-auto p-5 pb-24 scrollbar-hide">
+      <div className="relative z-10 flex-1 overflow-y-auto pb-24 scrollbar-hide">
         <div className="flex flex-col gap-4">
           <div className="mb-2">
             <h2 className="text-sm font-semibold text-gray-600">
-              추천 팀 <span className="text-[#F7ABCF]">{DUMMY_TEAMS.length}</span>
+              추천 팀 <span className="text-[#F7ABCF]">{picks.length}</span>
             </h2>
           </div>
 
-          {DUMMY_TEAMS.map((team) => (
-            <TeamCard key={team.id} {...team} />
+          {picks.map((p) => (
+            <TeamPickCard
+              key={p.id}
+              title={p.title}
+              meta={p.meta}
+              members={p.members}
+              bookmarked={p.bookmarked}
+              status={p.status}
+              onClickProfile={() => console.log('팀 프로필 보기', p.id)}
+              onClickRequest={() => console.log('매칭 요청', p.id)}
+            />
           ))}
         </div>
       </div>
