@@ -16,7 +16,9 @@ export default function MainLayout({ children }: { children: ReactNode }) {
     >
       <MainHeader />
 
-      <main className="mx-auto w-full max-w-[480px] px-5 pb-24 pt-4">{children}</main>
+      <main className="mx-auto h-[calc(100dvh-140px)] w-full max-w-[480px] overflow-y-auto px-5 pb-24 pt-4">
+        {children}
+      </main>
 
       <BottomNav />
     </div>

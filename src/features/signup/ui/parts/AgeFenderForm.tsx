@@ -27,7 +27,7 @@ export default function AgeFenderForm() {
             type="button"
             variant="neutral"
             className="h-14 flex-1 text-lg"
-            isActive={gender === 'male'}
+            // isActive={gender === 'male'}
             onClick={() => setProfile({ gender: 'male' })}
           >
             남성
@@ -36,7 +36,7 @@ export default function AgeFenderForm() {
             type="button"
             variant="neutral"
             className="h-14 flex-1 text-lg"
-            isActive={gender === 'female'}
+            // isActive={gender === 'female'}
             onClick={() => setProfile({ gender: 'female' })}
           >
             여성

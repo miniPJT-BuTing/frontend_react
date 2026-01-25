@@ -1,3 +1,7 @@
+import Image from 'next/image';
+
+import HeartIcon from '@/assets/icons/heart.png';
+
 import MeetingCard from './ui/MeetingCard';
 
 const mock = {
@@ -10,9 +14,23 @@ const mock = {
 export default function MyMeetingSection() {
   return (
     <section>
-      <h2 className="mb-3 text-center text-[18px] font-extrabold tracking-tight text-[#4B57C2]">
-        ♡ MY MEETING ♡
-      </h2>
+      <div className="mb-3 flex items-center justify-center gap-3">
+        <Image src={HeartIcon} alt="heart" width={28} height={28} priority />
+
+        <h2
+          className="
+            font-['DNFBit']
+            text-lg
+            tracking-wide
+            text-black
+            drop-shadow-[0_2px_0_rgba(255,255,255,0.8)]
+          "
+        >
+          MY MEETING
+        </h2>
+
+        <Image src={HeartIcon} alt="heart" width={28} height={28} priority />
+      </div>
 
       <MeetingCard
         status={mock.status}
@@ -20,7 +38,6 @@ export default function MyMeetingSection() {
         meta={mock.meta}
         members={mock.members}
         primaryAction={{ label: '채팅하러 가기', href: '/chats' }}
-        ribbon={{ side: 'right', color: 'pink' }}
       />
     </section>
   );

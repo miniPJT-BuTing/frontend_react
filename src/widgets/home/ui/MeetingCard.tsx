@@ -4,43 +4,21 @@ type Props = {
   meta: string[];
   members: number;
   primaryAction: { label: string; href: string };
-  ribbon?: { side: 'right' | 'left'; color: 'pink' | 'blue' };
 };
 
-export default function MeetingCard({
-  status,
-  title,
-  meta,
-  members,
-  primaryAction,
-  ribbon,
-}: Props) {
+export default function MeetingCard({ status, title, meta, members, primaryAction }: Props) {
   return (
-    <div className="relative rounded-[22px] border-2 border-[#5863D6] bg-white p-4 shadow-[0_10px_0_rgba(88,99,214,0.12)]">
-      {/* ribbon */}
-      {ribbon && (
-        <div
-          className={[
-            'absolute top-0 h-14 w-10 rounded-b-md',
-            ribbon.side === 'right' ? 'right-6' : 'left-6',
-            ribbon.color === 'pink' ? 'bg-[#FF9BC2]' : 'bg-[#8FD0FF]',
-            'shadow-[0_6px_0_rgba(0,0,0,0.08)]',
-          ].join(' ')}
-        >
-          <div className="absolute bottom-0 left-0 right-0 mx-auto h-0 w-0 border-l-[20px] border-r-[20px] border-t-[14px] border-l-transparent border-r-transparent border-t-white" />
-        </div>
-      )}
+    <div className="relative rounded-[22px] border border-black bg-white p-4">
+      <div className="flex items-start justify-between gap-2">
+        <h3 className="text-[16px] font-extrabold text-black leading-tight">{title}</h3>
 
-      {/* status chip */}
-      <div className="inline-flex items-center rounded-full bg-[#FF9BC2] px-3 py-1 text-[12px] font-bold text-white">
-        {status}
+        <div className="shrink-0 inline-flex items-center rounded-full border border-black bg-[#FF9BC2] px-3 py-[2px] text-[12px] font-bold text-black">
+          {status}
+        </div>
       </div>
 
-      <h3 className="mt-3 text-[16px] font-extrabold text-[#2F3A8F]">{title}</h3>
+      <p className="mt-1 text-[12px] font-semibold text-gray-500">{meta.join(' | ')}</p>
 
-      <p className="mt-2 text-[12px] font-semibold text-[#6B7280]">{meta.join(' | ')}</p>
-
-      {/* members bubbles */}
       <div className="mt-3 flex gap-2">
         {Array.from({ length: members }).map((_, i) => (
           <div key={i} className="size-10 rounded-full bg-[#FFE1EE]" />
@@ -49,7 +27,7 @@ export default function MeetingCard({
 
       <a
         href={primaryAction.href}
-        className="mt-4 block w-full rounded-full bg-[#FF9BC2] py-3 text-center text-[14px] font-extrabold text-white shadow-[0_6px_0_rgba(255,155,194,0.35)] active:translate-y-[1px]"
+        className="mt-4 block w-full rounded-full bg-primary border border-black py-3 text-center text-[14px] font-extrabold text-black active:translate-y-[1px]"
       >
         {primaryAction.label}
       </a>
