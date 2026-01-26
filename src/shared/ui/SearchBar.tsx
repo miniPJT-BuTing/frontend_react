@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Search } from 'lucide-react';
 
-export function SearchBarLink({ placeholder }: { placeholder: string }) {
+export default function SearchBarLink({ placeholder }: { placeholder: string }) {
   return (
     <Link
       href="/matching/filter"

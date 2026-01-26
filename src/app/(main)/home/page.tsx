@@ -1,6 +1,6 @@
+import SearchBarLink from '@/shared/ui/SearchBar';
 import MyMeetingSection from '@/widgets/home/MyMeetingSection';
 import TodayPickSection from '@/widgets/home/TodayPickSection';
-import { SearchBarLink } from '@/shared/ui/SearchBar';
 
 export default function HomePage() {
   return (
