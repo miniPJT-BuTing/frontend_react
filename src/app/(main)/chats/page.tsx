@@ -32,7 +32,7 @@ const MOCK_CHATS: ChatItem[] = [
 
 export default function ChatsPage() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 py-4">
       <div className="flex flex-col gap-3">
         {MOCK_CHATS.map((chat) => (
           <button
