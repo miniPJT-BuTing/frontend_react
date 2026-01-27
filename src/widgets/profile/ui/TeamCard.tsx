@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { Route } from 'next';
 
 export default function TeamCard({
   title,
@@ -32,7 +33,7 @@ export default function TeamCard({
 
       <div className="mt-4 grid grid-cols-1 gap-2">
         <Link
-          href={primaryAction.href}
+          href={primaryAction.href as Route}
           className="block w-full rounded-full bg-primary border border-black py-3 text-center text-[14px] font-extrabold text-black active:translate-y-[1px]"
         >
           {primaryAction.label}
@@ -40,7 +41,7 @@ export default function TeamCard({
 
         {secondaryAction && (
           <Link
-            href={secondaryAction.href}
+            href={secondaryAction.href as Route}
             className="block w-full rounded-full bg-white border border-black py-3 text-center text-[14px] font-extrabold text-black active:translate-y-[1px]"
           >
             {secondaryAction.label}

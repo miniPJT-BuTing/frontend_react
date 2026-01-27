@@ -40,12 +40,12 @@ export default function FriendsSection() {
                 >
                   목록 보기
                 </Link>
-                <Link
+                {/* <Link
                   href="/friends/add"
                   className="rounded-full border border-black bg-primary px-3 py-2 text-[12px] font-extrabold text-black active:translate-y-[1px]"
                 >
                   친구 추가
-                </Link>
+                </Link> */}
               </div>
             </div>
 
@@ -78,7 +78,8 @@ export default function FriendsSection() {
           <EmptyInline
             title="아직 친구가 없어요"
             desc="친구를 추가하면 팀 구성/미팅 진행이 더 편해져요!"
-            cta={{ label: '친구 추가하기', href: '/friends/add' }}
+            actionLabel="친구 추가하기"
+            href="/friends/add"
           />
         )}
       </div>

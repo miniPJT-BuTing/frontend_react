@@ -36,7 +36,8 @@ export default function MyTeamSection() {
         <EmptyCard
           title="아직 팀이 없어요"
           desc="미팅 팀을 만들고 상대를 찾아볼까요?"
-          cta={{ label: '팀 만들러 가기', href: '/team/create' }}
+          actionLabel="팀 만들러 가기"
+          href="/team/create"
         />
       )}
     </section>

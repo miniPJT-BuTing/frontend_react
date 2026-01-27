@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { Route } from 'next';
 
 export default function MenuItem({
   title,
@@ -28,7 +29,7 @@ export default function MenuItem({
 
   if (href) {
     return (
-      <Link href={href} className="block">
+      <Link href={href as Route} className="block">
         {content}
       </Link>
     );

@@ -3,6 +3,7 @@ import React from 'react';
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'neutral';
   fullWidth?: boolean;
+  isActive?: boolean;
 }
 
 export const RetroButton = ({
@@ -10,6 +11,7 @@ export const RetroButton = ({
   className,
   variant = 'primary',
   fullWidth = false,
+  isActive = false,
   ...props
 }: ButtonProps) => {
   const baseStyles = `
@@ -28,12 +30,21 @@ export const RetroButton = ({
     neutral: 'bg-white text-black hover:bg-slate-50',
   };
 
+  const activeStyles = isActive
+    ? `
+        ring-2 ring-black
+        translate-y-[1px]
+        shadow-[0_2px_0_0_rgba(0,0,0,1)]
+      `
+    : '';
+
   return (
     <button
       className={`
         ${baseStyles}
         ${variantStyles[variant]}
         ${fullWidth ? 'w-full' : ''}
+        ${activeStyles}
         ${className ?? ''}
       `}
       {...props}
