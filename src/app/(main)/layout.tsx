@@ -5,22 +5,20 @@ import BottomNav from '@/widgets/bottom-nav/BottomNav';
 export default function MainLayout({ children }: { children: ReactNode }) {
   return (
     <div
-      className="min-h-dvh"
-      style={{
-        background: `
-      repeating-linear-gradient(
-        180deg,
-        #EAF4FF 0px,
-        #EAF4FF 120px,
-        #E3F0FF 120px,
-        #E3F0FF 240px
-      )
-    `,
-      }}
+      className="
+    flex min-h-screen flex-col items-center
+    text-slate-900
+    bg-gradient-to-b
+    from-[#EAF4FF]
+    via-[#D7F8FF]
+    to-[#79A5E2]
+  "
     >
       <MainHeader />
 
-      <main className="mx-auto w-full max-w-[420px] px-5 pb-24 pt-4">{children}</main>
+      <main className="mx-auto h-[calc(100dvh-140px)] w-full max-w-[480px] overflow-y-auto px-5 pb-24 pt-4">
+        {children}
+      </main>
 
       <BottomNav />
     </div>

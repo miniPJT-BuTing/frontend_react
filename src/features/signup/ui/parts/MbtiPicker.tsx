@@ -14,7 +14,7 @@ export default function MbtiPicker() {
   const { mbti, setPersonality } = useSignupStore();
 
   const handleSelect = (char: string, colIndex: number) => {
-    let currentMbti = mbti || '____';
+    const currentMbti = mbti || '____';
     const chars = currentMbti.split('');
     chars[colIndex] = char;
     setPersonality({ mbti: chars.join('') });
