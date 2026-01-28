@@ -21,14 +21,18 @@ export default function KeywordGrid({
               type="button"
               onClick={() => onToggle(k)}
               className={[
-                'rounded-full border px-3 py-2 text-[13px] leading-none transition',
+                'h-10 rounded-full border border-black px-3',
+                'inline-flex items-center justify-center',
+                'text-sm font-extrabold leading-none',
+                'transition-transform transition-colors',
                 'active:translate-y-[1px]',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/60',
                 active
-                  ? 'border-[#5863D6] bg-[#FBCFE8] text-[#5863D6]'
-                  : 'border-[#5863D6] bg-white/70 text-[#5863D6]',
+                  ? 'bg-[#F7ABCF] text-black shadow-[0_2px_0_0_rgba(0,0,0,1)]'
+                  : 'bg-white text-black hover:bg-slate-50',
               ].join(' ')}
             >
-              <span className="font-['DNFBit']">{k}</span>
+              <span className=" tracking-wide">{k}</span>
             </button>
           );
         })}
