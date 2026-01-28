@@ -8,7 +8,7 @@ import { useCreateTeamStore } from '../../model/createTeam.store';
 import KeywordGrid from '@/shared/ui/KeywordGrid';
 import AgeRangeSection from '@/shared/ui/AgeRangeSection';
 
-import bulbIcon from '@/assets/icons/mood.png';
+import moodIcon from '@/assets/icons/mood.png';
 import schoolIcon from '@/assets/icons/school.png';
 import calendarIcon from '@/assets/icons/calendar.png';
 
@@ -66,8 +66,8 @@ export default function Step2Preference() {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col">
-        <div className="flex items-center gap-1">
-          <Image src={bulbIcon} alt="bulb" width={34} height={34} />
+        <div className="flex items-center gap-2">
+          <Image src={moodIcon} alt="mood" width={34} height={34} />
           <label className="text-base font-bold">선호 분위기</label>
         </div>
 
@@ -83,7 +83,7 @@ export default function Step2Preference() {
       </div>
 
       <div className="flex flex-col">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           <Image src={schoolIcon} alt="school" width={34} height={34} />
           <label className="text-base font-bold">선호 학번</label>
         </div>
@@ -103,7 +103,7 @@ export default function Step2Preference() {
       </div>
 
       <div className="flex flex-col">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           <Image src={calendarIcon} alt="calendar" width={34} height={34} />
           <label className="text-base font-bold">선호 나이</label>
         </div>

@@ -15,7 +15,7 @@ export default function Step1Basic() {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           <Image src={HeartIcon} alt="heart" width={34} height={34} priority />
           <label className="text-base font-bold">방 제목</label>
         </div>
@@ -44,7 +44,7 @@ export default function Step1Basic() {
       </div>
 
       <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           <Image src={IntroIcon} alt="intro" width={34} height={34} priority />
           <label className="text-base font-bold">방 소개글</label>
         </div>
