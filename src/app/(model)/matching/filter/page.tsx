@@ -75,71 +75,67 @@ export default function MatchingFilterPage() {
       <FilterHeader onBack={() => router.back()} />
 
       <div className="container relative mx-auto flex min-h-[calc(100vh-140px)] max-w-[480px] flex-col p-6">
-        <main className="w-full px-5 pb-28">
-          <KeywordGrid
-            keywords={KEYWORDS}
-            selected={selected}
-            onToggle={(k) => {
-              setSelected((prev) =>
-                prev.includes(k) ? prev.filter((v) => v !== k) : [...prev, k]
-              );
-            }}
+        <KeywordGrid
+          keywords={KEYWORDS}
+          selected={selected}
+          onToggle={(k) => {
+            setSelected((prev) => (prev.includes(k) ? prev.filter((v) => v !== k) : [...prev, k]));
+          }}
+        />
+
+        <section className="mt-10 space-y-5">
+          <button
+            type="button"
+            onClick={() => toggle('studentId')}
+            className="flex w-full items-center justify-between"
+          >
+            <span className="text-sm font-extrabold text-black">선호 학번</span>
+
+            <span className="flex items-center gap-2">
+              <span className="rounded-full border border-black bg-[#FEFED0] px-3 py-1 text-xs font-extrabold text-black">
+                {studentIdLabel}
+              </span>
+
+              <Chevron open={active === 'studentId'} />
+            </span>
+          </button>
+
+          <AgeRangeSection
+            label="선호 학번"
+            value={studentIdRange}
+            valueLabel={studentIdLabel}
+            min={14}
+            max={26}
+            onChange={setStudentIdRange}
+            open={active === 'studentId'}
           />
 
-          <section className="mt-10 space-y-5">
-            <button
-              type="button"
-              onClick={() => toggle('studentId')}
-              className="flex w-full items-center justify-between"
-            >
-              <span className="text-sm font-extrabold text-black">선호 학번</span>
+          <button
+            type="button"
+            onClick={() => toggle('age')}
+            className="flex w-full items-center justify-between"
+          >
+            <span className="text-sm font-extrabold text-black">선호 연령(년생)</span>
 
-              <span className="flex items-center gap-2">
-                <span className="rounded-full border border-black bg-[#FEFED0] px-3 py-1 text-xs font-extrabold text-black">
-                  {studentIdLabel}
-                </span>
-
-                <Chevron open={active === 'studentId'} />
+            <span className="flex items-center gap-2">
+              <span className="rounded-full border border-black bg-[#FEFED0] px-3 py-1 text-xs font-extrabold text-black">
+                {ageLabel}
               </span>
-            </button>
 
-            <AgeRangeSection
-              label="선호 학번"
-              value={studentIdRange}
-              valueLabel={studentIdLabel}
-              min={14}
-              max={26}
-              onChange={setStudentIdRange}
-              open={active === 'studentId'}
-            />
+              <Chevron open={active === 'age'} />
+            </span>
+          </button>
 
-            <button
-              type="button"
-              onClick={() => toggle('age')}
-              className="flex w-full items-center justify-between"
-            >
-              <span className="text-sm font-extrabold text-black">선호 연령(년생)</span>
-
-              <span className="flex items-center gap-2">
-                <span className="rounded-full border border-black bg-[#FEFED0] px-3 py-1 text-xs font-extrabold text-black">
-                  {ageLabel}
-                </span>
-
-                <Chevron open={active === 'age'} />
-              </span>
-            </button>
-
-            <AgeRangeSection
-              label="선호 연령(년생)"
-              value={ageRange}
-              valueLabel={ageLabel}
-              min={1990}
-              max={2009}
-              onChange={setAgeRange}
-              open={active === 'age'}
-            />
-          </section>
-        </main>
+          <AgeRangeSection
+            label="선호 연령(년생)"
+            value={ageRange}
+            valueLabel={ageLabel}
+            min={1990}
+            max={2009}
+            onChange={setAgeRange}
+            open={active === 'age'}
+          />
+        </section>
 
         <BottomCta
           text="검색하기"

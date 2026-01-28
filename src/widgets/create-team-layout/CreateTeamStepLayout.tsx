@@ -15,7 +15,6 @@ interface CreateTeamStepLayoutProps {
   onBack?: () => void;
   nextLabel?: string;
   nextButtonVariant?: 'primary' | 'secondary' | 'neutral';
-  isNextDisabled?: boolean;
 }
 
 export const CreateTeamStepLayout = ({
@@ -28,7 +27,6 @@ export const CreateTeamStepLayout = ({
   onBack,
   nextLabel = '다음',
   nextButtonVariant = 'primary',
-  isNextDisabled = false,
 }: CreateTeamStepLayoutProps) => {
   const router = useRouter();
 
@@ -52,7 +50,6 @@ export const CreateTeamStepLayout = ({
           <RetroButton
             fullWidth
             onClick={onNext}
-            disabled={isNextDisabled}
             className="h-14 text-lg"
             variant={nextButtonVariant}
           >

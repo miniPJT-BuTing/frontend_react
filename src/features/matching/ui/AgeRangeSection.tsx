@@ -44,7 +44,7 @@ export default function AgeRangeSection({
   return (
     <section className="mt-5">
       {open && (
-        <div className="rounded-[22px] border border-black bg-white p-4">
+        <div className="rounded-xl border border-black bg-white p-4">
           <div className="relative h-9 w-full">
             <div className="absolute left-0 right-0 top-1/2 h-2 -translate-y-1/2 rounded-full border border-black bg-white" />
 

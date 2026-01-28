@@ -16,7 +16,7 @@ export default function CreateTeamStep1Page() {
   const isNextDisabled = !title.trim() || !introduction.trim();
 
   return (
-    <CreateTeamStepLayout step={1} onNext={handleNext} isNextDisabled={isNextDisabled}>
+    <CreateTeamStepLayout step={1} onNext={handleNext}>
       <Step1Basic />
     </CreateTeamStepLayout>
   );

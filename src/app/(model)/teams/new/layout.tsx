@@ -6,7 +6,7 @@ export default function FilterLayout({ children }: { children: React.ReactNode }
           pointer-events-none absolute inset-x-0 top-0
           h-1/2
           bg-gradient-to-b
-          from-[#BDE0FE]
+          from-[#FBCFE8]
           to-transparent
         "
       />
@@ -16,7 +16,7 @@ export default function FilterLayout({ children }: { children: React.ReactNode }
           pointer-events-none absolute inset-x-0 bottom-0
           h-1/4
           bg-gradient-to-t
-          from-[#BDE0FE]
+          from-[#FBCFE8]
           to-transparent
         "
       />
