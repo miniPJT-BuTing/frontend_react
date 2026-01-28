@@ -9,8 +9,18 @@ export default function KeywordGrid({
   selected: string[];
   onToggle: (k: string) => void;
 }) {
+  const selectedCount = selected.length;
+
   return (
-    <section className="mt-4">
+    <section className="mt-5">
+      <div className="mb-3 flex items-center justify-between">
+        <span className="text-sm font-extrabold text-black">키워드</span>
+
+        <span className="rounded-full border border-black bg-[#FEFED0] px-3 py-1 text-xs font-extrabold text-black">
+          {selectedCount > 0 ? `${selectedCount}개 선택` : '선택해주세요'}
+        </span>
+      </div>
+
       <div className="grid grid-cols-4 gap-3">
         {keywords.map((k) => {
           const active = selected.includes(k);
@@ -32,7 +42,7 @@ export default function KeywordGrid({
                   : 'bg-white text-black hover:bg-slate-50',
               ].join(' ')}
             >
-              <span className=" tracking-wide">{k}</span>
+              <span className="tracking-wide">{k}</span>
             </button>
           );
         })}
