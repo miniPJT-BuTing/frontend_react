@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 import HeartIcon from '@/assets/icons/heart.png';
 
-import MeetingCard from './ui/MeetingCard';
+import MeetingCard from '@/entities/meeting/ui/MeetingCard';
 
 const mock = {
   status: 'matched' as const,
