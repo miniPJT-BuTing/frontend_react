@@ -46,7 +46,7 @@ export const CreateTeamStepLayout = ({
           <div className="animate-fade-in-up">{children}</div>
         </div>
 
-        <div className="fixed bottom-10 left-0 right-0 px-6 max-w-[480px] mx-auto z-10">
+        <div className="fixed bottom-6 left-0 right-0 px-6 max-w-[480px] mx-auto z-10">
           <RetroButton
             fullWidth
             onClick={onNext}

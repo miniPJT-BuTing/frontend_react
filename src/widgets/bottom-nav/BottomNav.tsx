@@ -53,8 +53,8 @@ export default function BottomNav() {
                 />
                 <span
                   className={[
-                    "font-['DNFBit'] text-[12px] leading-none",
-                    isActive ? 'text-black' : 'text-[#94A3B8]',
+                    'text-xs leading-none',
+                    isActive ? 'text-black font-bold' : 'text-[#94A3B8]',
                   ].join(' ')}
                 >
                   {label}

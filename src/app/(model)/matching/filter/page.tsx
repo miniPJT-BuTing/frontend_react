@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import { ChevronDown } from 'lucide-react';
 
 import FilterHeader from '@/features/matching/ui/FilterHeader';
-import KeywordGrid from '@/features/matching/ui/KeywordGrid';
-import AgeRangeSection from '@/features/matching/ui/AgeRangeSection';
+import KeywordGrid from '@/shared/ui/KeywordGrid';
+import AgeRangeSection from '@/shared/ui/AgeRangeSection';
 import BottomCta from '@/features/matching/ui/BottomCta';
 
 const KEYWORDS = [
