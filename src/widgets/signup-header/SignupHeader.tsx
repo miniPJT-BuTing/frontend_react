@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { ChevronLeft } from 'lucide-react';
-import { ProgressBar } from '@/shared/ui/ProgressBar';
 
 interface SignupHeaderProps {
   step: number;
@@ -28,8 +27,6 @@ export const SignupHeader = ({ step, totalSteps = 6, onBack }: SignupHeaderProps
           <ChevronLeft className="w-6 h-6 text-black stroke-[3]" />
         </button>
       </div>
-
-      {/* <ProgressBar current={step} total={totalSteps} /> */}
 
       <div className="flex justify-start">
         <div

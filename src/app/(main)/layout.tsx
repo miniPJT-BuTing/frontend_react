@@ -8,15 +8,17 @@ export default function MainLayout({ children }: { children: ReactNode }) {
       className="
     flex min-h-screen flex-col items-center
     text-slate-900
-    bg-gradient-to-b
-    from-[#EAF4FF]
-    via-[#D7F8FF]
-    to-[#79A5E2]
   "
     >
       <MainHeader />
 
-      <main className="mx-auto h-[calc(100dvh-140px)] w-full max-w-[480px] overflow-y-auto px-5 pb-24 pt-4">
+      <main
+        className="
+          mx-auto w-full max-w-[480px] flex-1 overflow-y-auto
+          px-5 pt-4
+          pb-[calc(72px+env(safe-area-inset-bottom)+16px)]
+        "
+      >
         {children}
       </main>
 

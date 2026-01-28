@@ -38,7 +38,7 @@ export const CreateTeamHeader = ({ step, totalSteps = 3, onBack }: CreateTeamHea
             text-lg font-bold uppercase
             bg-gradient-to-b
             from-[#FFFFFF]
-            to-[#FFABCF]
+            to-[#68D0E7]
             text-black
           "
         >

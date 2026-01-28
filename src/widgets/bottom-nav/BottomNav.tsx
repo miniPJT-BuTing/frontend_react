@@ -28,8 +28,8 @@ export default function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50">
-      <div className="relative mx-auto w-full max-w-[480px]">
-        <div className="flex h-[72px] items-center justify-around rounded-t-[22px] bg-white px-3 shadow-[0_-4px_10px_rgba(0,0,0,0.08)]">
+      <div className="relative mx-auto w-full max-w-[480px] bg-white">
+        <div className="flex h-[72px] items-center justify-around rounded-t-[22px] px-3 shadow-[0_-4px_10px_rgba(0,0,0,0.08)]">
           {NAV_ITEMS.map(({ label, href, icon }) => {
             const isActive = pathname === href || pathname.startsWith(`${href}/`);
 
@@ -53,8 +53,8 @@ export default function BottomNav() {
                 />
                 <span
                   className={[
-                    "font-['DNFBit'] text-[12px] leading-none",
-                    isActive ? 'text-[#FF6FAE]' : 'text-[#94A3B8]',
+                    'text-xs leading-none',
+                    isActive ? 'text-black font-bold' : 'text-[#94A3B8]',
                   ].join(' ')}
                 >
                   {label}

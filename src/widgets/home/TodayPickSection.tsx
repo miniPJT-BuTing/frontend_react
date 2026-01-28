@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 import StarIcon from '@/assets/icons/star.png';
 
-import TeamPickCard from './ui/TeamPickCard';
+import TeamPickCard from '@/entities/team/ui/TeamPickCard';
 
 const mock = [
   {
