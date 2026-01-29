@@ -1,9 +1,12 @@
+import Link from 'next/link';
+import type { Route } from 'next';
+
 type Props = {
   title: string;
   meta: string[];
   members: number;
   status: 'idle' | 'waiting';
-  onClickProfile: () => void;
+  profileLink: string;
   onClickRequest: () => void;
 };
 
@@ -12,7 +15,7 @@ export default function TeamPickCard({
   meta,
   members,
   status,
-  onClickProfile,
+  profileLink,
   onClickRequest,
 }: Props) {
   const badgeLabel = status === 'waiting' ? 'waiting' : 'idle';
@@ -41,13 +44,12 @@ export default function TeamPickCard({
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-3">
-        <button
-          type="button"
-          onClick={onClickProfile}
-          className="w-full rounded-full border border-black bg-white py-3 text-[14px] font-extrabold text-black active:translate-y-[1px]"
+        <Link
+          href={profileLink as Route}
+          className="block w-full rounded-full border border-black bg-white py-3 text-center text-[14px] font-extrabold text-black active:translate-y-[1px]"
         >
           팀 프로필 보기
-        </button>
+        </Link>
 
         {status === 'idle' ? (
           <button
