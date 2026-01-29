@@ -20,7 +20,7 @@ export default function Splash() {
   };
 
   return (
-    <div className="relative h-screen w-full overflow-hidden text-slate-900">
+    <div className="relative h-screen w-full overflow-hidden">
       <div
         className="absolute inset-0"
         style={{
