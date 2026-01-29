@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import AgeStudentIdForm from '@/features/signup/ui/parts/AgeStudentIdForm';
-import CollegeSelect from '@/features/signup/ui/parts/CollegeSelect';
-import GenderForm from '@/features/signup/ui/parts/GenderForm';
+import {
+  NicknameForm,
+  AgeStudentIdForm,
+  CollegeSelect,
+  GenderForm,
+} from '@/features/signup/ui/steps/step-2';
 import { SignupStepLayout } from '@/widgets/signup/SignupStepLayout';
-import NicknameForm from '@/features/signup/ui/parts/NicknameForm';
 
 type FunnelStep = 'nickname' | 'basic' | 'college' | 'gender';
 
@@ -40,14 +42,14 @@ export default function Step2Page() {
     if (funnelStep === 'nickname') setFunnelStep('basic');
     else if (funnelStep === 'basic') setFunnelStep('college');
     else if (funnelStep === 'college') setFunnelStep('gender');
-    else router.push('/signup/step-3'); // Navigate to Personality (New Step 3)
+    else router.push('/signup/step-3');
   };
 
   const handleBack = () => {
     if (funnelStep === 'gender') setFunnelStep('college');
     else if (funnelStep === 'college') setFunnelStep('basic');
     else if (funnelStep === 'basic') setFunnelStep('nickname');
-    else router.back(); // Go back to Step 1 (Email)
+    else router.back();
   };
 
   const current = stepConfig[funnelStep];

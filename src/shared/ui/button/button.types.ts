@@ -1,1 +1,1 @@
-export type ButtonVariant = 'primary' | 'skyblue' | 'blueGreen' | 'yellow' | 'kakao';
+export type ButtonVariant = 'neutral' | 'primary' | 'skyblue' | 'blueGreen' | 'yellow' | 'kakao';
