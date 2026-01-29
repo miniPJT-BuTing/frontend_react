@@ -3,9 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { SignupStepLayout } from '@/widgets/signup/SignupStepLayout';
-import MbtiPicker from '@/features/signup/ui/parts/MbtiPicker';
-import KeywordPicker from '@/features/signup/ui/parts/KeywordPicker';
-import OneLiner from '@/features/signup/ui/parts/OneLiner';
+import { MbtiPicker, KeywordPicker, OneLiner } from '@/features/signup/ui/steps/step-3';
 
 type FunnelStep = 'mbti' | 'keyword' | 'oneLiner';
 
@@ -33,13 +31,13 @@ export default function Step3Page() {
   const handleNext = () => {
     if (funnelStep === 'mbti') setFunnelStep('keyword');
     else if (funnelStep === 'keyword') setFunnelStep('oneLiner');
-    else router.push('/signup/step-4'); // Navigate to Personality (New Step 3)
+    else router.push('/signup/step-4');
   };
 
   const handleBack = () => {
     if (funnelStep === 'oneLiner') setFunnelStep('keyword');
     else if (funnelStep === 'keyword') setFunnelStep('mbti');
-    else router.back(); // Go back to Step 1 (Email)
+    else router.back();
   };
 
   const current = stepConfig[funnelStep];

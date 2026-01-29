@@ -31,7 +31,7 @@ export default function KeywordGrid({
               type="button"
               onClick={() => onToggle(k)}
               className={[
-                'h-10 rounded-full border border-black px-3',
+                'h-10 rounded-full border-2 border-black px-3',
                 'inline-flex items-center justify-center',
                 'text-sm font-extrabold leading-none',
                 'transition-transform transition-colors',

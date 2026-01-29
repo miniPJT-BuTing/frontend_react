@@ -2,13 +2,13 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { SignupStepLayout } from '@/widgets/signup/SignupStepLayout';
 import {
   NicknameForm,
   AgeStudentIdForm,
   CollegeSelect,
   GenderForm,
 } from '@/features/signup/ui/steps/step-2';
-import { SignupStepLayout } from '@/widgets/signup/SignupStepLayout';
 
 type FunnelStep = 'nickname' | 'basic' | 'college' | 'gender';
 

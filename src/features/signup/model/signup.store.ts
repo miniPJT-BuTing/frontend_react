@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { SignupState, SignupProfile, SignupPersonality, SignupAvatar } from './signup.types';
+import type { PersonalityKeywordKey } from '@/shared/lib/personalityKeyword';
 
 const initialProfile: SignupProfile = {
   email: '',
@@ -12,7 +13,7 @@ const initialProfile: SignupProfile = {
 
 const initialPersonality: SignupPersonality = {
   mbti: null,
-  keywords: [],
+  keywords: [], // ✅ PersonalityKeywordKey[] 로 쓰게 될 것
   oneLiner: '',
 };
 
@@ -32,5 +33,19 @@ export const useSignupStore = create<SignupState>((set) => ({
   setProfile: (data) => set((s) => ({ ...s, ...data })),
   setPersonality: (data) => set((s) => ({ ...s, ...data })),
   setAvatar: (data) => set((s) => ({ ...s, ...data })),
+
+  toggleKeywordKey: (key: PersonalityKeywordKey) =>
+    set((s) => {
+      const exists = s.keywords.includes(key);
+
+      if (exists) {
+        return { ...s, keywords: s.keywords.filter((k) => k !== key) };
+      }
+
+      if (s.keywords.length >= 5) return s;
+
+      return { ...s, keywords: [...s.keywords, key] };
+    }),
+
   reset: () => set(initialState),
 }));

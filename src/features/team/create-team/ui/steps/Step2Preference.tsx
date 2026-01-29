@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import Image from 'next/image';
 
 import { useCreateTeamStore } from '../../model/createTeam.store';
+import { PERSONALITY_LABELS } from '@/shared/lib/personalityKeyword';
 
 import KeywordGrid from '@/shared/ui/KeywordGrid';
 import AgeRangeSection from '@/shared/ui/AgeRangeSection';
@@ -11,29 +12,6 @@ import AgeRangeSection from '@/shared/ui/AgeRangeSection';
 import moodIcon from '@/assets/icons/mood.png';
 import schoolIcon from '@/assets/icons/school.png';
 import calendarIcon from '@/assets/icons/calendar.png';
-
-const KEYWORDS = [
-  '연상',
-  '연하',
-  '동갑',
-  '신입생',
-  '연애',
-  '친목',
-  '술',
-  '취미',
-  '논리적',
-  '긍정적',
-  '배려심',
-  '진중함',
-  '열정적',
-  '다정함',
-  '책임감',
-  '털털함',
-  '현실적',
-  '쿨함',
-  '신중함',
-  '리더십',
-] as const;
 
 type Range = [number, number];
 
@@ -61,7 +39,6 @@ export default function Step2Preference() {
   );
 
   const ageLabel = useMemo(() => `${ageRange[0]}세 ~ ${ageRange[1]}세`, [ageRange]);
-  const selected = atmosphere;
 
   return (
     <div className="flex flex-col gap-8">
@@ -72,11 +49,13 @@ export default function Step2Preference() {
         </div>
 
         <KeywordGrid
-          keywords={KEYWORDS}
-          selected={selected}
+          keywords={PERSONALITY_LABELS}
+          selected={atmosphere}
           onToggle={(k) => {
             setPreferences({
-              atmosphere: selected.includes(k) ? selected.filter((v) => v !== k) : [...selected, k],
+              atmosphere: atmosphere.includes(k)
+                ? atmosphere.filter((v) => v !== k)
+                : [...atmosphere, k],
             });
           }}
         />

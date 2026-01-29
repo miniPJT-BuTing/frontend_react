@@ -9,7 +9,6 @@ export default function Step4Page() {
   const router = useRouter();
 
   const handleComplete = () => {
-    // Submit data logic here
     console.log('Signup Complete!');
     router.push('/home');
   };
