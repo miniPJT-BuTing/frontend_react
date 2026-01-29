@@ -1,7 +1,7 @@
 import React from 'react';
-import { useSignupStore } from '../../model/signup.store';
+import { useSignupStore } from '@/features/signup/model';
 
-export default function NicknameForm() {
+export function NicknameForm() {
   const { nickname, setProfile } = useSignupStore();
 
   return (
@@ -12,7 +12,7 @@ export default function NicknameForm() {
         value={nickname}
         onChange={(e) => setProfile({ nickname: e.target.value })}
         placeholder="닉네임을 입력해주세요"
-        className="h-14 w-full rounded-full border border-black px-4 text-base outline-none focus:bg-gray-50"
+        className="h-14 w-full rounded-full border-2 border-black px-4 text-base outline-none focus:bg-gray-50"
       />
     </div>
   );

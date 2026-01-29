@@ -1,8 +1,8 @@
 import React from 'react';
-import { useSignupStore } from '../../model/signup.store';
-import { RetroButton } from '@/shared/ui/RetroButton';
+import { useSignupStore } from '@/features/signup/model';
+import { RetroButton } from '@/shared/ui/button/RetroButton';
 
-export default function GenderForm() {
+export function GenderForm() {
   const { gender, setProfile } = useSignupStore();
 
   return (
@@ -13,7 +13,7 @@ export default function GenderForm() {
           type="button"
           variant="neutral"
           className={`h-14 w-full text-base ${gender === 'male' ? '!bg-[#F7ABCF]' : ''}`}
-          // isActive={gender === 'male'}
+          isActive={gender === 'male'}
           onClick={() => setProfile({ gender: 'male' })}
         >
           남성
@@ -22,7 +22,7 @@ export default function GenderForm() {
           type="button"
           variant="neutral"
           className={`h-14 w-full text-base ${gender === 'female' ? '!bg-[#F7ABCF]' : ''}`}
-          // isActive={gender === 'female'}
+          isActive={gender === 'female'}
           onClick={() => setProfile({ gender: 'female' })}
         >
           여성

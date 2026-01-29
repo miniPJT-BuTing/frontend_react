@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { RetroButton } from '@/shared/ui/RetroButton';
+import { RetroButton } from '@/shared/ui/button/RetroButton';
 import { CreateTeamHeader } from '@/widgets/create-team-header/CreateTeamHeader';
 
 interface CreateTeamStepLayoutProps {

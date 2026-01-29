@@ -21,13 +21,12 @@ export const BottomToast = ({
     return () => clearTimeout(t);
   }, [isVisible, duration, onClose]);
 
-  // 항상 렌더링해서 exit 애니메이션 가능
   const show = isVisible;
 
   const iconBg = {
-    success: 'bg-[#BFEBD6]',
-    error: 'bg-[#F7ABCF]',
-    info: 'bg-[#CFE9FF]',
+    success: 'bg-[var(--color-success)]',
+    error: 'bg-[var(--color-warning)]',
+    info: 'bg-[var(--color-background)]',
   }[type];
 
   const iconText = {
@@ -40,7 +39,7 @@ export const BottomToast = ({
     <div className="pointer-events-none fixed inset-x-0 bottom-[7rem] z-50 flex justify-center px-4">
       <div
         className={`
-          flex items-center gap-2
+          flex items-center gap-3
           rounded-full
           bg-black/70
           px-4 py-2
@@ -54,7 +53,7 @@ export const BottomToast = ({
       >
         <div
           className={`
-            flex h-6 w-6 items-center justify-center
+            flex h-5 w-5 items-center justify-center
             rounded-full
             ${iconBg}
             text-[12px] font-bold text-black

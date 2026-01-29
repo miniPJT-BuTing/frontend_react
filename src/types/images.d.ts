@@ -14,7 +14,7 @@ declare module '*.jpeg' {
 }
 
 declare module '*.svg' {
-  const content: string;
+  const content: import('next/image').StaticImageData;
   export default content;
 }
 
