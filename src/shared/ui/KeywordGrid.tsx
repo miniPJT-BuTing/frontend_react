@@ -16,7 +16,7 @@ export default function KeywordGrid({
       <div className="mb-3 flex items-center justify-between">
         <span className="text-sm font-extrabold text-black">키워드</span>
 
-        <span className="rounded-full border border-black bg-[#FEFED0] px-3 py-1 text-xs font-extrabold text-black">
+        <span className="rounded-full border-2 border-black bg-[var(--color-yellow)] px-3 py-1 text-xs font-extrabold text-black">
           {selectedCount > 0 ? `${selectedCount}개 선택` : '선택해주세요'}
         </span>
       </div>
@@ -38,7 +38,7 @@ export default function KeywordGrid({
                 'active:translate-y-[1px]',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/60',
                 active
-                  ? 'bg-[#F7ABCF] text-black shadow-[0_2px_0_0_rgba(0,0,0,1)]'
+                  ? 'bg-[var(--color-primary)] text-black shadow-[0_2px_0_0_rgba(0,0,0,1)]'
                   : 'bg-white text-black hover:bg-slate-50',
               ].join(' ')}
             >
