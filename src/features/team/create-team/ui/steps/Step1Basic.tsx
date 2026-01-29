@@ -4,7 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import { useCreateTeamStore } from '@/features/team/create-team/model/createTeam.store';
 import HeartIcon from '@/assets/icons/heart.png';
-import IntroIcon from '@/assets/icons/matching-intro.png';
+import IntroIcon from '@/assets/icons/matching-Intro.png';
 
 const TITLE_MAX = 40;
 const INTRO_MAX = 200;

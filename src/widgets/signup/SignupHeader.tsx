@@ -19,7 +19,7 @@ export const SignupHeader = ({ step, totalSteps = 6, onBack }: SignupHeaderProps
             w-10 h-10
             flex items-center justify-center
             rounded-full
-            border border-black
+            border-2 border-black
             bg-white
             transition-all
           "
@@ -33,11 +33,11 @@ export const SignupHeader = ({ step, totalSteps = 6, onBack }: SignupHeaderProps
           className="
       px-4 py-2
       rounded-full
-      border border-black
+      border-2 border-black
       text-lg font-bold uppercase
       bg-gradient-to-b
-      from-[#FFFFFF]
-      to-[#68D0E7]
+      from-[var(--color-background)]
+      to-[var(--color-blueGreen)]
       text-black
     "
         >

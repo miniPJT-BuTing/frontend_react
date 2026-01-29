@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import AgeStudentIdForm from '@/features/signup/ui/parts/AgeStudentIdForm';
 import CollegeSelect from '@/features/signup/ui/parts/CollegeSelect';
 import GenderForm from '@/features/signup/ui/parts/GenderForm';
-import { SignupStepLayout } from '@/widgets/signup-layout/SignupStepLayout';
+import { SignupStepLayout } from '@/widgets/signup/SignupStepLayout';
 import NicknameForm from '@/features/signup/ui/parts/NicknameForm';
 
 type FunnelStep = 'nickname' | 'basic' | 'college' | 'gender';

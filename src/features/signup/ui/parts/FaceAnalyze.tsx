@@ -1,5 +1,5 @@
 import React from 'react';
-import { RetroButton } from '@/shared/ui/RetroButton';
+import { RetroButton } from '@/shared/ui/button/RetroButton';
 
 export default function FaceAnalyze() {
   return (

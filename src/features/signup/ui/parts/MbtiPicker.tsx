@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSignupStore } from '../../model/signup.store';
-import { RetroButton } from '@/shared/ui/RetroButton';
+import { RetroButton } from '@/shared/ui/button/RetroButton';
 
 // Pairs defined as Top/Bottom for each column
 const MBTI_COLS = [

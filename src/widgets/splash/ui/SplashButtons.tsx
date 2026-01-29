@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
 import chatIcon from '@/assets/icons/chat.png';
-import { ShadowButton } from '@/shared/ui/shadow-button/ShadowButton';
+import { ShadowButton } from '@/shared/ui/button';
 
 type Props = {
   onKakaoSignup?: () => void;
@@ -17,10 +17,13 @@ export default function SplashButtons({ onKakaoSignup, onLogin }: Props) {
         leftIcon={
           <Image src={chatIcon} alt="Chat Icon" width={40} height={40} priority draggable={false} />
         }
-        label="카카오로 회원가입 하기"
-      />
+      >
+        카카오로 회원가입 하기
+      </ShadowButton>
 
-      <ShadowButton onClick={onLogin} variant="primary" label="로그인 하기" />
+      <ShadowButton onClick={onLogin} variant="primary">
+        로그인 하기
+      </ShadowButton>
     </div>
   );
 }

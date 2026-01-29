@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { SignupStepLayout } from '@/widgets/signup-layout/SignupStepLayout';
+import { SignupStepLayout } from '@/widgets/signup/SignupStepLayout';
 import MbtiPicker from '@/features/signup/ui/parts/MbtiPicker';
 import KeywordPicker from '@/features/signup/ui/parts/KeywordPicker';
 import OneLiner from '@/features/signup/ui/parts/OneLiner';

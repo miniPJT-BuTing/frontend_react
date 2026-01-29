@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { RetroButton } from '@/shared/ui/RetroButton';
-import { SignupHeader } from '@/widgets/signup-header/SignupHeader';
+import { RetroButton } from '@/shared/ui/button';
+import { SignupHeader } from '@/widgets/signup';
 
 interface SignupStepLayoutProps {
   step: number;
@@ -14,7 +14,6 @@ interface SignupStepLayoutProps {
   onNext: () => void;
   onBack?: () => void; // Added optional onBack
   nextLabel?: string;
-  nextButtonVariant?: 'primary' | 'secondary' | 'neutral';
 }
 
 export const SignupStepLayout = ({
@@ -26,7 +25,6 @@ export const SignupStepLayout = ({
   onNext,
   onBack, // Destructure
   nextLabel = '다음',
-  nextButtonVariant = 'primary',
 }: SignupStepLayoutProps) => {
   const router = useRouter();
 
@@ -54,12 +52,7 @@ export const SignupStepLayout = ({
         </div>
 
         <div className="fixed bottom-6 left-0 right-0 px-6 max-w-[480px] mx-auto z-10">
-          <RetroButton
-            fullWidth
-            onClick={onNext}
-            className="h-14 text-lg"
-            variant={nextButtonVariant}
-          >
+          <RetroButton onClick={onNext} variant="yellow">
             {nextLabel}
           </RetroButton>
         </div>

@@ -1,8 +1,9 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import Step4Avator from '@/features/signup/ui/steps/Step4';
-import { SignupStepLayout } from '@/widgets/signup-layout/SignupStepLayout';
+import FaceAnalyze from '@/features/signup/ui/parts/FaceAnalyze';
+import AnimalPicker from '@/features/signup/ui/parts/AnimalPicker';
+import { SignupStepLayout } from '@/widgets/signup/SignupStepLayout';
 
 export default function Step4Page() {
   const router = useRouter();
@@ -21,9 +22,11 @@ export default function Step4Page() {
       subtitle="나만의 캐릭터를 만들어보세요."
       onNext={handleComplete}
       nextLabel="완료하기"
-      nextButtonVariant="secondary"
     >
-      <Step4Avator />
+      <div className="flex flex-col gap-8">
+        <FaceAnalyze />
+        <AnimalPicker />
+      </div>
     </SignupStepLayout>
   );
 }
