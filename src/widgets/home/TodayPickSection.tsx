@@ -66,7 +66,7 @@ export default function TodayPickSection() {
             meta={p.meta}
             members={p.members}
             status={p.status}
-            onClickProfile={() => console.log('팀 프로필 보기', p.id)}
+            profileLink={`/teams/${p.id}`}
             onClickRequest={() => console.log('매칭 요청', p.id)}
           />
         ))}
