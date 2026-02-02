@@ -1,6 +1,10 @@
 import { colors } from './colors';
 
-function flatten(obj: Record<string, any>, prefix = 'color', acc: Record<string, string> = {}) {
+type ColorMap = {
+  [key: string]: string | ColorMap;
+};
+
+function flatten(obj: ColorMap, prefix = 'color', acc: Record<string, string> = {}) {
   for (const [key, value] of Object.entries(obj)) {
     const name = `${prefix}-${key}`;
 
