@@ -1,5 +1,3 @@
-import { KeywordGrid } from '@/shared/ui/KeywordGrid';
-
 type Props = {
   title: string;
   description: string;
