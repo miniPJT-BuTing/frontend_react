@@ -14,7 +14,7 @@ interface CreateTeamStepLayoutProps {
   onNext: () => void;
   onBack?: () => void;
   nextLabel?: string;
-  nextButtonVariant?: 'primary' | 'secondary' | 'neutral';
+  nextButtonVariant?: 'neutral' | 'primary' | 'skyblue' | 'blueGreen' | 'yellow' | 'kakao';
 }
 
 export const CreateTeamStepLayout = ({
@@ -47,12 +47,7 @@ export const CreateTeamStepLayout = ({
         </div>
 
         <div className="fixed bottom-6 left-0 right-0 px-6 max-w-[480px] mx-auto z-10">
-          <RetroButton
-            fullWidth
-            onClick={onNext}
-            className="h-14 text-lg"
-            variant={nextButtonVariant}
-          >
+          <RetroButton onClick={onNext} className="h-14 text-lg w-full" variant={nextButtonVariant}>
             {nextLabel}
           </RetroButton>
         </div>
