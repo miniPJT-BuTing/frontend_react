@@ -1,5 +1,8 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+import { use } from 'react';
+
 import { TeamDetailHeader } from '@/widgets/team-detail/TeamDetailHeader';
 import { TeamTitleSection } from '@/widgets/team-detail/TeamTitleSection';
 import { TeamMembersRow } from '@/widgets/team-detail/TeamMembersRow';
@@ -8,8 +11,11 @@ import { TeamIntroduction } from '@/widgets/team-detail/TeamIntroduction';
 import { TeamActionFooter } from '@/widgets/team-detail/TeamActionFooter';
 
 // Mock Data
+const currentUserId = 'm1'; // 로그인한 사용자 ID (실제로는 Auth Store 등에서 가져옴)
+
 const mockTeamData = {
   id: 't1',
+  leaderId: 'm1', // 팀장의 ID (이 값이 currentUserId와 같으면 내 팀)
   title: '동아대 디자인과랑 4:4 미팅해요! 🎨',
   createdAt: '01.29',
   specs: {
@@ -59,12 +65,21 @@ const mockTeamData = {
   ],
 };
 
-export default function TeamPage({ params }: { params: { teamId: string } }) {
+export default function TeamPage({ params }: { params: Promise<{ teamId: string }> }) {
+  const router = useRouter();
+  const { teamId } = use(params);
+  const isMyTeam = mockTeamData.leaderId === currentUserId;
+
   const handleRequest = () => {
     alert('매칭 요청을 보냈습니다! (Mock)');
   };
 
+  const handleEdit = () => {
+    router.push(`/teams/${teamId}/edit`);
+  };
+
   return (
+    // ... (rest of the component)
     <main className="flex h-screen flex-col bg-white">
       <TeamDetailHeader />
 
@@ -76,7 +91,7 @@ export default function TeamPage({ params }: { params: { teamId: string } }) {
         <TeamIntroduction content={mockTeamData.introduction} />
       </div>
 
-      <TeamActionFooter onClickRequest={handleRequest} />
+      <TeamActionFooter onRequest={handleRequest} onEdit={handleEdit} isOwnTeam={isMyTeam} />
     </main>
   );
 }
