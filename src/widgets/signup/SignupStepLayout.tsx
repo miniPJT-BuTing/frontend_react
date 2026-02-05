@@ -52,7 +52,7 @@ export const SignupStepLayout = ({
         </div>
 
         <div className="fixed bottom-6 left-0 right-0 px-6 max-w-[480px] mx-auto z-10">
-          <RetroButton onClick={onNext} variant="yellow">
+          <RetroButton onClick={onNext} variant="yellow" className="w-full">
             {nextLabel}
           </RetroButton>
         </div>
