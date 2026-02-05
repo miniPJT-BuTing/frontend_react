@@ -1,3 +1,6 @@
+import Link from 'next/link';
+import type { Route } from 'next';
+
 type ChatItem = {
   id: number;
   title: string;
@@ -35,8 +38,9 @@ export default function ChatsPage() {
     <div className="space-y-8 py-4">
       <div className="flex flex-col gap-3">
         {MOCK_CHATS.map((chat) => (
-          <button
+          <Link
             key={chat.id}
+            href={`/chats/${chat.id}` as Route}
             className="flex w-full items-center gap-3 rounded-[18px] border border-black bg-white p-3 text-left active:scale-[0.99]"
           >
             <div className="relative shrink-0">
@@ -56,7 +60,7 @@ export default function ChatsPage() {
 
               <p className="mt-1 truncate text-[12px] text-gray-600">{chat.lastMessage}</p>
             </div>
-          </button>
+          </Link>
         ))}
       </div>
     </div>
