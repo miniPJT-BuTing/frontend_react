@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter, useParams } from 'next/navigation';
 import { Megaphone, Vote, Image as ImageIcon, Camera, MapPin, Calendar, FileText, Smile } from 'lucide-react';
 
 type Props = {
@@ -19,7 +20,23 @@ const MENU_ITEMS = [
 ];
 
 export default function ChatPlusMenu({ isOpen, onClose }: Props) {
-  const handleClick = (itemLabel: string) => {
+  const router = useRouter();
+  const params = useParams();
+  const roomId = params.roomId as string;
+
+  const handleClick = (itemId: string, itemLabel: string) => {
+    if (itemId === 'notice') {
+      router.push(`/chats/${roomId}/notice/new`);
+      onClose();
+      return;
+    }
+
+    if (itemId === 'vote') {
+      router.push(`/chats/${roomId}/vote/new`);
+      onClose();
+      return;
+    }
+
     alert(`${itemLabel} 기능은 준비 중입니다!`);
     onClose();
   };
@@ -47,7 +64,7 @@ export default function ChatPlusMenu({ isOpen, onClose }: Props) {
           {MENU_ITEMS.map((item) => (
             <button
               key={item.id}
-              onClick={() => handleClick(item.label)}
+              onClick={() => handleClick(item.id, item.label)}
               className="flex flex-col items-center gap-2 transition-transform active:scale-95"
             >
               <div

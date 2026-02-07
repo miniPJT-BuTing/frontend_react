@@ -1,7 +1,6 @@
-'use client';
-
 import { X, User, Vote, Megaphone, LogOut } from 'lucide-react';
 import { useEffect } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 
 type Props = {
   isOpen: boolean;
@@ -22,6 +21,10 @@ const VOTES = [
 ];
 
 export default function ChatSidePanel({ isOpen, onClose }: Props) {
+  const router = useRouter();
+  const params = useParams();
+  const roomId = params.roomId as string;
+
   // 패널이 열렸을 때 백그라운드 스크롤 막기
   useEffect(() => {
     if (isOpen) {
@@ -33,6 +36,11 @@ export default function ChatSidePanel({ isOpen, onClose }: Props) {
       document.body.style.overflow = '';
     };
   }, [isOpen]);
+
+  const handleVoteClick = (voteId: string) => {
+    router.push(`/chats/${roomId}/vote/${voteId}`);
+    onClose();
+  };
 
   return (
     <>
@@ -111,7 +119,11 @@ export default function ChatSidePanel({ isOpen, onClose }: Props) {
 
                {/* Mock Votes */}
                {VOTES.map((vote) => (
-                 <div key={vote.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl active:bg-gray-100 transition-colors cursor-pointer">
+                 <div 
+                   key={vote.id} 
+                   onClick={() => handleVoteClick(vote.id)}
+                   className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl active:bg-gray-100 transition-colors cursor-pointer"
+                 >
                     <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center shrink-0 border border-gray-200">
                       <Vote size={14} className="text-[#FF9BC2]" />
                     </div>
