@@ -1,25 +1,32 @@
 'use client';
 
 type Props = {
-  onClickRequest: () => void;
+  onRequest: () => void;
+  onEdit?: () => void;
   isOwnTeam?: boolean;
 };
 
-export function TeamActionFooter({ onClickRequest, isOwnTeam = false }: Props) {
-  if (isOwnTeam) return null;
-
+export function TeamActionFooter({ onRequest, onEdit, isOwnTeam = false }: Props) {
   return (
     <div className="w-full shrink-0 bg-white border-t border-gray-100 px-5 pb-8 pt-4">
       <div className="mx-auto max-w-[440px]">
-        {' '}
-        {/* Max width constrained for better look on larger screens within the layout */}
-        <button
-          type="button"
-          onClick={onClickRequest}
-          className="w-full rounded-full border border-black bg-[#FF9BC2] py-3 text-[14px] font-extrabold text-black active:translate-y-[1px]"
-        >
-          매칭 요청하기
-        </button>
+        {isOwnTeam ? (
+          <button
+            type="button"
+            onClick={onEdit}
+            className="w-full rounded-full border border-black bg-white py-4 text-[16px] font-bold text-black shadow-sm active:bg-gray-50 active:scale-[0.99] transition-transform"
+          >
+            팀 정보 수정하기
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={onRequest}
+            className="w-full rounded-full bg-[#F7ABCF] py-4 text-[16px] font-bold text-white shadow-sm active:bg-[#F596C2] active:scale-[0.99] transition-transform"
+          >
+            매칭 요청하기
+          </button>
+        )}
       </div>
     </div>
   );

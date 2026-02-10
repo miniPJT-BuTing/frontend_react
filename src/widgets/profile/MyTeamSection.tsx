@@ -29,7 +29,7 @@ export default function MyTeamSection() {
           title={team.title}
           meta={team.meta}
           members={team.members}
-          primaryAction={{ label: '팀 상세 보기', href: '/team' }}
+          primaryAction={{ label: '팀 상세 보기', href: `/teams/${team.id}` }}
           secondaryAction={{ label: '채팅하러 가기', href: '/chats' }}
         />
       ) : (

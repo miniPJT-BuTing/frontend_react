@@ -24,6 +24,7 @@ interface CreateTeamState {
     >
   ) => void;
   setMembers: (data: Partial<Pick<CreateTeamState, 'memberCount' | 'invitedMembers'>>) => void;
+  setAllData: (data: Partial<CreateTeamState>) => void;
   reset: () => void;
 }
 
@@ -41,6 +42,7 @@ export const useCreateTeamStore = create<CreateTeamState>((set) => ({
   setBasicInfo: (data) => set((state) => ({ ...state, ...data })),
   setPreferences: (data) => set((state) => ({ ...state, ...data })),
   setMembers: (data) => set((state) => ({ ...state, ...data })),
+  setAllData: (data) => set((state) => ({ ...state, ...data })),
   reset: () =>
     set({
       title: '',
