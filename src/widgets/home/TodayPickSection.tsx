@@ -8,28 +8,28 @@ import TeamPickCard from '@/entities/team/ui/TeamPickCard';
 
 const mock = [
   {
-    id: 't1',
+    id: '1',
     title: '동아대 디자인과랑 4:4 미팅해요',
     meta: ['4:4', '동아대 등', '23학번', '22세'],
     members: 4,
     status: 'idle' as const,
   },
   {
-    id: 't2',
+    id: '2',
     title: '동아대 디자인과랑 4:4 미팅해요',
     meta: ['4:4', '동아대 등', '23학번', '22세'],
     members: 4,
     status: 'waiting' as const,
   },
   {
-    id: 't3',
+    id: '3',
     title: '동아대 디자인과랑 4:4 미팅해요',
     meta: ['4:4', '동아대 등', '23학번', '22세'],
     members: 4,
     status: 'idle' as const,
   },
   {
-    id: 't4',
+    id: '4',
     title: '동아대 디자인과랑 4:4 미팅해요',
     meta: ['4:4', '동아대 등', '23학번', '22세'],
     members: 4,

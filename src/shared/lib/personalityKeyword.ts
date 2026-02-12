@@ -1,24 +1,25 @@
+// 1. 회원 성격 키워드 (Personality Type) - 20개
 export type PersonalityKeywordKey =
-  | 'LIVELINESS'
+  | 'AFFECTION'
   | 'CALMNESS'
-  | 'ENTHUSIASM'
+  | 'CASUALNESS'
+  | 'CAUTION'
+  | 'CONSIDERATION'
   | 'COOLNESS'
+  | 'EMOTIONALITY'
+  | 'ENTHUSIASM'
   | 'HONESTY'
   | 'HUMOR'
-  | 'SOCIABILITY'
-  | 'SENSE'
-  | 'AFFECTION'
-  | 'CASUALNESS'
-  | 'OPTIMISM'
-  | 'EMOTIONALITY'
+  | 'LEADERSHIP'
+  | 'LIVELINESS'
   | 'LOGIC'
+  | 'OPTIMISM'
   | 'POSITIVITY'
   | 'REALISM'
-  | 'CONSIDERATION'
-  | 'SERIOUSNESS'
   | 'RESPONSIBILITY'
-  | 'CAUTION'
-  | 'LEADERSHIP';
+  | 'SENSE'
+  | 'SERIOUSNESS'
+  | 'SOCIABILITY';
 
 export type PersonalityKeyword = {
   key: PersonalityKeywordKey;
@@ -26,32 +27,62 @@ export type PersonalityKeyword = {
 };
 
 export const PERSONALITY_KEYWORDS = [
-  { key: 'LIVELINESS', label: '활발함' },
-  { key: 'CALMNESS', label: '차분함' },
+  { key: 'LIVELINESS', label: '활발한' },
+  { key: 'CALMNESS', label: '조용한' },
   { key: 'ENTHUSIASM', label: '열정적' },
-  { key: 'COOLNESS', label: '쿨함' },
-
-  { key: 'HONESTY', label: '솔직함' },
+  { key: 'COOLNESS', label: '시크한' },
+  { key: 'HONESTY', label: '솔직한' },
   { key: 'HUMOR', label: '유머러스' },
   { key: 'SOCIABILITY', label: '사교적' },
-  { key: 'SENSE', label: '센스있음' },
-  { key: 'AFFECTION', label: '다정함' },
-  { key: 'CASUALNESS', label: '털털함' },
-
-  { key: 'OPTIMISM', label: '낙천적' },
+  { key: 'SENSE', label: '센스있는' },
+  { key: 'AFFECTION', label: '다정다감' },
+  { key: 'CASUALNESS', label: '털털한' },
+  { key: 'CAUTION', label: '신중한' },
+  { key: 'CONSIDERATION', label: '배려심' },
   { key: 'EMOTIONALITY', label: '감성적' },
-  { key: 'LOGIC', label: '논리적' },
+  { key: 'LOGIC', label: '이성적' },
+  { key: 'OPTIMISM', label: '낙천적' },
   { key: 'POSITIVITY', label: '긍정적' },
   { key: 'REALISM', label: '현실적' },
-
-  { key: 'CONSIDERATION', label: '배려심' },
-  { key: 'SERIOUSNESS', label: '진중함' },
   { key: 'RESPONSIBILITY', label: '책임감' },
-  { key: 'CAUTION', label: '신중함' },
+  { key: 'SERIOUSNESS', label: '진지한' },
   { key: 'LEADERSHIP', label: '리더십' },
 ] as const satisfies readonly PersonalityKeyword[];
 
-// 라벨 유니온/배열 (KeywordGrid에 바로 넣을 용도)
+
+// 2. 팀 선호 분위기 키워드 (Preferred Mood) - 8개
+export type TeamMoodKey =
+  | 'ROMANTIC_TENSION'
+  | 'FRIENDSHIP_TENSION'
+  | 'FLIRTY_TENSION'
+  | 'CALM_TENSION'
+  | 'HIGH_TENSION'
+  | 'DRINKING_TENSION'
+  | 'EMOTIONAL_TENSION'
+  | 'ANY_MOOD';
+
+export type TeamMoodKeyword = {
+  key: TeamMoodKey;
+  label: string;
+};
+
+export const TEAM_MOOD_KEYWORDS = [
+  { key: 'ROMANTIC_TENSION', label: '연애 텐션' },
+  { key: 'FRIENDSHIP_TENSION', label: '친구 텐션' },
+  { key: 'FLIRTY_TENSION', label: '썸 텐션' },
+  { key: 'CALM_TENSION', label: '차분 텐션' },
+  { key: 'HIGH_TENSION', label: '하이 텐션' },
+  { key: 'DRINKING_TENSION', label: '술 텐션' },
+  { key: 'EMOTIONAL_TENSION', label: '감성 텐션' },
+  { key: 'ANY_MOOD', label: '상관 없음' },
+] as const satisfies readonly TeamMoodKeyword[];
+
+export const TEAM_MOOD_LABEL_TO_KEY = Object.fromEntries(
+  TEAM_MOOD_KEYWORDS.map((k) => [k.label, k.key])
+) as Record<string, TeamMoodKey>;
+
+
+// 라벨 유니온/배열 (KeywordGrid에 바로 넣을 용도) - Personality 기준
 export type PersonalityKeywordLabel = (typeof PERSONALITY_KEYWORDS)[number]['label'];
 export const PERSONALITY_LABELS = PERSONALITY_KEYWORDS.map(
   (k) => k.label

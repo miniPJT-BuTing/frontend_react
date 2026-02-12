@@ -10,7 +10,7 @@ type Team = {
 };
 
 const mockTeam: Team | null = {
-  id: 't1',
+  id: '4',
   title: '동아대 디자인과랑 4:4 미팅해요',
   meta: ['4:4', '동아대 등', '23학번', '22세'],
   members: 4,
