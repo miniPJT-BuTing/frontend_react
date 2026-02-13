@@ -10,7 +10,7 @@ import { TeamSpecs } from '@/widgets/team-detail/TeamSpecs';
 import { TeamIntroduction } from '@/widgets/team-detail/TeamIntroduction';
 import { TeamActionFooter } from '@/widgets/team-detail/TeamActionFooter';
 
-import { getTeamDetail, deleteTeam } from '@/features/team/api/team.api';
+import { getTeamDetail, deleteTeam, requestMatching } from '@/features/team/api/team.api';
 
 // 임시 테스트용 유저 ID (백엔드 헤더 설정과 동일하게)
 const TEST_USER_ID = '1';
@@ -84,6 +84,7 @@ export default function TeamPage({ params }: { params: Promise<{ teamId: string 
 
   const [teamData, setTeamData] = useState<TeamData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [requesting, setRequesting] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -154,8 +155,23 @@ export default function TeamPage({ params }: { params: Promise<{ teamId: string 
 
   const isMyTeam = teamData.leaderId === TEST_USER_ID;
 
-  const handleRequest = () => {
-    alert('매칭 요청을 보냈습니다! (Mock)');
+  const handleRequest = async () => {
+    try {
+      if (requesting) return;
+      setRequesting(true);
+      const targetTeamId = Number(teamId) || Number(teamData.id);
+      if (!targetTeamId) {
+        alert('유효하지 않은 팀 ID입니다.');
+        return;
+      }
+      const response = await requestMatching(targetTeamId);
+      alert(response.message || (response.isSuccess ? '매칭 요청을 보냈습니다.' : '요청이 처리되지 않았습니다.'));
+    } catch (error) {
+      console.error('Failed to request matching:', error);
+      alert('매칭 요청에 실패했습니다.');
+    } finally {
+      setRequesting(false);
+    }
   };
 
   const handleEdit = () => {

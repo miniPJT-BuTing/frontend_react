@@ -1,5 +1,10 @@
 import { create } from 'zustand';
 
+export interface InvitedMember {
+  memberId: number;
+  nickname: string;
+}
+
 interface CreateTeamState {
   // Step 1: Basic Info
   title: string;
@@ -13,8 +18,8 @@ interface CreateTeamState {
   maxAge: number | null;
 
   // Step 3: Members
-  memberCount: number; // 2, 3, 4
-  invitedMembers: string[]; // List of user IDs or names for now
+  memberCount: number; // 2, 3, 4, 5, 6
+  invitedMembers: InvitedMember[];
 
   // Actions
   setBasicInfo: (data: Partial<Pick<CreateTeamState, 'title' | 'introduction'>>) => void;

@@ -9,9 +9,10 @@ type Message = {
   senderName: string;
   avatarColor?: string;
   content: string;
-  type: 'text' | 'image';
+  type: 'text' | 'image' | 'vote';
   timestamp: string;
   isMe: boolean;
+  voteId?: string;
 };
 
 type Props = {

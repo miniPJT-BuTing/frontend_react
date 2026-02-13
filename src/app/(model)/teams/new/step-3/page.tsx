@@ -9,10 +9,16 @@ import { createTeam, type CreateTeamRequest } from '@/features/team/api/team.api
 // Enum Helper
 const getTeamSizeEnum = (count: number): string => {
   switch (count) {
-    case 2: return 'TWO_ON_TWO';
-    case 3: return 'THREE_ON_THREE';
-    case 4: return 'FOUR_ON_FOUR';
-    default: return 'TWO_ON_TWO';
+    case 2:
+      return 'TWO_ON_TWO';
+    case 3:
+      return 'THREE_ON_THREE';
+    case 4:
+      return 'FOUR_ON_FOUR';
+    case 5:
+      return 'FIVE_ON_FIVE';
+    default:
+      return 'SIX_ON_SIX';
   }
 };
 
@@ -33,20 +39,17 @@ export default function CreateTeamStep3Page() {
         preferredAgeMax: store.maxAge || 30,
         preferredEntryYearMin: store.minStudentId || 0,
         preferredEntryYearMax: store.maxStudentId || 99,
-        // invitedMembers는 현재 string[] (ID) -> number[] 변환 필요
-        inviteMemberIds: store.invitedMembers.map(id => parseInt(id, 10)).filter(n => !isNaN(n)),
+        inviteMemberIds: store.invitedMembers.map((member) => member.memberId),
       };
 
       const result = await createTeam(requestData);
-      
+
       console.log('Team Created! ID:', result.teamId);
       store.reset(); // 스토어 초기화
       router.push('/home'); // 생성 후 홈으로 이동 (또는 내 팀 상세 페이지)
     } catch (error) {
       console.error('Failed to create team:', error);
       alert('팀 생성에 실패했습니다. (API 오류)');
-      // 에러 나도 일단 이동 (개발 편의성)
-      router.push('/home'); 
     }
   };
 

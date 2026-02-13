@@ -12,7 +12,9 @@ const mapTeamSize = (size: string): number => {
   if (size === 'TWO_ON_TWO') return 2;
   if (size === 'THREE_ON_THREE') return 3;
   if (size === 'FOUR_ON_FOUR') return 4;
-  return 4; // Default
+  if (size === 'FIVE_ON_FIVE') return 5;
+  if (size === 'SIX_ON_SIX') return 6;
+  return 2;
 };
 
 const mapMood = (mood: string): string[] => {
@@ -54,8 +56,12 @@ export default function EditTeamPage({ params }: { params: Promise<{ teamId: str
           minAge: data.preferredAgeMin,
           maxAge: data.preferredAgeMax,
           memberCount: mapTeamSize(data.teamSize),
-          // invitedMembers는 멤버 ID 배열로 변환
-          invitedMembers: data.members ? data.members.map(m => m.id.toString()) : [], 
+          // 수정 플로우에서 초대 목록도 id+닉네임 형태로 보존
+          invitedMembers: data.members
+            ? data.members
+                .filter((m) => m.role !== 'LEADER')
+                .map((m) => ({ memberId: m.id, nickname: m.nickname }))
+            : [],
         });
         
         router.replace(`/teams/${teamId}/edit/step-1`);
