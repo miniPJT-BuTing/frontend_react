@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 
 import { useCreateTeamStore } from '../../model/createTeam.store';
+import { searchFriendsForTeamInvite, type TeamFriendSearchItem } from '@/features/team/api/team.api';
 
 import { Plus, X } from 'lucide-react';
 import profileIcon from '@/assets/icons/profile-nav.png';
@@ -13,9 +14,49 @@ export default function Step3Members() {
   const { memberCount, invitedMembers, setMembers } = useCreateTeamStore();
 
   const [query, setQuery] = useState('');
+  const [results, setResults] = useState<TeamFriendSearchItem[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
 
   const maxInvites = useMemo(() => Math.max(0, memberCount - 1), [memberCount]); // 본인 제외
-  const canAdd = query.trim().length > 0 && invitedMembers.length < maxInvites;
+  const canInviteMore = invitedMembers.length < maxInvites;
+
+  useEffect(() => {
+    const keyword = query.trim();
+
+    if (keyword.length < 2) {
+      setResults([]);
+      setSearchError(null);
+      return;
+    }
+
+    const timer = window.setTimeout(async () => {
+      try {
+        setIsSearching(true);
+        setSearchError(null);
+        const searched = await searchFriendsForTeamInvite(keyword);
+        setResults(searched);
+      } catch (error) {
+        console.error('Failed to search friends:', error);
+        setSearchError('친구 검색에 실패했어요. 잠시 후 다시 시도해주세요.');
+        setResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 250);
+
+    return () => window.clearTimeout(timer);
+  }, [query]);
+
+  const normalizedResults = useMemo(
+    () =>
+      (Array.isArray(results) ? results : []).filter(
+        (friend) => !invitedMembers.some((invited) => invited.memberId === friend.memberId)
+      ),
+    [results, invitedMembers]
+  );
+
+  const canAdd = canInviteMore && normalizedResults.length > 0;
 
   const handleMemberCountChange = (count: number) => {
     // 인원 수 줄이면 초대 인원도 잘라내기(UX)
@@ -26,18 +67,19 @@ export default function Step3Members() {
     setMembers({ memberCount: count });
   };
 
-  const handleAdd = () => {
-    const name = query.trim();
-    if (!name) return;
-    if (invitedMembers.includes(name)) return;
-    if (invitedMembers.length >= maxInvites) return;
+  const handleAdd = (friend: TeamFriendSearchItem) => {
+    if (invitedMembers.some((member) => member.memberId === friend.memberId)) return;
+    if (!canInviteMore) return;
 
-    setMembers({ invitedMembers: [...invitedMembers, name] });
+    setMembers({
+      invitedMembers: [...invitedMembers, { memberId: friend.memberId, nickname: friend.nickname }],
+    });
     setQuery('');
+    setResults([]);
   };
 
-  const handleRemove = (name: string) => {
-    setMembers({ invitedMembers: invitedMembers.filter((m) => m !== name) });
+  const handleRemove = (memberId: number) => {
+    setMembers({ invitedMembers: invitedMembers.filter((m) => m.memberId !== memberId) });
   };
 
   return (
@@ -91,7 +133,9 @@ export default function Step3Members() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') handleAdd();
+              if (e.key === 'Enter' && canAdd) {
+                handleAdd(normalizedResults[0]);
+              }
             }}
             placeholder="친구 닉네임 검색"
             className={[
@@ -104,7 +148,11 @@ export default function Step3Members() {
 
           <button
             type="button"
-            onClick={handleAdd}
+            onClick={() => {
+              if (canAdd) {
+                handleAdd(normalizedResults[0]);
+              }
+            }}
             disabled={!canAdd}
             className={[
               'h-12 w-12 rounded-full border border-black',
@@ -121,6 +169,34 @@ export default function Step3Members() {
           </button>
         </div>
 
+        {(query.trim().length >= 2 || isSearching || searchError) && (
+          <div className="rounded-xl border border-black bg-white p-3">
+            {isSearching && <p className="text-xs text-slate-500">친구를 검색하고 있어요...</p>}
+
+            {!isSearching && searchError && <p className="text-xs text-red-500">{searchError}</p>}
+
+            {!isSearching && !searchError && normalizedResults.length === 0 && (
+              <p className="text-xs text-slate-500">검색 결과가 없거나 이미 초대된 친구예요.</p>
+            )}
+
+            {!isSearching && !searchError && normalizedResults.length > 0 && (
+              <div className="flex flex-col gap-2">
+                {normalizedResults.slice(0, 6).map((friend) => (
+                  <button
+                    key={friend.memberId}
+                    type="button"
+                    onClick={() => handleAdd(friend)}
+                    className="flex items-center justify-between rounded-lg border border-black/15 bg-slate-50 px-3 py-2 text-left hover:bg-slate-100"
+                  >
+                    <span className="text-sm font-bold text-black">{friend.nickname}</span>
+                    <span className="text-xs text-slate-500">ID {friend.memberId}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="rounded-xl border border-black bg-white p-4 shadow-[0_3px_0_0_rgba(0,0,0,1)]">
           <div className="mb-3 flex items-center justify-between">
             <span className="text-sm font-extrabold text-black">초대 목록</span>
@@ -135,21 +211,21 @@ export default function Step3Members() {
             <div className="flex flex-col gap-2">
               {invitedMembers.map((member) => (
                 <div
-                  key={member}
+                  key={member.memberId}
                   className="flex items-center justify-between rounded-[14px] border border-black/10 bg-slate-50 px-4 py-3"
                 >
-                  <span className="text-sm font-extrabold text-black">{member}</span>
+                  <span className="text-sm font-extrabold text-black">{member.nickname}</span>
 
                   <button
                     type="button"
-                    onClick={() => handleRemove(member)}
+                    onClick={() => handleRemove(member.memberId)}
                     className={[
                       'inline-flex h-8 w-8 items-center justify-center rounded-full',
                       'border border-black/15 bg-white text-slate-500',
                       'active:translate-y-[1px]',
                       'hover:bg-slate-50',
                     ].join(' ')}
-                    aria-label={`${member} 삭제`}
+                    aria-label={`${member.nickname} 삭제`}
                   >
                     <X size={16} />
                   </button>

@@ -4,24 +4,35 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { use } from 'react';
 import { useCreateTeamStore } from '@/features/team/create-team/model/createTeam.store';
+import { getTeamDetail } from '@/features/team/api/team.api';
+import { TEAM_MOOD_LABEL_TO_KEY, type TeamMoodKey } from '@/shared/lib/personalityKeyword';
 
-// Mock API Call
-const fetchTeamData = async (teamId: string) => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 500));
+// Enum Helper (Reverse Mapping)
+const mapTeamSize = (size: string): number => {
+  if (size === 'TWO_ON_TWO') return 2;
+  if (size === 'THREE_ON_THREE') return 3;
+  if (size === 'FOUR_ON_FOUR') return 4;
+  if (size === 'FIVE_ON_FIVE') return 5;
+  if (size === 'SIX_ON_SIX') return 6;
+  return 2;
+};
 
-  return {
-    title: '동아대 디자인과랑 4:4 미팅해요! 🎨',
-    introduction:
-      '안녕하세요! 저희는 동아대학교 산업디자인과 재학 중인 4명입니다. \n 시험 끝나고 다 같이 신나게 놀고 싶어서 글 올려요! \n 술게임도 좋아하고 맛집 탐방도 좋아해요. 부담 없이 연락 주세요! 😊',
-    atmosphere: ['활발한', '술게임', '맛집탐방'], // 상세 페이지와 일치시킴 (키워드가 정확해야 함)
-    minStudentId: 20,
-    maxStudentId: 24,
-    minAge: 20,
-    maxAge: 25,
-    memberCount: 4,
-    invitedMembers: ['m1', 'm2'], // 실제 멤버 ID 등
-  };
+const mapMood = (mood: string): string[] => {
+  if (!mood) return [];
+  
+  const trimmed = mood.trim();
+  
+  // 1. 이미 Key인 경우 (ROMANTIC_TENSION)
+  if (Object.values(TEAM_MOOD_LABEL_TO_KEY).includes(trimmed as TeamMoodKey)) {
+    return [trimmed];
+  }
+
+  // 2. Label인 경우 (연애 텐션) -> Key로 변환
+  const key = TEAM_MOOD_LABEL_TO_KEY[trimmed];
+  if (key) return [key];
+
+  // 3. 매칭 안 되면 원본 반환 (혹시 모를 상황 대비)
+  return [trimmed];
 };
 
 export default function EditTeamPage({ params }: { params: Promise<{ teamId: string }> }) {
@@ -31,9 +42,34 @@ export default function EditTeamPage({ params }: { params: Promise<{ teamId: str
 
   useEffect(() => {
     const init = async () => {
-      const data = await fetchTeamData(teamId);
-      setAllData(data);
-      router.replace(`/teams/${teamId}/edit/step-1`);
+      try {
+        const data = await getTeamDetail(teamId);
+        
+        console.log('Loaded Mood:', data.preferredMood); // 디버깅용
+
+        setAllData({
+          title: data.title,
+          introduction: data.description,
+          atmosphere: mapMood(data.preferredMood), // Key 그대로 전달
+          minStudentId: data.preferredEntryYearMin,
+          maxStudentId: data.preferredEntryYearMax,
+          minAge: data.preferredAgeMin,
+          maxAge: data.preferredAgeMax,
+          memberCount: mapTeamSize(data.teamSize),
+          // 수정 플로우에서 초대 목록도 id+닉네임 형태로 보존
+          invitedMembers: data.members
+            ? data.members
+                .filter((m) => m.role !== 'LEADER')
+                .map((m) => ({ memberId: m.id, nickname: m.nickname }))
+            : [],
+        });
+        
+        router.replace(`/teams/${teamId}/edit/step-1`);
+      } catch (error) {
+        console.error('Failed to load team data:', error);
+        alert('팀 정보를 불러오는데 실패했습니다.');
+        router.back();
+      }
     };
 
     init();
