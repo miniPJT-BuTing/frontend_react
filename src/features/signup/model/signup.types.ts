@@ -4,6 +4,11 @@ export type SignupProfile = {
   email: string;
   nickname: string;
   college: string;
+  collegeId: number | null;
+  universityName: string;
+  universityDomainId: number | null;
+  signUpToken: string;
+  providerName: string;
   studentId: string;
   age: number | null;
   gender: Gender | null;

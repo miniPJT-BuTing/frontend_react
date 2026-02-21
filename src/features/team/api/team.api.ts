@@ -1,65 +1,26 @@
 import { apiInstance } from '@/shared/api/apiInstance';
+import type { ApiResponse } from '@/shared/api/api.types';
+import type {
+  ActionApiResult,
+  CreateTeamRequest,
+  CreateTeamResponse,
+  MatchingPostItem,
+  MatchingPostListParams,
+  TeamDetailResponse,
+  TeamFriendSearchItem,
+  UpdateTeamRequest,
+} from './team.types';
 
-export interface TeamDetailResponse {
-  teamId: number;
-  title: string;
-  description: string;
-  teamSize: string;
-  gender: string;
-  preferredMood: string;
-  preferredAgeMin: number;
-  preferredAgeMax: number;
-  preferredEntryYearMin: number;
-  preferredEntryYearMax: number;
-  currentMemberCount: number;
-  targetMemberCount: number;
-  leaderInfo: {
-    memberId: number;
-    nickname: string;
-    age: number;
-    bio: string;
-    universityName: string;
-    collegeName: string;
-    image?: string; // Optional
-  };
-  createdAt: string;
-  updatedAt: string;
-  members?: Array<{
-    id: number;
-    nickname: string;
-    mbti: string;
-    university: string;
-    department: string;
-    studentId: number;
-    age: number;
-    image: string;
-    role: 'LEADER' | 'MEMBER';
-  }>;
-}
-
-export interface MatchingPostListParams {
-  gender?: string;
-  teamSize?: string;
-  preferredMood?: string;
-  page?: number;
-  size?: number;
-  sort?: string;
-}
-
-export interface MatchingPostItem {
-  teamId: number;
-  title: string;
-  teamSize?: string;
-  preferredMood?: string;
-  preferredAgeMin?: number;
-  preferredAgeMax?: number;
-  preferredEntryYearMin?: number;
-  preferredEntryYearMax?: number;
-  currentMemberCount: number;
-  targetMemberCount: number;
-  universityName?: string;
-  status?: string;
-}
+export type {
+  ActionApiResult,
+  CreateTeamRequest,
+  CreateTeamResponse,
+  MatchingPostItem,
+  MatchingPostListParams,
+  TeamDetailResponse,
+  TeamFriendSearchItem,
+  UpdateTeamRequest,
+} from './team.types';
 
 const extractArrayFromUnknown = (raw: unknown): unknown[] => {
   if (Array.isArray(raw)) return raw;
@@ -131,54 +92,6 @@ const normalizeMatchingPostList = (raw: unknown): MatchingPostItem[] => {
   return normalized;
 };
 
-// 팀 상세 조회
-export const getTeamDetail = async (teamId: string | number): Promise<TeamDetailResponse> => {
-  const response = await apiInstance.get<BaseResponse<TeamDetailResponse>>(
-    `/v1/teams/matching-posts/${teamId}`
-  );
-  return response.data.result;
-};
-
-// 매칭 게시글 목록 조회
-export const getMatchingPosts = async (
-  params?: MatchingPostListParams
-): Promise<MatchingPostItem[]> => {
-  const response = await apiInstance.get<BaseResponse<unknown>>('/v1/teams/matching-posts', {
-    params,
-  });
-
-  return normalizeMatchingPostList(response.data.result);
-};
-
-export interface CreateTeamRequest {
-  title: string;
-  description: string;
-  preferredMood: string; // ENUM
-  teamSize: string; // ENUM
-  preferredAgeMin: number;
-  preferredAgeMax: number;
-  preferredEntryYearMin: number; // 학번 (e.g. 20)
-  preferredEntryYearMax: number;
-  inviteMemberIds: number[];
-}
-
-export interface CreateTeamResponse {
-  teamId: number;
-}
-
-export interface TeamFriendSearchItem {
-  memberId: number;
-  nickname: string;
-  universityName?: string;
-  collegeName?: string;
-}
-
-export interface ActionApiResult {
-  isSuccess: boolean;
-  code: string | number;
-  message: string;
-}
-
 const normalizeFriendSearchResult = (raw: unknown): TeamFriendSearchItem[] => {
   const toArray = (value: unknown): unknown[] => {
     if (Array.isArray(value)) return value;
@@ -188,7 +101,6 @@ const normalizeFriendSearchResult = (raw: unknown): TeamFriendSearchItem[] => {
       for (const key of candidates) {
         if (Array.isArray(obj[key])) return obj[key] as unknown[];
       }
-      // 단일 객체로 내려오는 경우 대비
       if ('memberId' in obj || 'id' in obj) return [obj];
     }
     return [];
@@ -221,15 +133,30 @@ const normalizeFriendSearchResult = (raw: unknown): TeamFriendSearchItem[] => {
   return normalized;
 };
 
-// 팀 생성
-export const createTeam = async (data: CreateTeamRequest): Promise<CreateTeamResponse> => {
-  const response = await apiInstance.post<BaseResponse<CreateTeamResponse>>('/v1/teams', data);
+export const getTeamDetail = async (teamId: string | number): Promise<TeamDetailResponse> => {
+  const response = await apiInstance.get<ApiResponse<TeamDetailResponse>>(
+    `/v1/teams/matching-posts/${teamId}`
+  );
   return response.data.result;
 };
 
-// 매칭 요청
+export const getMatchingPosts = async (
+  params?: MatchingPostListParams
+): Promise<MatchingPostItem[]> => {
+  const response = await apiInstance.get<ApiResponse<unknown>>('/v1/teams/matching-posts', {
+    params,
+  });
+
+  return normalizeMatchingPostList(response.data.result);
+};
+
+export const createTeam = async (data: CreateTeamRequest): Promise<CreateTeamResponse> => {
+  const response = await apiInstance.post<ApiResponse<CreateTeamResponse>>('/v1/teams', data);
+  return response.data.result;
+};
+
 export const requestMatching = async (targetTeamId: number): Promise<ActionApiResult> => {
-  const response = await apiInstance.post<BaseResponse<null>>('/v1/match-requests', { targetTeamId });
+  const response = await apiInstance.post<ApiResponse<null>>('/v1/match-requests', { targetTeamId });
   return {
     isSuccess: response.data.isSuccess,
     code: response.data.code,
@@ -237,30 +164,11 @@ export const requestMatching = async (targetTeamId: number): Promise<ActionApiRe
   };
 };
 
-// 매칭 요청 수락/거절
 export const respondMatchRequest = async (
   matchRequestId: number,
   accept: boolean
 ): Promise<ActionApiResult> => {
-  const response = await apiInstance.patch<BaseResponse<null>>(
-    `/v1/match-requests/${matchRequestId}/respond`,
-    {
-      accept,
-    }
-  );
-  return {
-    isSuccess: response.data.isSuccess,
-    code: response.data.code,
-    message: response.data.message,
-  };
-};
-
-// 팀 초대 수락/거절
-export const respondTeamInvitation = async (
-  invitationId: number,
-  accept: boolean
-): Promise<ActionApiResult> => {
-  const response = await apiInstance.patch<BaseResponse<null>>(`/v1/teams/invitations/${invitationId}/respond`, {
+  const response = await apiInstance.patch<ApiResponse<null>>(`/v1/match-requests/${matchRequestId}/respond`, {
     accept,
   });
   return {
@@ -270,13 +178,25 @@ export const respondTeamInvitation = async (
   };
 };
 
-// 친구 검색 (팀 초대용)
+export const respondTeamInvitation = async (
+  invitationId: number,
+  accept: boolean
+): Promise<ActionApiResult> => {
+  const response = await apiInstance.patch<ApiResponse<null>>(`/v1/teams/invitations/${invitationId}/respond`, {
+    accept,
+  });
+  return {
+    isSuccess: response.data.isSuccess,
+    code: response.data.code,
+    message: response.data.message,
+  };
+};
+
 export const searchFriendsForTeamInvite = async (
   keyword: string
 ): Promise<TeamFriendSearchItem[]> => {
-  const response = await apiInstance.get<BaseResponse<unknown>>('/v1/teams/friends/search', {
+  const response = await apiInstance.get<ApiResponse<unknown>>('/v1/teams/friends/search', {
     params: {
-      // 백엔드 파라미터 명이 정해지지 않은 구간 대비
       keyword,
       nickname: keyword,
     },
@@ -285,17 +205,6 @@ export const searchFriendsForTeamInvite = async (
   return normalizeFriendSearchResult(response.data.result);
 };
 
-export interface UpdateTeamRequest {
-  title: string;
-  description: string;
-  preferredMood: string;
-  preferredAgeMin: number;
-  preferredAgeMax: number;
-  preferredEntryYearMin: number;
-  preferredEntryYearMax: number;
-}
-
-// 팀 수정
 export const updateTeam = async (
   teamId: string | number,
   data: UpdateTeamRequest
@@ -303,15 +212,6 @@ export const updateTeam = async (
   await apiInstance.patch(`/v1/teams/matching-posts/${teamId}`, data);
 };
 
-// 팀 삭제
 export const deleteTeam = async (teamId: string | number): Promise<void> => {
   await apiInstance.delete(`/v1/teams/matching-posts/${teamId}`);
 };
-
-// 공통 응답 타입
-interface BaseResponse<T> {
-  isSuccess: boolean;
-  code: string;
-  message: string;
-  result: T;
-}

@@ -1,11 +1,30 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { SignupStepLayout } from '@/widgets/signup';
 import { EmailVerifyForm } from '@/features/signup/ui/steps/step-1';
+import { useSignupStore } from '@/features/signup/model';
 
 export default function Step1Page() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const setProfile = useSignupStore((s) => s.setProfile);
+
+  useEffect(() => {
+    const signupToken = searchParams.get('signupToken') ?? '';
+    const providerName = searchParams.get('providerName') ?? '';
+    const nickname = searchParams.get('nickname') ?? '';
+
+    if (!signupToken && !providerName && !nickname) return;
+
+    setProfile({
+      ...(signupToken ? { signUpToken: signupToken } : {}),
+      ...(providerName ? { providerName } : {}),
+      ...(nickname ? { nickname } : {}),
+    });
+  }, [searchParams, setProfile]);
 
   return (
     <SignupStepLayout

@@ -10,7 +10,14 @@ export function CollegeSelect() {
       <input
         type="text"
         value={college}
-        onChange={(e) => setProfile({ college: e.target.value })}
+        onChange={(e) => {
+          const value = e.target.value;
+          const numeric = Number(value);
+          setProfile({
+            college: value,
+            collegeId: Number.isFinite(numeric) && numeric > 0 ? numeric : null,
+          });
+        }}
         placeholder="ex) 공과대"
         className="h-14 w-full rounded-full border border-black px-4 text-base outline-none focus:bg-gray-50"
       />

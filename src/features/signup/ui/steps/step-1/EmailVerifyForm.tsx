@@ -1,10 +1,23 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { AxiosError } from 'axios';
 import { useSignupStore } from '@/features/signup/model';
 import { BottomToast } from '@/shared/ui/BottomToast';
 import { InputWithAction } from '@/features/signup/ui/steps/step-1';
+import { sendEmailVerificationApi, verifyEmailCodeApi } from '@/features/auth/api/auth.api';
+import { getMemberAvailabilityApi } from '@/features/signup/api/signup.api';
 
 type ToastType = 'success' | 'error' | 'info';
 type ToastState = { visible: boolean; message: string; type: ToastType };
+const SIGNUP_VERIFICATION_TYPE = 'SIGN_UP';
+
+function extractApiErrorMessage(error: unknown, fallback: string) {
+  if (error instanceof AxiosError) {
+    const apiMessage = (error.response?.data as { message?: string } | undefined)?.message;
+    return apiMessage || error.message || fallback;
+  }
+  if (error instanceof Error) return error.message;
+  return fallback;
+}
 
 export function EmailVerifyForm() {
   const email = useSignupStore((s) => s.email);
@@ -12,6 +25,8 @@ export function EmailVerifyForm() {
 
   const [authCode, setAuthCode] = useState('');
   const [isEmailSent, setIsEmailSent] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
 
   const [toast, setToast] = useState<ToastState>({
     visible: false,
@@ -37,7 +52,7 @@ export function EmailVerifyForm() {
 
   const emailRegex = useMemo(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/, []);
 
-  const handleSendEmail = useCallback(() => {
+  const handleSendEmail = useCallback(async () => {
     if (!email) {
       showToast('이메일을 입력해주세요.', 'error');
       return;
@@ -47,24 +62,72 @@ export function EmailVerifyForm() {
       return;
     }
 
-    console.log('Sending email to:', email);
-    setIsEmailSent(true);
-    showToast('인증번호가 전송되었습니다!', 'success');
+    try {
+      setIsSending(true);
+      const availability = await getMemberAvailabilityApi({ email: email.trim() });
+      const emailAvailability = availability.find((item) => item.type === 'EMAIL');
+      if (emailAvailability && !emailAvailability.isAvailable) {
+        showToast('이미 사용 중인 이메일입니다.', 'error');
+        return;
+      }
+
+      const result = await sendEmailVerificationApi({
+        email: email.trim(),
+        verificationType: SIGNUP_VERIFICATION_TYPE,
+      });
+      setIsEmailSent(true);
+      showToast(
+        result.resendRemainingSeconds > 0
+          ? `${result.resendRemainingSeconds}초 후 재전송할 수 있어요.`
+          : '인증번호가 전송되었습니다!',
+        'success'
+      );
+    } catch (error) {
+      showToast(extractApiErrorMessage(error, '인증번호 전송에 실패했습니다.'), 'error');
+    } finally {
+      setIsSending(false);
+    }
   }, [email, emailRegex, showToast]);
 
-  const handleVerifyCode = useCallback(() => {
+  const handleVerifyCode = useCallback(async () => {
     if (!authCode) {
       showToast('인증번호를 입력해주세요.', 'error');
       return;
     }
-
-    // Mock Verification
-    if (authCode === '1234') {
-      showToast('인증이 완료되었습니다.', 'success');
-    } else {
-      showToast('인증번호가 올바르지 않습니다.', 'error');
+    if (!email) {
+      showToast('이메일을 먼저 입력해주세요.', 'error');
+      return;
     }
-  }, [authCode, showToast]);
+
+    try {
+      setIsVerifying(true);
+      const result = await verifyEmailCodeApi({
+        email: email.trim(),
+        verificationType: SIGNUP_VERIFICATION_TYPE,
+        code: authCode.trim(),
+      });
+
+      if (!result.verified) {
+        showToast('인증번호가 올바르지 않습니다.', 'error');
+        return;
+      }
+
+      if (result.universityName) {
+        setProfile({
+          universityName: result.universityName,
+          universityDomainId: result.universityDomainId,
+        });
+        showToast(`${result.universityName} 인증이 완료되었습니다.`, 'success');
+      } else {
+        setProfile({ universityDomainId: result.universityDomainId });
+        showToast('이메일 인증이 완료되었습니다.', 'success');
+      }
+    } catch (error) {
+      showToast(extractApiErrorMessage(error, '인증번호 검증에 실패했습니다.'), 'error');
+    } finally {
+      setIsVerifying(false);
+    }
+  }, [authCode, email, setProfile, showToast]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -72,7 +135,8 @@ export function EmailVerifyForm() {
         label="이메일"
         placeholder="이메일 입력"
         value={email}
-        buttonText={isEmailSent ? '재전송' : '전송'}
+        buttonText={isSending ? '전송중...' : isEmailSent ? '재전송' : '전송'}
+        disabled={isSending}
         onChange={(v) => setProfile({ email: v })}
         onAction={handleSendEmail}
       />
@@ -83,7 +147,8 @@ export function EmailVerifyForm() {
             label="인증번호"
             placeholder="인증번호 6자리"
             value={authCode}
-            buttonText="확인"
+            buttonText={isVerifying ? '확인중...' : '확인'}
+            disabled={isVerifying}
             onChange={setAuthCode}
             onAction={handleVerifyCode}
           />

@@ -1,37 +1,13 @@
 import { apiInstance } from '@/shared/api/apiInstance';
+import type { ApiResponse } from '@/shared/api/api.types';
+import type {
+  ChatMember,
+  ChatMessageResponse,
+  ChatRoomDetailResponse,
+  ChatRoomResponse,
+} from './chat.types';
 
-export interface ChatRoomResponse {
-  chatRoomId: number;
-  title: string;
-  memberCount: number;
-  unreadCount: number;
-  lastMessage: string;
-  lastMessageTime: string; // ISO 8601
-  teamId?: number; // 연관된 팀 ID (Optional)
-}
-
-export interface ChatMember {
-  memberId: number;
-  nickname: string;
-  image?: string;
-}
-
-export interface ChatRoomDetailResponse {
-  chatRoomId: number;
-  title: string;
-  memberCount: number;
-  members: ChatMember[];
-}
-
-export interface ChatMessageResponse {
-  seq: number;
-  senderId: number;
-  senderName: string;
-  type: string;
-  content: string;
-  createdAt: string;
-  voteId?: number;
-}
+export type { ChatMember, ChatMessageResponse, ChatRoomDetailResponse, ChatRoomResponse } from './chat.types';
 
 const extractArrayFromUnknown = (raw: unknown): unknown[] => {
   if (Array.isArray(raw)) return raw;
@@ -163,13 +139,13 @@ const normalizeChatMessages = (raw: unknown): ChatMessageResponse[] => {
 
 // 채팅방 목록 조회
 export const getChatRooms = async (): Promise<ChatRoomResponse[]> => {
-  const response = await apiInstance.get<BaseResponse<unknown>>('/v1/chat');
+  const response = await apiInstance.get<ApiResponse<unknown>>('/v1/chat');
   return normalizeChatRooms(response.data.result);
 };
 
 // 채팅방 상세 조회
 export const getChatRoomDetail = async (roomId: string | number): Promise<ChatRoomDetailResponse> => {
-  const response = await apiInstance.get<BaseResponse<unknown>>(`/v1/chat/${roomId}`);
+  const response = await apiInstance.get<ApiResponse<unknown>>(`/v1/chat/${roomId}`);
   return normalizeChatRoomDetail(response.data.result, roomId);
 };
 
@@ -178,18 +154,10 @@ export const getChatMessages = async (
   roomId: string | number,
   beforeSeq?: number
 ): Promise<ChatMessageResponse[]> => {
-  const response = await apiInstance.get<BaseResponse<unknown>>(`/v1/chat/${roomId}/messages`, {
+  const response = await apiInstance.get<ApiResponse<unknown>>(`/v1/chat/${roomId}/messages`, {
     params: {
       beforeSeq,
     },
   });
   return normalizeChatMessages(response.data.result);
 };
-
-// 공통 응답 타입 (팀 API와 중복되므로 추후 shared/types로 이동 권장)
-interface BaseResponse<T> {
-  isSuccess: boolean;
-  code: string;
-  message: string;
-  result: T;
-}

@@ -1,24 +1,32 @@
-import { publicApi } from '@/shared/api/apiInstance';
+import { apiInstance, publicApi } from '@/shared/api/apiInstance';
 import { tokenStore } from '@/shared/auth/tokenStore';
 
-// 로그인 → accessToken 저장
 export async function login(payload: Record<string, unknown>) {
-  const res = await publicApi.post('/auth/login', payload);
+  const res = await publicApi.post('/v1/auth/login', payload);
   tokenStore.set(res.data?.accessToken ?? null);
   return res.data;
 }
 
-// 로그아웃 → 토큰 제거
 export async function logout() {
-  await publicApi.post('/auth/logout');
+  await apiInstance.post('/v1/auth/logout');
   tokenStore.clear();
 }
 
-// 앱 시작 시 access 복구
 export async function bootstrapAuth() {
   try {
-    const res = await publicApi.post('/auth/refresh');
-    tokenStore.set(res.data?.accessToken ?? null);
+    const res = await publicApi.post('/v1/auth/reissue');
+    const authorization = res.headers.authorization;
+    const accessToken =
+      typeof authorization === 'string' && authorization.toLowerCase().startsWith('bearer ')
+        ? authorization.slice(7).trim()
+        : null;
+
+    if (!accessToken) {
+      tokenStore.clear();
+      return false;
+    }
+
+    tokenStore.set(accessToken);
     return true;
   } catch {
     tokenStore.clear();

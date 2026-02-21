@@ -1,11 +1,40 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { AxiosError } from 'axios';
 import SectionTitle from './ui/SectionTitle';
 import MenuCard from './ui/MenuCard';
 import MenuItem from './ui/MenuItem';
 import Divider from './ui/Divider';
+import { logoutApi } from '@/features/auth/api/auth.api';
+import { tokenStore } from '@/shared/auth/tokenStore';
 
 export default function ProfileMenuSection() {
+  const router = useRouter();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return;
+
+    try {
+      setIsLoggingOut(true);
+      await logoutApi();
+      alert('로그아웃 되었습니다.');
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const message = (error.response?.data as { message?: string } | undefined)?.message;
+        alert(message || '로그아웃 처리 중 오류가 발생했습니다.');
+      } else {
+        alert('로그아웃 처리 중 오류가 발생했습니다.');
+      }
+    } finally {
+      tokenStore.clear();
+      router.replace('/splash');
+      setIsLoggingOut(false);
+    }
+  };
+
   return (
     <section>
       <SectionTitle title="MY MENU" />
@@ -27,9 +56,9 @@ export default function ProfileMenuSection() {
 
         <MenuCard>
           <MenuItem
-            title="로그아웃"
+            title={isLoggingOut ? '로그아웃 중...' : '로그아웃'}
             desc="현재 계정에서 로그아웃해요"
-            onClick={() => alert('로그아웃')}
+            onClick={handleLogout}
             tone="warn"
           />
           <Divider />
