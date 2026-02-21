@@ -8,7 +8,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const baseStyles =
-  'flex h-14 items-center justify-center gap-3 rounded-full border-2 border-black ' +
+  'flex h-14 items-center justify-center gap-3 rounded-full border border-black ' +
   'text-base font-extrabold transition-colors';
 
 const variantStyles: Record<ButtonVariant, string> = {

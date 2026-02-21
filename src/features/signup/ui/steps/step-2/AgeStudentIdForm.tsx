@@ -13,7 +13,7 @@ export function AgeStudentIdForm() {
           value={age || ''}
           onChange={(e) => setProfile({ age: parseInt(e.target.value) || null })}
           placeholder="나이 (예: 20)"
-          className="h-14 w-full rounded-full border-2 border-gray-600 px-4 text-base outline-none focus:bg-gray-50 transition-colors"
+          className="h-14 w-full rounded-full border border-gray-600 px-4 text-base outline-none focus:bg-gray-50 transition-colors"
         />
       </div>
 
@@ -24,7 +24,7 @@ export function AgeStudentIdForm() {
           value={studentId}
           onChange={(e) => setProfile({ studentId: e.target.value })}
           placeholder="학번 (예: 23학번)"
-          className="h-14 w-full rounded-full border-2 border-gray-600 px-4 text-base outline-none focus:bg-gray-50 transition-colors"
+          className="h-14 w-full rounded-full border border-gray-600 px-4 text-base outline-none focus:bg-gray-50 transition-colors"
         />
       </div>
     </div>

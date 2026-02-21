@@ -15,7 +15,7 @@ export function OneLiner() {
 
         <span
           className={[
-            'rounded-full border-2 border-black px-3 py-1 text-xs font-extrabold bg-[var(--color-yellow)]',
+            'rounded-full border border-black px-3 py-1 text-xs font-extrabold bg-[var(--color-yellow)]',
           ].join(' ')}
         >
           {length}/{MAX_LENGTH}
@@ -27,7 +27,7 @@ export function OneLiner() {
         maxLength={MAX_LENGTH}
         onChange={(e) => setPersonality({ oneLiner: e.target.value })}
         placeholder={PLACEHOLDER}
-        className="h-40 w-full resize-none rounded-xl border-2 border-black p-4 text-base outline-none transition-colors focus:bg-gray-50 placeholder:text-sm placeholder:text-slate-400"
+        className="h-40 w-full resize-none rounded-xl border border-black p-4 text-base outline-none transition-colors focus:bg-gray-50 placeholder:text-sm placeholder:text-slate-400"
       />
     </div>
   );

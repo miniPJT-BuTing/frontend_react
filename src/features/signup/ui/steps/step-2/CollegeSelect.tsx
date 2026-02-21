@@ -12,7 +12,7 @@ export function CollegeSelect() {
         value={college}
         onChange={(e) => setProfile({ college: e.target.value })}
         placeholder="ex) 공과대"
-        className="h-14 w-full rounded-full border-2 border-black px-4 text-base outline-none focus:bg-gray-50"
+        className="h-14 w-full rounded-full border border-black px-4 text-base outline-none focus:bg-gray-50"
       />
     </div>
   );

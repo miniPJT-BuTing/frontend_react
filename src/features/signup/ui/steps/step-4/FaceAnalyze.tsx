@@ -20,7 +20,7 @@ export function FaceAnalyze({ onSkip, onComplete }: Props) {
           type="button"
           onClick={onSkip}
           className="
-            rounded-full border-2 border-black
+            rounded-full border border-black
             bg-[var(--color-yellow)] px-3 py-1
             text-xs font-extrabold text-black
             active:translate-y-[1px]
@@ -36,7 +36,7 @@ export function FaceAnalyze({ onSkip, onComplete }: Props) {
           onClick={handleAnalyze}
           className="
             flex h-40 w-40 items-center justify-center
-            rounded-full border-2 border-black bg-white
+            rounded-full border border-black bg-white
             transition-transform
             hover:bg-gray-50
             active:translate-y-[2px] active:scale-95
