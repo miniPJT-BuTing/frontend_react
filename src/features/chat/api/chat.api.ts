@@ -1,4 +1,4 @@
-import { http } from '@/shared/api/http';
+import { apiInstance } from '@/shared/api/apiInstance';
 
 export interface ChatRoomResponse {
   chatRoomId: number;
@@ -163,13 +163,13 @@ const normalizeChatMessages = (raw: unknown): ChatMessageResponse[] => {
 
 // 채팅방 목록 조회
 export const getChatRooms = async (): Promise<ChatRoomResponse[]> => {
-  const response = await http.get<BaseResponse<unknown>>('/v1/chat');
+  const response = await apiInstance.get<BaseResponse<unknown>>('/v1/chat');
   return normalizeChatRooms(response.data.result);
 };
 
 // 채팅방 상세 조회
 export const getChatRoomDetail = async (roomId: string | number): Promise<ChatRoomDetailResponse> => {
-  const response = await http.get<BaseResponse<unknown>>(`/v1/chat/${roomId}`);
+  const response = await apiInstance.get<BaseResponse<unknown>>(`/v1/chat/${roomId}`);
   return normalizeChatRoomDetail(response.data.result, roomId);
 };
 
@@ -178,7 +178,7 @@ export const getChatMessages = async (
   roomId: string | number,
   beforeSeq?: number
 ): Promise<ChatMessageResponse[]> => {
-  const response = await http.get<BaseResponse<unknown>>(`/v1/chat/${roomId}/messages`, {
+  const response = await apiInstance.get<BaseResponse<unknown>>(`/v1/chat/${roomId}/messages`, {
     params: {
       beforeSeq,
     },

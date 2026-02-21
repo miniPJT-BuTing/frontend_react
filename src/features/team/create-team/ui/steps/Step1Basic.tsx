@@ -9,7 +9,7 @@ import IntroIcon from '@/assets/icons/matching-intro.png';
 const TITLE_MAX = 40;
 const INTRO_MAX = 200;
 
-const badgeClass = (isMax: boolean) =>
+const badgeClass =
   [
     'rounded-full border border-black px-3 py-1 text-xs font-extrabold text-black bg-[var(--color-yellow)]',
   ].join(' ');
@@ -29,7 +29,7 @@ export default function Step1Basic() {
             <label className="text-base font-bold">방 제목</label>
           </div>
 
-          <span className={badgeClass(titleLen >= TITLE_MAX)}>
+          <span className={badgeClass}>
             {titleLen}/{TITLE_MAX}
           </span>
         </div>
@@ -58,7 +58,7 @@ export default function Step1Basic() {
             <label className="text-base font-bold">방 소개글</label>
           </div>
 
-          <span className={badgeClass(introLen >= INTRO_MAX)}>
+          <span className={badgeClass}>
             {introLen}/{INTRO_MAX}
           </span>
         </div>

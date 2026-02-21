@@ -5,11 +5,6 @@ import { CreateTeamStepLayout } from '@/widgets/create-team-layout/CreateTeamSte
 import { useCreateTeamStore } from '@/features/team/create-team/model/createTeam.store';
 import { updateTeam, type UpdateTeamRequest } from '@/features/team/api/team.api';
 
-// Enum Helper
-const getMoodEnum = (moods: string[]): string => {
-  return 'ANY_MOOD'; // Mock logic
-};
-
 export default function EditTeamStep3Page() {
   const router = useRouter();
   const params = useParams();

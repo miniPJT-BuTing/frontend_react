@@ -16,7 +16,7 @@ export default function KeywordGrid({
       <div className="mb-3 flex items-center justify-between">
         <span className="text-sm font-extrabold text-black">키워드</span>
 
-        <span className="rounded-full border-2 border-black bg-[var(--color-yellow)] px-3 py-1 text-xs font-extrabold text-black">
+        <span className="rounded-full border border-black bg-[var(--color-yellow)] px-3 py-1 text-xs font-extrabold text-black">
           {selectedCount > 0 ? `${selectedCount}개 선택` : '선택해주세요'}
         </span>
       </div>
@@ -31,7 +31,7 @@ export default function KeywordGrid({
               type="button"
               onClick={() => onToggle(k)}
               className={[
-                'h-10 rounded-full border-2 border-black px-3',
+                'h-10 rounded-full border border-black px-3',
                 'inline-flex items-center justify-center',
                 'text-sm font-extrabold leading-none',
                 'transition-transform transition-colors',

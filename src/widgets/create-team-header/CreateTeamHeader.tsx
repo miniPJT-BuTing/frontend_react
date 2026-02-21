@@ -41,6 +41,7 @@ export const CreateTeamHeader = ({ step, totalSteps = 3, onBack }: CreateTeamHea
             to-[#68D0E7]
             text-black
           "
+          aria-label={`step ${step} of ${totalSteps}`}
         >
           STEP {step}
         </div>

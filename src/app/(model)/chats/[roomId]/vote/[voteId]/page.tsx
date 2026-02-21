@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { X, Clock, User } from 'lucide-react';
 
 // Mock Vote Data
@@ -22,7 +22,6 @@ const MOCK_VOTE = {
 
 export default function VoteDetailPage() {
   const router = useRouter();
-  const params = useParams();
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
   const handleSubmit = () => {

@@ -145,7 +145,7 @@ export default function TeamPage({ params }: { params: Promise<{ teamId: string 
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-white">
+      <div className="flex min-h-[60vh] items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#FF9BC2] border-t-transparent" />
       </div>
     );
@@ -165,7 +165,10 @@ export default function TeamPage({ params }: { params: Promise<{ teamId: string 
         return;
       }
       const response = await requestMatching(targetTeamId);
-      alert(response.message || (response.isSuccess ? '매칭 요청을 보냈습니다.' : '요청이 처리되지 않았습니다.'));
+      alert(
+        response.message ||
+          (response.isSuccess ? '매칭 요청을 보냈습니다.' : '요청이 처리되지 않았습니다.')
+      );
     } catch (error) {
       console.error('Failed to request matching:', error);
       alert('매칭 요청에 실패했습니다.');
@@ -193,10 +196,10 @@ export default function TeamPage({ params }: { params: Promise<{ teamId: string 
   };
 
   return (
-    <main className="flex h-screen flex-col bg-white">
+    <main className="flex min-h-full flex-col">
       <TeamDetailHeader />
 
-      <div className="flex-1 overflow-y-auto pb-4 scrollbar-hide">
+      <div className="flex-1 pb-4">
         <TeamTitleSection title={teamData.title} createdAt={teamData.createdAt} />
         <TeamMembersRow members={teamData.members} />
         <div className="h-px w-full bg-gray-100 my-2" /> {/* Divider */}
@@ -204,11 +207,11 @@ export default function TeamPage({ params }: { params: Promise<{ teamId: string 
         <TeamIntroduction content={teamData.introduction} />
       </div>
 
-      <TeamActionFooter 
-        onRequest={handleRequest} 
-        onEdit={handleEdit} 
+      <TeamActionFooter
+        onRequest={handleRequest}
+        onEdit={handleEdit}
         onDelete={handleDelete}
-        isOwnTeam={isMyTeam} 
+        isOwnTeam={isMyTeam}
       />
     </main>
   );

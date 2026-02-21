@@ -1,9 +1,27 @@
-import type { ReactNode } from 'react';
-
-export default function TeamsLayout({ children }: { children: ReactNode }) {
+export default function TeamsLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col items-center bg-gray-50">
-      <div className="mx-auto w-full max-w-[480px] flex-1 bg-white min-h-screen relative shadow-lg">
+    <div className="relative flex min-h-screen flex-col items-center text-slate-900">
+      <div
+        className="
+          pointer-events-none absolute inset-x-0 top-0
+          h-1/2
+          bg-gradient-to-b
+          from-[var(--color-skyblue)]
+          to-transparent
+        "
+      />
+
+      <div
+        className="
+          pointer-events-none absolute inset-x-0 bottom-0
+          h-1/4
+          bg-gradient-to-t
+          from-[var(--color-skyblue)]
+          to-transparent
+        "
+      />
+
+      <div className="relative h-full w-full max-w-[480px] overflow-y-auto overflow-x-hidden scrollbar-hide">
         {children}
       </div>
     </div>

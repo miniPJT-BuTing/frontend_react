@@ -49,14 +49,14 @@ export default function Step4Page() {
         {mode === 'picker' && (
           <>
             {pickSource === 'manual' && (
-              <div className="rounded-xl border-2 border-black bg-[var(--color-yellow)] p-4 text-center text-sm font-bold">
+              <div className="rounded-xl border border-black bg-[var(--color-yellow)] p-4 text-center text-sm font-bold">
                 AI 얼굴 분석을 건너뛰었어요 😊 <br />
                 <span className="text-black/80">나를 닮은 동물을 직접 선택해주세요!</span>
               </div>
             )}
 
             {pickSource === 'ai' && (
-              <div className="rounded-xl border-2 border-black bg-[var(--color-yellow)] p-4 text-center text-sm font-bold">
+              <div className="rounded-xl border border-black bg-[var(--color-yellow)] p-4 text-center text-sm font-bold">
                 얼굴 분석 결과를 기반으로 추천된 동물이에요 🐾 <br />
                 마음에 들지 않으면 직접 변경할 수도 있어요!
               </div>

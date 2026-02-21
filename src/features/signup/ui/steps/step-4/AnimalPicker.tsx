@@ -21,7 +21,7 @@ export function AnimalPicker({ onBackToAnalyze }: Props) {
             type="button"
             onClick={onBackToAnalyze}
             className="
-              rounded-full border-2 border-black
+              rounded-full border border-black
               bg-[var(--color-yellow)] px-3 py-1
               text-xs font-extrabold text-black
               active:translate-y-[1px]
@@ -32,13 +32,20 @@ export function AnimalPicker({ onBackToAnalyze }: Props) {
         ) : null}
       </div>
 
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-4 gap-4">
         {ANIMALS.map((a) => (
           <RetroButton
             key={a}
             type="button"
             variant="neutral"
-            className="aspect-square text-3xl"
+            className="
+        h-[72px] w-full
+        rounded-full
+        !p-0
+        text-[2.2rem]
+        leading-none
+        flex items-center justify-center
+      "
             isActive={animal === a}
             onClick={() => setAvatar({ animal: a })}
           >
