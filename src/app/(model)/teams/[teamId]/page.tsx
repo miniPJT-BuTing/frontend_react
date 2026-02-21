@@ -145,7 +145,7 @@ export default function TeamPage({ params }: { params: Promise<{ teamId: string 
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-white">
+      <div className="flex min-h-[60vh] items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#FF9BC2] border-t-transparent" />
       </div>
     );
@@ -193,10 +193,10 @@ export default function TeamPage({ params }: { params: Promise<{ teamId: string 
   };
 
   return (
-    <main className="flex h-screen flex-col bg-white">
+    <main className="flex min-h-full flex-col">
       <TeamDetailHeader />
 
-      <div className="flex-1 overflow-y-auto pb-4 scrollbar-hide">
+      <div className="flex-1 pb-4">
         <TeamTitleSection title={teamData.title} createdAt={teamData.createdAt} />
         <TeamMembersRow members={teamData.members} />
         <div className="h-px w-full bg-gray-100 my-2" /> {/* Divider */}

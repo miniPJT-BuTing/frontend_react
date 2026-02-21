@@ -2,7 +2,9 @@ export const colors = {
   primary: '#F7ABCF',
   primaryHover: '#F596C2',
 
-  skyPrimary: '#fce2ed',
+  pink: '#FBCFE8',
+
+  skyPrimary: '#FCE2ED',
 
   skyblue: '#BDE0FE',
   skyblueHover: '#A9D4FD',

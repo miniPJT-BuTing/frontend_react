@@ -1,5 +1,7 @@
 'use client';
 
+import { RetroButton } from '@/shared/ui/button/RetroButton';
+
 type Props = {
   onRequest: () => void;
   onEdit?: () => void;
@@ -9,22 +11,14 @@ type Props = {
 
 export function TeamActionFooter({ onRequest, onEdit, onDelete, isOwnTeam = false }: Props) {
   return (
-    <div className="w-full shrink-0 bg-white border-t border-gray-100 px-5 pb-8 pt-4">
+    <div className="fixed bottom-6 left-0 right-0 px-6 max-w-[480px] mx-auto z-10">
       <div className="mx-auto max-w-[440px] flex flex-col gap-3">
         {isOwnTeam ? (
           <>
-            <button
-              type="button"
-              onClick={onEdit}
-              className="w-full rounded-full border border-black bg-white py-4 text-[16px] font-bold text-black shadow-sm active:bg-gray-50 active:scale-[0.99] transition-transform"
-            >
+            <RetroButton onClick={onEdit} variant="neutral" className="h-14 w-full text-lg">
               팀 정보 수정하기
-            </button>
-            <button
-              type="button"
-              onClick={onDelete}
-              className="text-[13px] font-medium text-gray-400 underline underline-offset-4 active:text-red-500"
-            >
+            </RetroButton>
+            <button type="button" onClick={onDelete} className="text-xs font-medium text-gray-400">
               팀 삭제하기
             </button>
           </>
