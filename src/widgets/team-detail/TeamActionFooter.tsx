@@ -15,7 +15,7 @@ export function TeamActionFooter({ onRequest, onEdit, onDelete, isOwnTeam = fals
       <div className="mx-auto max-w-[440px] flex flex-col gap-3">
         {isOwnTeam ? (
           <>
-            <RetroButton onClick={onEdit} variant="neutral" className="h-14 w-full text-lg">
+            <RetroButton onClick={onEdit} variant="yellow" className="h-14 w-full text-lg">
               팀 정보 수정하기
             </RetroButton>
             <button type="button" onClick={onDelete} className="text-xs font-medium text-gray-400">

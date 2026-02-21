@@ -51,7 +51,6 @@ export default function Step2Preference() {
 
   return (
     <div className="flex flex-col gap-8">
-      {/* 선호 분위기 */}
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2">
           <Image src={moodIcon} alt="mood" width={34} height={34} />
@@ -79,7 +78,6 @@ export default function Step2Preference() {
         </div>
       </div>
 
-      {/* 선호 학번 */}
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <Image src={schoolIcon} alt="school" width={34} height={34} />

@@ -5,20 +5,20 @@ import { ChevronLeft } from 'lucide-react';
 
 export function TeamDetailHeader() {
   const router = useRouter();
+  const handleBack = () => router.back();
 
   return (
-    <header className="w-full shrink-0 px-6 pb-3 pt-4">
-      <div className="relative flex h-10 items-center justify-center">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="absolute left-0 flex h-10 w-10 items-center justify-center rounded-full border border-black bg-white transition-all active:scale-95"
-          aria-label="뒤로가기"
-        >
-          <ChevronLeft className="h-6 w-6 text-black stroke-[3]" />
-        </button>
-
-        <h1 className="text-lg font-bold text-black">팀 프로필</h1>
+    <header className="mb-8 flex items-center justify-between px-6 pt-4">
+      <button
+        type="button"
+        onClick={handleBack}
+        aria-label="뒤로가기"
+        className="h-10 w-10 rounded-full border border-black bg-white flex items-center justify-center active:translate-y-[1px]"
+      >
+        <ChevronLeft className="h-6 w-6 stroke-[3] text-black" />
+      </button>
+      <div className="rounded-full border border-black bg-gradient-to-b from-white to-[var(--color-primary)] px-4 py-2 text-sm font-bold uppercase active:translate-y-[1px]">
+        team detail
       </div>
     </header>
   );
