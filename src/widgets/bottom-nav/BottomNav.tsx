@@ -27,9 +27,18 @@ export default function BottomNav() {
   if (pathname.startsWith('/teams/new')) return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50">
-      <div className="relative mx-auto w-full max-w-[480px] bg-white">
-        <div className="flex h-[72px] items-center justify-around rounded-t-[22px] px-3 shadow-[0_-4px_10px_rgba(0,0,0,0.08)]">
+    <nav className="fixed inset-x-0 bottom-0 z-50">
+      <div className="bg-transparent pb-[env(safe-area-inset-bottom)]">
+        <div
+          className="
+            h-[72px]
+            w-full
+            rounded-t-[26px]
+            border-x border-t border-black
+            bg-white
+            flex items-center justify-around
+          "
+        >
           {NAV_ITEMS.map(({ label, href, icon }) => {
             const isActive = pathname === href || pathname.startsWith(`${href}/`);
 
@@ -38,7 +47,7 @@ export default function BottomNav() {
                 key={href}
                 type="button"
                 onClick={() => router.push(href)}
-                className="flex flex-col items-center justify-center gap-1.5 px-2"
+                className="flex flex-col items-center justify-center gap-1.5 px-4"
               >
                 <Image
                   src={icon}
@@ -48,13 +57,13 @@ export default function BottomNav() {
                   priority={isActive}
                   className={[
                     'pixelated transition-transform duration-150',
-                    isActive ? 'opacity-100 scale-[1.06]' : 'icon-inactive scale-100',
+                    isActive ? 'opacity-100 scale-[1.06]' : 'opacity-55 scale-100',
                   ].join(' ')}
                 />
                 <span
                   className={[
                     'text-xs leading-none',
-                    isActive ? 'text-black font-bold' : 'text-[#94A3B8]',
+                    isActive ? 'text-black font-bold' : 'text-slate-400',
                   ].join(' ')}
                 >
                   {label}

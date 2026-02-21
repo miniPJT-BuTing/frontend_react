@@ -6,15 +6,17 @@ export default function MainLayout({ children }: { children: ReactNode }) {
   return (
     <div
       className="
-    flex min-h-screen flex-col items-center
-    text-slate-900
-  "
+        flex h-[100dvh] flex-col items-center overflow-hidden
+        bg-gradient-to-b
+        from-[var(--color-skyblue)] from-0%
+        to-[var(--color-skyPrimary)] to-90%
+      "
     >
       <MainHeader />
 
       <main
         className="
-          mx-auto w-full max-w-[480px] flex-1 overflow-y-auto
+          mx-auto w-full max-w-[480px] flex-1 overflow-y-auto scrollbar-hide
           px-5 pt-4
           pb-[calc(72px+env(safe-area-inset-bottom)+16px)]
         "
