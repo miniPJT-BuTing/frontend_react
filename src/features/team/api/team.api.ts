@@ -1,4 +1,4 @@
-import { http } from '@/shared/api/http';
+import { apiInstance } from '@/shared/api/apiInstance';
 
 export interface TeamDetailResponse {
   teamId: number;
@@ -133,7 +133,7 @@ const normalizeMatchingPostList = (raw: unknown): MatchingPostItem[] => {
 
 // 팀 상세 조회
 export const getTeamDetail = async (teamId: string | number): Promise<TeamDetailResponse> => {
-  const response = await http.get<BaseResponse<TeamDetailResponse>>(
+  const response = await apiInstance.get<BaseResponse<TeamDetailResponse>>(
     `/v1/teams/matching-posts/${teamId}`
   );
   return response.data.result;
@@ -143,7 +143,7 @@ export const getTeamDetail = async (teamId: string | number): Promise<TeamDetail
 export const getMatchingPosts = async (
   params?: MatchingPostListParams
 ): Promise<MatchingPostItem[]> => {
-  const response = await http.get<BaseResponse<unknown>>('/v1/teams/matching-posts', {
+  const response = await apiInstance.get<BaseResponse<unknown>>('/v1/teams/matching-posts', {
     params,
   });
 
@@ -223,13 +223,13 @@ const normalizeFriendSearchResult = (raw: unknown): TeamFriendSearchItem[] => {
 
 // 팀 생성
 export const createTeam = async (data: CreateTeamRequest): Promise<CreateTeamResponse> => {
-  const response = await http.post<BaseResponse<CreateTeamResponse>>('/v1/teams', data);
+  const response = await apiInstance.post<BaseResponse<CreateTeamResponse>>('/v1/teams', data);
   return response.data.result;
 };
 
 // 매칭 요청
 export const requestMatching = async (targetTeamId: number): Promise<ActionApiResult> => {
-  const response = await http.post<BaseResponse<null>>('/v1/match-requests', { targetTeamId });
+  const response = await apiInstance.post<BaseResponse<null>>('/v1/match-requests', { targetTeamId });
   return {
     isSuccess: response.data.isSuccess,
     code: response.data.code,
@@ -242,9 +242,12 @@ export const respondMatchRequest = async (
   matchRequestId: number,
   accept: boolean
 ): Promise<ActionApiResult> => {
-  const response = await http.patch<BaseResponse<null>>(`/v1/match-requests/${matchRequestId}/respond`, {
-    accept,
-  });
+  const response = await apiInstance.patch<BaseResponse<null>>(
+    `/v1/match-requests/${matchRequestId}/respond`,
+    {
+      accept,
+    }
+  );
   return {
     isSuccess: response.data.isSuccess,
     code: response.data.code,
@@ -257,7 +260,7 @@ export const respondTeamInvitation = async (
   invitationId: number,
   accept: boolean
 ): Promise<ActionApiResult> => {
-  const response = await http.patch<BaseResponse<null>>(`/v1/teams/invitations/${invitationId}/respond`, {
+  const response = await apiInstance.patch<BaseResponse<null>>(`/v1/teams/invitations/${invitationId}/respond`, {
     accept,
   });
   return {
@@ -271,7 +274,7 @@ export const respondTeamInvitation = async (
 export const searchFriendsForTeamInvite = async (
   keyword: string
 ): Promise<TeamFriendSearchItem[]> => {
-  const response = await http.get<BaseResponse<unknown>>('/v1/teams/friends/search', {
+  const response = await apiInstance.get<BaseResponse<unknown>>('/v1/teams/friends/search', {
     params: {
       // 백엔드 파라미터 명이 정해지지 않은 구간 대비
       keyword,
@@ -297,12 +300,12 @@ export const updateTeam = async (
   teamId: string | number,
   data: UpdateTeamRequest
 ): Promise<void> => {
-  await http.patch(`/v1/teams/matching-posts/${teamId}`, data);
+  await apiInstance.patch(`/v1/teams/matching-posts/${teamId}`, data);
 };
 
 // 팀 삭제
 export const deleteTeam = async (teamId: string | number): Promise<void> => {
-  await http.delete(`/v1/teams/matching-posts/${teamId}`);
+  await apiInstance.delete(`/v1/teams/matching-posts/${teamId}`);
 };
 
 // 공통 응답 타입
