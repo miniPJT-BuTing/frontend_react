@@ -40,6 +40,7 @@ export const SignupHeader = ({ step, totalSteps = 6, onBack }: SignupHeaderProps
       to-[var(--color-blueGreen)]
       text-black
     "
+          aria-label={`step ${step} of ${totalSteps}`}
         >
           STEP {step}
         </div>

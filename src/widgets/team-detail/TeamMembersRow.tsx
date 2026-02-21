@@ -1,5 +1,3 @@
-import Image from 'next/image';
-
 // 왕관 아이콘 (이모지로 대체하거나 에셋 사용 가능, 여기선 텍스트/이모지로 처리)
 // 실제 프로젝트에선 import CrownIcon from '@/assets/icons/crown.png'; 등을 사용 권장
 

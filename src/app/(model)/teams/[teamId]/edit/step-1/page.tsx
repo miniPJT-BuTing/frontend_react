@@ -3,13 +3,11 @@
 import { useRouter, useParams } from 'next/navigation';
 import Step1Basic from '@/features/team/create-team/ui/steps/Step1Basic';
 import { CreateTeamStepLayout } from '@/widgets/create-team-layout/CreateTeamStepLayout';
-import { useCreateTeamStore } from '@/features/team/create-team/model/createTeam.store';
 
 export default function EditTeamStep1Page() {
   const router = useRouter();
   const params = useParams();
   const teamId = params.teamId as string;
-  const { title, introduction } = useCreateTeamStore();
 
   const handleNext = () => {
     router.replace(`/teams/${teamId}/edit/step-2`);
@@ -18,8 +16,6 @@ export default function EditTeamStep1Page() {
   const handleBack = () => {
     router.back(); // 뒤로가기 시 상세 페이지로 (수정 취소)
   };
-
-  const isNextDisabled = !title.trim() || !introduction.trim();
 
   return (
     <CreateTeamStepLayout 

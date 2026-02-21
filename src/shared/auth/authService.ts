@@ -2,7 +2,7 @@ import { publicApi } from '@/shared/api/apiInstance';
 import { tokenStore } from '@/shared/auth/tokenStore';
 
 // 로그인 → accessToken 저장
-export async function login(payload: any) {
+export async function login(payload: Record<string, unknown>) {
   const res = await publicApi.post('/auth/login', payload);
   tokenStore.set(res.data?.accessToken ?? null);
   return res.data;

@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Bell, Plus } from 'lucide-react';
+import { Bell } from 'lucide-react';
 import ButingLogoTitle from '@/assets/logos/buting-logo-title.png';
 
 export default function MainHeader() {

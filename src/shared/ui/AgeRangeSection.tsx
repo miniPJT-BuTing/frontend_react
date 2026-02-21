@@ -83,7 +83,7 @@ export default function AgeRangeSection({
             <span className="text-xs font-semibold text-slate-600">{min}</span>
 
             <span className="rounded-full border border-black bg-[#F7ABCF] px-3 py-1 text-xs font-extrabold text-black">
-              {from} ~ {to}
+              {valueLabel}
             </span>
 
             <span className="text-xs font-semibold text-slate-600">{max}</span>

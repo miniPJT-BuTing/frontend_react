@@ -3,7 +3,7 @@
 import { RetroButton } from '@/shared/ui/button/RetroButton';
 
 interface MbtiSelectorProps {
-  value?: string;
+  value?: string | null;
   onChange: (nextMbti: string) => void;
   label?: string;
 }

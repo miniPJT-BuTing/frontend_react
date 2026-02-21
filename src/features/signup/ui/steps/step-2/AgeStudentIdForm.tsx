@@ -2,7 +2,7 @@ import React from 'react';
 import { useSignupStore } from '@/features/signup/model';
 
 export function AgeStudentIdForm() {
-  const { age, studentId, nickname, setProfile } = useSignupStore();
+  const { age, studentId, setProfile } = useSignupStore();
 
   return (
     <div className="flex flex-col gap-6">

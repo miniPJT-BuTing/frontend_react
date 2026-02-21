@@ -39,7 +39,7 @@ async function refreshAccessToken(): Promise<string | null> {
 
 authApi.interceptors.response.use(
   (r) => r,
-  async (error: AxiosError<any>) => {
+  async (error: AxiosError<unknown>) => {
     const status = error.response?.status;
     const original = error.config as
       | (InternalAxiosRequestConfig & { _retry?: boolean })
