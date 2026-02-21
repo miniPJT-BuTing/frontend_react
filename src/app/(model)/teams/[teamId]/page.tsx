@@ -165,7 +165,10 @@ export default function TeamPage({ params }: { params: Promise<{ teamId: string 
         return;
       }
       const response = await requestMatching(targetTeamId);
-      alert(response.message || (response.isSuccess ? '매칭 요청을 보냈습니다.' : '요청이 처리되지 않았습니다.'));
+      alert(
+        response.message ||
+          (response.isSuccess ? '매칭 요청을 보냈습니다.' : '요청이 처리되지 않았습니다.')
+      );
     } catch (error) {
       console.error('Failed to request matching:', error);
       alert('매칭 요청에 실패했습니다.');
@@ -204,11 +207,11 @@ export default function TeamPage({ params }: { params: Promise<{ teamId: string 
         <TeamIntroduction content={teamData.introduction} />
       </div>
 
-      <TeamActionFooter 
-        onRequest={handleRequest} 
-        onEdit={handleEdit} 
+      <TeamActionFooter
+        onRequest={handleRequest}
+        onEdit={handleEdit}
         onDelete={handleDelete}
-        isOwnTeam={isMyTeam} 
+        isOwnTeam={isMyTeam}
       />
     </main>
   );
