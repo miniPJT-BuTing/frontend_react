@@ -21,14 +21,23 @@ authApi.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 let isRefreshing = false;
 let queue: Array<(token: string | null) => void> = [];
 
+const extractBearerToken = (authorizationHeader: unknown): string | null => {
+  if (typeof authorizationHeader !== 'string') return null;
+  const trimmed = authorizationHeader.trim();
+  if (!trimmed.toLowerCase().startsWith('bearer ')) return null;
+  const token = trimmed.slice(7).trim();
+  return token || null;
+};
+
 function flush(token: string | null) {
   queue.forEach((cb) => cb(token));
   queue = [];
 }
 async function refreshAccessToken(): Promise<string | null> {
   try {
-    const res = await publicApi.post('/auth/refresh');
-    const token = res.data?.accessToken;
+    const res = await publicApi.post('/v1/auth/reissue');
+    const token = extractBearerToken(res.headers.authorization);
+
     if (!token) return null;
     tokenStore.set(token);
     return token;

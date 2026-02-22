@@ -6,6 +6,11 @@ const initialProfile: SignupProfile = {
   email: '',
   nickname: '',
   college: '',
+  collegeId: null,
+  universityName: '',
+  universityDomainId: null,
+  signUpToken: '',
+  providerName: '',
   studentId: '',
   age: null,
   gender: null,
@@ -13,7 +18,7 @@ const initialProfile: SignupProfile = {
 
 const initialPersonality: SignupPersonality = {
   mbti: null,
-  keywords: [], // ✅ PersonalityKeywordKey[] 로 쓰게 될 것
+  keywords: [],
   oneLiner: '',
 };
 

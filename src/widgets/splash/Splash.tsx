@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import SplashButtons from '@/widgets/splash/ui/SplashButtons';
+import { getOAuthAuthorizationUrl } from '@/features/auth/api/auth.api';
 
 import splashBg from '@/assets/images/splash-background.png';
 import logo from '@/assets/logos/buting-logo.png';
@@ -12,11 +13,11 @@ export default function Splash() {
   const router = useRouter();
 
   const handleKakaoSignup = () => {
-    router.push('/signup/step-1');
+    window.location.href = getOAuthAuthorizationUrl('kakao');
   };
 
   const handleLogin = () => {
-    router.push('/login');
+    router.push('/home');
   };
 
   return (
