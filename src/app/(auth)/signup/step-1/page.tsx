@@ -1,13 +1,12 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useSearchParams } from 'next/navigation';
+import { Suspense, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { SignupStepLayout } from '@/widgets/signup';
 import { EmailVerifyForm } from '@/features/signup/ui/steps/step-1';
 import { useSignupStore } from '@/features/signup/model';
 
-export default function Step1Page() {
+function Step1Content() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const setProfile = useSignupStore((s) => s.setProfile);
@@ -36,5 +35,13 @@ export default function Step1Page() {
     >
       <EmailVerifyForm />
     </SignupStepLayout>
+  );
+}
+
+export default function Step1Page() {
+  return (
+    <Suspense fallback={null}>
+      <Step1Content />
+    </Suspense>
   );
 }

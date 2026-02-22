@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { reissueApi } from '@/features/auth/api/auth.api';
 import { tokenStore } from '@/shared/auth/tokenStore';
@@ -9,7 +9,7 @@ function pickString(value: string | null) {
   return value ?? '';
 }
 
-export default function AuthCallbackPage() {
+function AuthCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -59,5 +59,13 @@ export default function AuthCallbackPage() {
     <div className="flex min-h-screen items-center justify-center text-sm text-slate-600">
       로그인 처리 중...
     </div>
+  );
+}
+
+export default function AuthCallbackPage() {
+  return (
+    <Suspense fallback={null}>
+      <AuthCallbackContent />
+    </Suspense>
   );
 }
