@@ -17,7 +17,7 @@ export default function Splash() {
   };
 
   const handleLogin = () => {
-    router.push('/login');
+    router.push('/home');
   };
 
   return (
