@@ -9,6 +9,8 @@ import { getMemberAvailabilityApi } from '@/features/signup/api/signup.api';
 type ToastType = 'success' | 'error' | 'info';
 type ToastState = { visible: boolean; message: string; type: ToastType };
 const SIGNUP_VERIFICATION_TYPE = 'SIGN_UP';
+const INVALID_UNIVERSITY_EMAIL_CODE = 4303;
+const INVALID_UNIVERSITY_EMAIL_MESSAGE = '올바르지 않은 대학 이메일';
 
 function extractApiErrorMessage(error: unknown, fallback: string) {
   if (error instanceof AxiosError) {
@@ -17,6 +19,26 @@ function extractApiErrorMessage(error: unknown, fallback: string) {
   }
   if (error instanceof Error) return error.message;
   return fallback;
+}
+
+function isInvalidUniversityEmailError(error: unknown) {
+  if (error instanceof AxiosError) {
+    const data = error.response?.data as { code?: number | string; message?: string } | undefined;
+    const rawCode = data?.code;
+    const numericCode = typeof rawCode === 'string' ? Number(rawCode) : rawCode;
+
+    if (numericCode === INVALID_UNIVERSITY_EMAIL_CODE) return true;
+    return typeof data?.message === 'string' && data.message.includes(INVALID_UNIVERSITY_EMAIL_MESSAGE);
+  }
+
+  if (error instanceof Error) {
+    const withCode = error as Error & { code?: number | string };
+    const numericCode = typeof withCode.code === 'string' ? Number(withCode.code) : withCode.code;
+    if (numericCode === INVALID_UNIVERSITY_EMAIL_CODE) return true;
+    return error.message.includes(INVALID_UNIVERSITY_EMAIL_MESSAGE);
+  }
+
+  return false;
 }
 
 export function EmailVerifyForm() {
@@ -83,11 +105,35 @@ export function EmailVerifyForm() {
         'success'
       );
     } catch (error) {
+      const invalidUniversityEmail = isInvalidUniversityEmailError(error);
+      if (invalidUniversityEmail) {
+        setIsEmailSent(false);
+        setAuthCode('');
+        setProfile({
+          universityName: '',
+          universityDomain: '',
+          universityDomainId: null,
+        });
+      }
       showToast(extractApiErrorMessage(error, '인증번호 전송에 실패했습니다.'), 'error');
     } finally {
       setIsSending(false);
     }
-  }, [email, emailRegex, showToast]);
+  }, [email, emailRegex, setProfile, showToast]);
+
+  const handleEmailChange = useCallback(
+    (value: string) => {
+      setProfile({
+        email: value,
+        universityName: '',
+        universityDomain: '',
+        universityDomainId: null,
+      });
+      setIsEmailSent(false);
+      setAuthCode('');
+    },
+    [setProfile]
+  );
 
   const handleVerifyCode = useCallback(async () => {
     if (!authCode) {
@@ -115,11 +161,16 @@ export function EmailVerifyForm() {
       if (result.universityName) {
         setProfile({
           universityName: result.universityName,
+          universityDomain: result.domain ?? '',
           universityDomainId: result.universityDomainId,
         });
         showToast(`${result.universityName} 인증이 완료되었습니다.`, 'success');
       } else {
-        setProfile({ universityDomainId: result.universityDomainId });
+        setProfile({
+          universityName: '',
+          universityDomain: result.domain ?? '',
+          universityDomainId: result.universityDomainId,
+        });
         showToast('이메일 인증이 완료되었습니다.', 'success');
       }
     } catch (error) {
@@ -137,7 +188,7 @@ export function EmailVerifyForm() {
         value={email}
         buttonText={isSending ? '전송중...' : isEmailSent ? '재전송' : '전송'}
         disabled={isSending}
-        onChange={(v) => setProfile({ email: v })}
+        onChange={handleEmailChange}
         onAction={handleSendEmail}
       />
 

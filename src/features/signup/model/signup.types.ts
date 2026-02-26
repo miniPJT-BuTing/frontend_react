@@ -6,6 +6,7 @@ export type SignupProfile = {
   college: string;
   collegeId: number | null;
   universityName: string;
+  universityDomain: string;
   universityDomainId: number | null;
   signUpToken: string;
   providerName: string;

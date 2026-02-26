@@ -17,6 +17,18 @@ export type {
   VerifyEmailCodeResult,
 } from './auth.types';
 
+function unwrapApiResult<T>(response: ApiResponse<T | null>, fallbackMessage: string): T {
+  if (response.isSuccess && response.result !== null) {
+    return response.result;
+  }
+
+  const error = new Error(response.message || fallbackMessage) as Error & {
+    code?: number | string;
+  };
+  error.code = response.code;
+  throw error;
+}
+
 export async function logoutApi(): Promise<void> {
   await apiInstance.post<ApiResponse<null>>('/v1/auth/logout');
 }
@@ -44,7 +56,7 @@ export async function sendEmailVerificationApi(
     '/v1/auth/email-verifications',
     payload
   );
-  return response.data.result;
+  return unwrapApiResult(response.data, '인증번호 전송에 실패했습니다.');
 }
 
 export async function verifyEmailCodeApi(
@@ -54,5 +66,5 @@ export async function verifyEmailCodeApi(
     '/v1/auth/email-verifications',
     payload
   );
-  return response.data.result;
+  return unwrapApiResult(response.data, '인증번호 검증에 실패했습니다.');
 }

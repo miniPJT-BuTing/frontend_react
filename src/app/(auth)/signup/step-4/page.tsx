@@ -26,23 +26,21 @@ export default function Step4Page() {
     const entryYear = entryYearMatch ? Number(entryYearMatch) % 100 : NaN;
     const gender = signupState.gender === 'male' ? 'M' : signupState.gender === 'female' ? 'W' : null;
     const mbti = signupState.mbti?.trim() ?? '';
-    const collegeIdFromText = Number(signupState.college);
-    const collegeId =
-      signupState.collegeId ?? (Number.isFinite(collegeIdFromText) && collegeIdFromText > 0 ? collegeIdFromText : null);
+    const collegeId = signupState.collegeId;
     const bio = signupState.oneLiner.trim();
     const keywords = signupState.keywords as PersonalityKeywordKey[];
 
     const missingFields: string[] = [];
-    if (!signupState.signUpToken) missingFields.push('signupToken');
-    if (!signupState.email.trim()) missingFields.push('universityEmail');
-    if (!signupState.universityDomainId) missingFields.push('universityDomainId');
-    if (!signupState.nickname.trim()) missingFields.push('nickname');
-    if (!signupState.age) missingFields.push('age');
-    if (!gender) missingFields.push('gender');
-    if (!mbti || mbti.length !== 4) missingFields.push('mbti');
-    if (!Number.isFinite(entryYear)) missingFields.push('entryYear');
-    if (keywords.length !== 3) missingFields.push('personalityTypes(3개)');
-    if (!collegeId) missingFields.push('collegeId');
+    if (!signupState.signUpToken) missingFields.push('가입 토큰');
+    if (!signupState.email.trim()) missingFields.push('학교 이메일');
+    if (!signupState.universityDomainId) missingFields.push('학교 이메일 인증');
+    if (!signupState.nickname.trim()) missingFields.push('닉네임');
+    if (!signupState.age) missingFields.push('나이');
+    if (!gender) missingFields.push('성별');
+    if (!mbti || mbti.length !== 4) missingFields.push('MBTI');
+    if (!Number.isFinite(entryYear)) missingFields.push('학번');
+    if (keywords.length !== 3) missingFields.push('성격 키워드 3개');
+    if (!collegeId) missingFields.push('소속 단과대');
 
     if (missingFields.length > 0) {
       alert(`회원가입에 필요한 정보가 부족합니다: ${missingFields.join(', ')}`);
@@ -69,7 +67,7 @@ export default function Step4Page() {
 
       signupState.reset();
       alert('회원가입이 완료되었습니다.');
-      router.replace('/');
+      router.replace('/home');
     } catch (error) {
       if (error instanceof AxiosError) {
         const message = (error.response?.data as { message?: string } | undefined)?.message;

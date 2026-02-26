@@ -8,6 +8,7 @@ const initialProfile: SignupProfile = {
   college: '',
   collegeId: null,
   universityName: '',
+  universityDomain: '',
   universityDomainId: null,
   signUpToken: '',
   providerName: '',
@@ -47,7 +48,7 @@ export const useSignupStore = create<SignupState>((set) => ({
         return { ...s, keywords: s.keywords.filter((k) => k !== key) };
       }
 
-      if (s.keywords.length >= 5) return s;
+      if (s.keywords.length >= 3) return s;
 
       return { ...s, keywords: [...s.keywords, key] };
     }),

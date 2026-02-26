@@ -9,9 +9,10 @@ export default async function SplashPage() {
     cookieStore.get('accessToken')?.value ||
     cookieStore.get('token')?.value ||
     cookieStore.get('buting_token')?.value;
+  const refreshToken = cookieStore.get('refreshToken')?.value;
 
-  if (accessToken) {
-    redirect('/');
+  if (accessToken || refreshToken) {
+    redirect('/home');
   }
 
   return <Splash />;

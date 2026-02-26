@@ -29,3 +29,8 @@ export interface MemberAvailabilityParams {
   email?: string;
   nickname?: string;
 }
+
+export interface CollegeItem {
+  id: number;
+  name: string;
+}

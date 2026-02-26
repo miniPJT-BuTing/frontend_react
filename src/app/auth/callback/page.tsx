@@ -50,7 +50,7 @@ function AuthCallbackContent() {
         }
       } catch {
       } finally {
-        router.replace('/');
+        router.replace('/home');
       }
     })();
   }, [router, searchParams]);

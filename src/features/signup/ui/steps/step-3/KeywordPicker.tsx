@@ -19,7 +19,7 @@ export function KeywordPicker() {
     if (selectedKeys.includes(key)) {
       setPersonality({ keywords: selectedKeys.filter((k) => k !== key) });
     } else {
-      if (selectedKeys.length >= 5) return;
+      if (selectedKeys.length >= 3) return;
       setPersonality({ keywords: [...selectedKeys, key] });
     }
   };
@@ -35,7 +35,7 @@ export function KeywordPicker() {
         selected={selectedLabels}
         onToggle={toggleKeyword}
       />
-      <p className="text-xs text-right text-gray-500">최대 5개까지 선택할 수 있어요.</p>
+      <p className="text-xs text-right text-gray-500">최대 3개까지 선택할 수 있어요.</p>
     </div>
   );
 }
