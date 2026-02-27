@@ -10,7 +10,11 @@ import { EditMbti } from '@/widgets/profile-edit/EditMbti';
 import { EditKeywords } from '@/widgets/profile-edit/EditKeywords';
 import { EditBio } from '@/widgets/profile-edit/EditBio';
 import { RetroButton } from '@/shared/ui/button/RetroButton';
-import { getMyProfile, updateMyProfile } from '@/features/member/api/member.api';
+import {
+  getMyProfile,
+  getPersonalityKeywordsApi,
+  updateMyProfile,
+} from '@/features/member/api/member.api';
 import { PERSONALITY_KEYWORDS, type PersonalityKeywordKey } from '@/shared/lib/personalityKeyword';
 
 export default function ProfileEditPage() {
@@ -27,11 +31,20 @@ export default function ProfileEditPage() {
     queryKey: ['member', 'me'],
     queryFn: getMyProfile,
   });
+  const { data: personalityKeywords } = useQuery({
+    queryKey: ['member', 'personality-keywords'],
+    queryFn: getPersonalityKeywordsApi,
+  });
+
+  const availableKeywordOptions =
+    personalityKeywords && personalityKeywords.length > 0
+      ? personalityKeywords
+      : PERSONALITY_KEYWORDS.map((keyword) => ({ code: keyword.key, description: keyword.label }));
 
   useEffect(() => {
     if (!data || isHydrated) return;
 
-    const validKeywordSet = new Set(PERSONALITY_KEYWORDS.map((keyword) => keyword.key));
+    const validKeywordSet = new Set(availableKeywordOptions.map((keyword) => keyword.code));
     const profileKeywords = data.personalityTypes.filter(
       (keyword): keyword is PersonalityKeywordKey => validKeywordSet.has(keyword as PersonalityKeywordKey)
     );
@@ -41,7 +54,7 @@ export default function ProfileEditPage() {
     setKeywords(profileKeywords);
     setBio(data.bio ?? '');
     setIsHydrated(true);
-  }, [data, isHydrated]);
+  }, [availableKeywordOptions, data, isHydrated]);
 
   const handleSave = async () => {
     if (isSaving || isLoading) return;
@@ -124,7 +137,7 @@ export default function ProfileEditPage() {
             <EditMbti value={mbti} onChange={setMbti} />
           </section>
           <section className="space-y-6">
-            <EditKeywords value={keywords} onChange={setKeywords} />
+            <EditKeywords value={keywords} onChange={setKeywords} options={availableKeywordOptions} />
             <EditBio value={bio} onChange={setBio} />
           </section>
         </div>

@@ -6,18 +6,25 @@ import {
   PERSONALITY_KEY_TO_LABEL,
   type PersonalityKeywordKey,
 } from '@/shared/lib/personalityKeyword';
+import type { PersonalityKeywordItem } from '@/features/member/api/member.types';
 
 type Props = {
   value: PersonalityKeywordKey[];
   onChange: (val: PersonalityKeywordKey[]) => void;
+  options?: PersonalityKeywordItem[];
 };
 
-export function EditKeywords({ value, onChange }: Props) {
+export function EditKeywords({ value, onChange, options }: Props) {
+  const keywordOptions = options ?? PERSONALITY_KEYWORDS.map((keyword) => ({
+    code: keyword.key,
+    description: keyword.label,
+  }));
+
   const toggleKeyword = (label: string) => {
-    const found = PERSONALITY_KEYWORDS.find((keyword) => keyword.label === label);
+    const found = keywordOptions.find((keyword) => keyword.description === label);
     if (!found) return;
 
-    const key = found.key;
+    const key = found.code as PersonalityKeywordKey;
 
     if (value.includes(key)) {
       onChange(value.filter((selectedKey) => selectedKey !== key));
@@ -32,7 +39,7 @@ export function EditKeywords({ value, onChange }: Props) {
   return (
     <div className="flex flex-col gap-3">
       <KeywordGrid
-        keywords={PERSONALITY_KEYWORDS.map((keyword) => keyword.label)}
+        keywords={keywordOptions.map((keyword) => keyword.description)}
         selected={selectedLabels}
         onToggle={toggleKeyword}
       />
