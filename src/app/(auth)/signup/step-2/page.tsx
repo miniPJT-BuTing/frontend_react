@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { SignupStepLayout } from '@/widgets/signup/SignupStepLayout';
+import { useSignupStore } from '@/features/signup/model';
 import {
   NicknameForm,
   AgeStudentIdForm,
@@ -15,6 +16,7 @@ type FunnelStep = 'nickname' | 'basic' | 'college' | 'gender';
 export default function Step2Page() {
   const router = useRouter();
   const [funnelStep, setFunnelStep] = useState<FunnelStep>('nickname');
+  const selectedCollegeId = useSignupStore((s) => s.collegeId);
   const stepConfig = {
     nickname: {
       title: <>닉네임을 알려주세요!</>,
@@ -41,7 +43,13 @@ export default function Step2Page() {
   const handleNext = () => {
     if (funnelStep === 'nickname') setFunnelStep('basic');
     else if (funnelStep === 'basic') setFunnelStep('college');
-    else if (funnelStep === 'college') setFunnelStep('gender');
+    else if (funnelStep === 'college') {
+      if (!selectedCollegeId) {
+        alert('소속 단과대를 먼저 선택해주세요.');
+        return;
+      }
+      setFunnelStep('gender');
+    }
     else router.push('/signup/step-3');
   };
 

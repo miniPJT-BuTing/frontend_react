@@ -3,12 +3,13 @@
 import { Vote } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import type { Route } from 'next';
 
 type MessageType = 'text' | 'image' | 'vote';
 
 type Message = {
   id: string;
-  senderId: string;
+  senderId: number;
   senderName: string;
   avatarColor?: string;
   content: string; // For vote, this is the JSON string or Title
@@ -16,6 +17,7 @@ type Message = {
   timestamp: string; // e.g. "오후 2:30"
   isMe: boolean;
   voteId?: string; // Optional for vote messages
+  unreadCount: number;
 };
 
 type Props = {
@@ -23,7 +25,7 @@ type Props = {
 };
 
 export default function MessageBubble({ message }: Props) {
-  const { senderName, avatarColor, content, timestamp, isMe, type, voteId } = message;
+  const { senderName, avatarColor, content, timestamp, isMe, type, voteId, unreadCount } = message;
   const params = useParams();
   const roomId = params.roomId as string;
 
@@ -37,12 +39,22 @@ export default function MessageBubble({ message }: Props) {
           </div>
           <div className="p-4">
             <h3 className="text-[15px] font-bold text-black mb-3 leading-snug">{content}</h3>
-            <Link 
-              href={`/chats/${roomId}/vote/${voteId || 'v1'}`}
-              className="block w-full rounded-lg border border-gray-200 bg-white py-2 text-center text-[13px] font-bold text-gray-700 hover:bg-gray-50 active:bg-gray-100"
-            >
-              투표하러 가기
-            </Link>
+            {voteId ? (
+              <Link
+                href={`/chats/${roomId}/vote/${voteId}` as Route}
+                className="block w-full rounded-lg border border-gray-200 bg-white py-2 text-center text-[13px] font-bold text-gray-700 hover:bg-gray-50 active:bg-gray-100"
+              >
+                투표하러 가기
+              </Link>
+            ) : (
+              <button
+                type="button"
+                disabled
+                className="block w-full rounded-lg border border-gray-200 bg-white py-2 text-center text-[13px] font-bold text-gray-400"
+              >
+                투표 정보 없음
+              </button>
+            )}
           </div>
         </div>
       );
@@ -61,7 +73,10 @@ export default function MessageBubble({ message }: Props) {
       <div className="flex w-full justify-end gap-2">
         <div className="flex flex-col items-end gap-1 max-w-[70%]">
           {renderContent()}
-          <span className="text-[11px] text-gray-400">{timestamp}</span>
+          <div className="flex items-center gap-1.5">
+            {unreadCount > 0 && <span className="text-[11px] font-semibold text-[#FF6A9F]">{unreadCount} 안읽음</span>}
+            <span className="text-[11px] text-gray-400">{timestamp}</span>
+          </div>
         </div>
       </div>
     );

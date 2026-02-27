@@ -1,9 +1,11 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import Image from 'next/image';
 import SplashButtons from '@/widgets/splash/ui/SplashButtons';
 import { getOAuthAuthorizationUrl } from '@/features/auth/api/auth.api';
+import { tokenStore } from '@/shared/auth/tokenStore';
 
 import splashBg from '@/assets/images/splash-background.png';
 import logo from '@/assets/logos/buting-logo.png';
@@ -11,6 +13,11 @@ import logoTitle from '@/assets/logos/buting-logo-title.png';
 
 export default function Splash() {
   const router = useRouter();
+
+  useEffect(() => {
+    if (!tokenStore.get()) return;
+    router.replace('/home');
+  }, [router]);
 
   const handleKakaoSignup = () => {
     window.location.href = getOAuthAuthorizationUrl('kakao');

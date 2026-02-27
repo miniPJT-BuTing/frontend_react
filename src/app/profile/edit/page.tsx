@@ -1,33 +1,44 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 import { EditNickname } from '@/widgets/profile-edit/EditNickname';
 import { EditMbti } from '@/widgets/profile-edit/EditMbti';
 import { EditKeywords } from '@/widgets/profile-edit/EditKeywords';
 import { EditBio } from '@/widgets/profile-edit/EditBio';
 import { RetroButton } from '@/shared/ui/button/RetroButton';
-import type { PersonalityKeywordKey } from '@/shared/lib/personalityKeyword';
-
-const initialData: {
-  nickname: string;
-  mbti: string;
-  keywords: PersonalityKeywordKey[];
-  bio: string;
-} = {
-  nickname: '민희',
-  mbti: 'ENFP',
-  keywords: ['LIVELINESS', 'HONESTY', 'CONSIDERATION'],
-  bio: '재밌게 이야기하고 편하게 진해져요 :)',
-};
+import { getMyProfile } from '@/features/member/api/member.api';
+import { PERSONALITY_KEYWORDS, type PersonalityKeywordKey } from '@/shared/lib/personalityKeyword';
 
 export default function ProfileEditPage() {
   const router = useRouter();
-  const [nickname, setNickname] = useState(initialData.nickname);
-  const [mbti, setMbti] = useState(initialData.mbti);
-  const [keywords, setKeywords] = useState<PersonalityKeywordKey[]>(initialData.keywords);
-  const [bio, setBio] = useState(initialData.bio);
+  const [nickname, setNickname] = useState('');
+  const [mbti, setMbti] = useState('');
+  const [keywords, setKeywords] = useState<PersonalityKeywordKey[]>([]);
+  const [bio, setBio] = useState('');
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['member', 'me'],
+    queryFn: getMyProfile,
+  });
+
+  useEffect(() => {
+    if (!data || isHydrated) return;
+
+    const validKeywordSet = new Set(PERSONALITY_KEYWORDS.map((keyword) => keyword.key));
+    const profileKeywords = data.personalityTypes.filter(
+      (keyword): keyword is PersonalityKeywordKey => validKeywordSet.has(keyword as PersonalityKeywordKey)
+    );
+
+    setNickname(data.nickname);
+    setMbti(data.mbtiCode ?? '');
+    setKeywords(profileKeywords);
+    setBio(data.bio ?? '');
+    setIsHydrated(true);
+  }, [data, isHydrated]);
 
   const handleSave = () => {
     console.log('Saved:', { nickname, mbti, keywords, bio });
@@ -53,6 +64,18 @@ export default function ProfileEditPage() {
       </header>
 
       <div className="flex-1 animate-fade-in-up pb-6">
+        {isLoading && (
+          <div className="rounded-[16px] border border-black bg-white p-4 text-center text-sm text-gray-500">
+            프로필 정보를 불러오는 중...
+          </div>
+        )}
+
+        {isError && (
+          <div className="rounded-[16px] border border-black bg-white p-4 text-center text-sm text-red-500">
+            프로필 정보를 불러오지 못했어요.
+          </div>
+        )}
+
         <div className="flex flex-col gap-10">
           <section className="space-y-6">
             <EditNickname value={nickname} onChange={setNickname} />
@@ -66,7 +89,7 @@ export default function ProfileEditPage() {
       </div>
 
       <div className="fixed bottom-6 left-0 right-0 mx-auto max-w-[480px] px-6 z-10 pb-[env(safe-area-inset-bottom)]">
-        <RetroButton onClick={handleSave} className="w-full" variant="yellow">
+        <RetroButton onClick={handleSave} className="w-full" variant="yellow" disabled={isLoading}>
           수정 완료
         </RetroButton>
       </div>

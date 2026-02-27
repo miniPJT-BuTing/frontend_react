@@ -18,7 +18,7 @@ export default function SplashButtons({ onKakaoSignup, onLogin }: Props) {
           <Image src={chatIcon} alt="Chat Icon" width={40} height={40} priority draggable={false} />
         }
       >
-        카카오로 회원가입 하기
+        카카오로 시작하기
       </ShadowButton>
 
       <ShadowButton onClick={onLogin} variant="primary">

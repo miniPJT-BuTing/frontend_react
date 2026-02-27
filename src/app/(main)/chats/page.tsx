@@ -4,7 +4,12 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import type { Route } from 'next';
 
-import { getChatRooms, type ChatRoomResponse } from '@/features/chat/api/chat.api';
+import {
+  getChatRooms,
+  normalizeChatRoomListUpdate,
+  type ChatRoomResponse,
+} from '@/features/chat/api/chat.api';
+import { createChatRealtimeClient } from '@/features/chat/realtime/chatRealtime.client';
 
 const formatChatTime = (isoString: string) => {
   const date = new Date(isoString);
@@ -28,8 +33,7 @@ export default function ChatsPage() {
         setError(null);
         const rooms = await getChatRooms();
         setChatRooms(rooms);
-      } catch (e) {
-        console.error('Failed to fetch chat rooms:', e);
+      } catch {
         setError('채팅 목록을 불러오지 못했어요.');
       } finally {
         setLoading(false);
@@ -39,13 +43,38 @@ export default function ChatsPage() {
     fetchChatRooms();
   }, []);
 
+  useEffect(() => {
+    const realtime = createChatRealtimeClient({
+      subscribeRoomList: true,
+      onRoomListUpdate: (payload) => {
+        const normalized = normalizeChatRoomListUpdate(payload);
+        if (!normalized) return;
+
+        setChatRooms((prev) => {
+          const next = new Map(prev.map((room) => [room.roomId, room]));
+          next.set(normalized.roomId, normalized);
+          return Array.from(next.values()).sort((a, b) => {
+            const aTime = new Date(a.lastSentAt).getTime();
+            const bTime = new Date(b.lastSentAt).getTime();
+            return bTime - aTime;
+          });
+        });
+      },
+    });
+
+    realtime.connect();
+    return () => {
+      realtime.disconnect();
+    };
+  }, []);
+
   const items = useMemo(
     () =>
       chatRooms.map((chat) => ({
-        id: chat.chatRoomId,
+        id: chat.roomId,
         title: chat.title,
-        lastMessage: chat.lastMessage || '최근 메시지가 없습니다.',
-        time: formatChatTime(chat.lastMessageTime),
+        lastMessage: chat.lastPreview || '최근 메시지가 없습니다.',
+        time: formatChatTime(chat.lastSentAt),
         unreadCount: chat.unreadCount,
       })),
     [chatRooms]

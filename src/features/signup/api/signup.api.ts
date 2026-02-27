@@ -1,6 +1,7 @@
 import { publicApi } from '@/shared/api/apiInstance';
 import type { ApiResponse } from '@/shared/api/api.types';
 import type {
+  CollegeItem,
   CompleteSignupRequest,
   MemberAvailabilityItem,
   MemberAvailabilityParams,
@@ -8,6 +9,7 @@ import type {
 
 export type {
   AvailabilityType,
+  CollegeItem,
   CompleteSignupRequest,
   MemberAvailabilityItem,
   MemberAvailabilityParams,
@@ -16,6 +18,11 @@ export type {
 
 export async function completeSignupApi(payload: CompleteSignupRequest): Promise<void> {
   await publicApi.post<ApiResponse<null>>('/v1/members', payload);
+}
+
+export async function getCollegesApi(): Promise<CollegeItem[]> {
+  const response = await publicApi.get<ApiResponse<CollegeItem[]>>('/v1/colleges');
+  return response.data.result ?? [];
 }
 
 export async function getMemberAvailabilityApi(
