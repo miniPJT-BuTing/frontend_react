@@ -25,6 +25,7 @@ const initialPersonality: SignupPersonality = {
 
 const initialAvatar: SignupAvatar = {
   animal: null,
+  faceShapeId: null,
 };
 
 const initialState = {

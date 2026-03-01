@@ -29,6 +29,7 @@ export default function Step4Page() {
     const collegeId = signupState.collegeId;
     const bio = signupState.oneLiner.trim();
     const keywords = signupState.keywords as PersonalityKeywordKey[];
+    const faceShapeId = signupState.faceShapeId;
 
     const missingFields: string[] = [];
     if (!signupState.signUpToken) missingFields.push('가입 토큰');
@@ -63,6 +64,7 @@ export default function Step4Page() {
         personalityTypes: keywords,
         ...(bio ? { bio } : {}),
         collegeId: collegeId!,
+        ...(faceShapeId ? { faceShapeId } : {}),
       });
 
       signupState.reset();
@@ -85,6 +87,9 @@ export default function Step4Page() {
     setMode('analyze');
   };
 
+  const analysisGender =
+    signupState.gender === 'male' ? 'M' : signupState.gender === 'female' ? 'W' : null;
+
   return (
     <SignupStepLayout
       step={4}
@@ -98,10 +103,13 @@ export default function Step4Page() {
         {mode === 'analyze' && (
           <FaceAnalyze
             onSkip={() => {
+              signupState.setAvatar({ faceShapeId: null });
               setPickSource('manual');
               setMode('picker');
             }}
-            onComplete={() => {
+            gender={analysisGender}
+            onComplete={(result) => {
+              signupState.setAvatar({ faceShapeId: result.faceShapeId });
               setPickSource('ai');
               setMode('picker');
             }}
