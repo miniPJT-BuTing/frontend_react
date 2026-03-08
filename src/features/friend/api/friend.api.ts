@@ -96,12 +96,15 @@ const normalizeFriendListPage = (raw: unknown): FriendPageResult<FriendListItem>
       const itemObj = asRecord(item);
       if (!itemObj) return null;
 
-      const friendInfo = asRecord(itemObj.friendInfo);
-      if (!friendInfo) return null;
+      const friendInfo = asRecord(itemObj.friendInfo) ?? itemObj;
 
       const memberId = toNumber(friendInfo.memberId);
       const nickname = toStringSafe(friendInfo.nickname)?.trim();
       if (memberId === undefined || !nickname) return null;
+
+      const becameFriendsAt =
+        toStringSafe(itemObj.becameFriendsAt)?.trim() ??
+        toStringSafe(friendInfo.becameFriendsAt)?.trim();
 
       return {
         memberId,
@@ -115,7 +118,7 @@ const normalizeFriendListPage = (raw: unknown): FriendPageResult<FriendListItem>
         bio: toStringSafe(friendInfo.bio)?.trim(),
         faceShapeName: toStringSafe(friendInfo.faceShapeName)?.trim(),
         personalityTypes: toStringArray(friendInfo.personalityTypes),
-        becameFriendsAt: toStringSafe(itemObj.becameFriendsAt)?.trim(),
+        becameFriendsAt,
       };
     })
     .filter((item): item is FriendListItem => item !== null);
@@ -133,13 +136,16 @@ const normalizeFriendRequestPage = (raw: unknown): FriendPageResult<FriendReques
       const itemObj = asRecord(item);
       if (!itemObj) return null;
 
-      const requester = asRecord(itemObj.requester);
-      if (!requester) return null;
+      const requester = asRecord(itemObj.requester) ?? itemObj;
 
-      const requestId = toNumber(itemObj.requestId);
+      const requestId = toNumber(itemObj.requestId) ?? toNumber(requester.requestId);
       const memberId = toNumber(requester.memberId);
       const nickname = toStringSafe(requester.nickname)?.trim();
       if (requestId === undefined || memberId === undefined || !nickname) return null;
+
+      const requestedAt =
+        toStringSafe(itemObj.requestedAt)?.trim() ?? toStringSafe(requester.requestedAt)?.trim();
+      const status = toStringSafe(itemObj.status)?.trim() ?? toStringSafe(requester.status)?.trim();
 
       return {
         requestId,
@@ -149,8 +155,8 @@ const normalizeFriendRequestPage = (raw: unknown): FriendPageResult<FriendReques
         collegeName: toStringSafe(requester.collegeName)?.trim(),
         entryYear: toNumber(requester.entryYear),
         faceShapeName: toStringSafe(requester.faceShapeName)?.trim(),
-        requestedAt: toStringSafe(itemObj.requestedAt)?.trim(),
-        status: toStringSafe(itemObj.status)?.trim(),
+        requestedAt,
+        status,
       };
     })
     .filter((item): item is FriendRequestItem => item !== null);

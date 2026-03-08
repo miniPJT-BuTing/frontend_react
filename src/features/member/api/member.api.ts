@@ -122,7 +122,6 @@ const normalizeUpdatePayload = (payload: UpdateMyProfileRequest) => {
 
   return {
     nickname,
-    mbti,
     mbtiCode: mbti,
     personalityTypes: payload.personalityTypes,
     ...(bio ? { bio } : {}),

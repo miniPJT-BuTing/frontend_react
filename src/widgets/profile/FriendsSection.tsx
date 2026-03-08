@@ -29,7 +29,7 @@ export default function FriendsSection() {
           <p className="text-[13px] font-semibold text-red-500">친구 목록을 불러오지 못했어요.</p>
         )}
 
-        {friends.length > 0 ? (
+        {!isLoading && !isError && friends.length > 0 ? (
           <>
             <div className="flex items-center justify-between gap-3">
               <div>
@@ -87,14 +87,16 @@ export default function FriendsSection() {
               )}
             </div>
           </>
-        ) : (
+        ) : null}
+
+        {!isLoading && !isError && friends.length === 0 ? (
           <EmptyInline
             title="아직 친구가 없어요"
             desc="친구를 추가하면 팀 구성/미팅 진행이 더 편해져요!"
             actionLabel="친구 추가하기"
             href="/friends"
           />
-        )}
+        ) : null}
       </div>
     </section>
   );

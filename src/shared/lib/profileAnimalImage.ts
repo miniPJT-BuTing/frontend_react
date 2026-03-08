@@ -26,7 +26,7 @@ type AnimalKey =
   | 'bear'
   | 'cat'
   | 'deer'
-  | 'dessertfox'
+  | 'desertfox'
   | 'dino'
   | 'dog'
   | 'fox'
@@ -41,7 +41,7 @@ const IMAGE_MAP: Record<GenderKey, Partial<Record<AnimalKey, StaticImageData>>> 
     bear: mBear,
     cat: mCat,
     deer: mDeer,
-    dessertfox: mDessertFox,
+    desertfox: mDessertFox,
     dino: mDino,
     dog: mDog,
     fox: mFox,
@@ -68,8 +68,8 @@ const ANIMAL_ALIAS_TO_KEY: Record<string, AnimalKey> = {
   bear: 'bear',
   cat: 'cat',
   deer: 'deer',
-  desertfox: 'dessertfox',
-  dessertfox: 'dessertfox',
+  desertfox: 'desertfox',
+  dessertfox: 'desertfox',
   dino: 'dino',
   dinosaur: 'dino',
   dog: 'dog',
@@ -84,7 +84,7 @@ const ANIMAL_ALIAS_TO_KEY: Record<string, AnimalKey> = {
   곰: 'bear',
   공룡: 'dino',
   늑대: 'wolf',
-  사막여우: 'dessertfox',
+  사막여우: 'desertfox',
   사슴: 'deer',
   여우: 'fox',
   토끼: 'rabbit',
