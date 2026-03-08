@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { AxiosError } from 'axios';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   getMatchRequestDetail,
@@ -12,52 +11,14 @@ import {
   type MatchRequestSummaryItem,
   type TeamInvitationSummaryItem,
 } from '@/features/team/api/team.api';
-import { resolveTeamMoodKey, TEAM_MOOD_KEY_TO_LABEL } from '@/shared/lib/personalityKeyword';
-
-function extractApiMessage(error: unknown, fallback: string) {
-  if (error instanceof AxiosError) {
-    const message = (error.response?.data as { message?: string } | undefined)?.message;
-    return message || fallback;
-  }
-  if (error instanceof Error && error.message) {
-    return error.message;
-  }
-  return fallback;
-}
-
-const toTeamSizeLabel = (teamSize?: string) => {
-  if (teamSize === 'TWO_ON_TWO') return '2:2';
-  if (teamSize === 'THREE_ON_THREE') return '3:3';
-  if (teamSize === 'FOUR_ON_FOUR') return '4:4';
-  if (teamSize === 'FIVE_ON_FIVE') return '5:5';
-  if (teamSize === 'SIX_ON_SIX') return '6:6';
-  return undefined;
-};
-
-const toMoodLabel = (mood?: string) => {
-  if (!mood) return undefined;
-  const moodKey = resolveTeamMoodKey(mood);
-  return moodKey ? TEAM_MOOD_KEY_TO_LABEL[moodKey] : mood;
-};
-
-const toEntryYearLabel = (min?: number, max?: number) => {
-  if (typeof min !== 'number' || typeof max !== 'number') return undefined;
-  return `${min}~${max}학번`;
-};
-
-const toAgeLabel = (min?: number, max?: number) => {
-  if (typeof min !== 'number' || typeof max !== 'number') return undefined;
-  return `${min}~${max}세`;
-};
-
-const toStatusLabel = (status?: string) => {
-  const normalized = status?.toUpperCase();
-  if (normalized === 'PENDING') return '대기중';
-  if (normalized === 'ACCEPTED') return '수락됨';
-  if (normalized === 'REJECTED') return '거절됨';
-  if (normalized === 'EXPIRED') return '만료됨';
-  return status || '상태미상';
-};
+import { extractApiMessage } from '@/shared/lib/apiError';
+import {
+  formatAgeRange,
+  formatEntryYearRange,
+  formatRequestStatusLabel,
+  formatTeamMoodLabel,
+  formatTeamSizeLabel,
+} from '@/shared/lib/teamFormat';
 
 const sortByLatestId = <T extends { matchRequestId?: number; invitationId?: number }>(a: T, b: T) => {
   const aId = a.matchRequestId ?? a.invitationId ?? 0;
@@ -67,17 +28,17 @@ const sortByLatestId = <T extends { matchRequestId?: number; invitationId?: numb
 
 const getMatchMeta = (request: MatchRequestSummaryItem): string[] =>
   [
-    toTeamSizeLabel(request.opponentTeamSize),
-    toMoodLabel(request.opponentPreferredMood),
-    toEntryYearLabel(request.opponentPreferredEntryYearMin, request.opponentPreferredEntryYearMax),
+    formatTeamSizeLabel(request.opponentTeamSize),
+    formatTeamMoodLabel(request.opponentPreferredMood),
+    formatEntryYearRange(request.opponentPreferredEntryYearMin, request.opponentPreferredEntryYearMax),
   ].filter((value): value is string => Boolean(value));
 
 const getInvitationMeta = (invitation: TeamInvitationSummaryItem): string[] =>
   [
-    toTeamSizeLabel(invitation.teamSize),
-    toMoodLabel(invitation.preferredMood),
-    toEntryYearLabel(invitation.preferredEntryYearMin, invitation.preferredEntryYearMax),
-    toAgeLabel(invitation.preferredAgeMin, invitation.preferredAgeMax),
+    formatTeamSizeLabel(invitation.teamSize),
+    formatTeamMoodLabel(invitation.preferredMood),
+    formatEntryYearRange(invitation.preferredEntryYearMin, invitation.preferredEntryYearMax),
+    formatAgeRange(invitation.preferredAgeMin, invitation.preferredAgeMax),
   ].filter((value): value is string => Boolean(value));
 
 export default function NotificationsPage() {
@@ -202,7 +163,8 @@ export default function NotificationsPage() {
                       {getMatchMeta(request).join(' | ') || '상세 정보 없음'}
                     </p>
                     <p className="mt-1 text-[11px] font-bold text-gray-400">
-                      상태: {toStatusLabel(request.status)} · {request.requestedAtAgo || '요청 시간 정보 없음'}
+                      상태: {formatRequestStatusLabel(request.status)} ·{' '}
+                      {request.requestedAtAgo || '요청 시간 정보 없음'}
                     </p>
                   </div>
 
@@ -260,18 +222,18 @@ export default function NotificationsPage() {
                     {!isSelectedDetailLoading && !isSelectedDetailError && selectedMatchDetail && (
                       <div className="space-y-1 text-[12px] font-semibold text-gray-700">
                         <p>요청 ID: {selectedMatchDetail.matchRequestId}</p>
-                        <p>상태: {toStatusLabel(selectedMatchDetail.status)}</p>
+                        <p>상태: {formatRequestStatusLabel(selectedMatchDetail.status)}</p>
                         <p>상대 팀: {selectedMatchDetail.opponentTeamTitle || '-'}</p>
                         <p>
                           선호 조건:{' '}
                           {[
-                            toTeamSizeLabel(selectedMatchDetail.opponentTeamSize),
-                            toMoodLabel(selectedMatchDetail.opponentPreferredMood),
-                            toEntryYearLabel(
+                            formatTeamSizeLabel(selectedMatchDetail.opponentTeamSize),
+                            formatTeamMoodLabel(selectedMatchDetail.opponentPreferredMood),
+                            formatEntryYearRange(
                               selectedMatchDetail.opponentPreferredEntryYearMin,
                               selectedMatchDetail.opponentPreferredEntryYearMax
                             ),
-                            toAgeLabel(
+                            formatAgeRange(
                               selectedMatchDetail.opponentPreferredAgeMin,
                               selectedMatchDetail.opponentPreferredAgeMax
                             ),
@@ -322,7 +284,7 @@ export default function NotificationsPage() {
                       {getInvitationMeta(invitation).join(' | ') || '상세 정보 없음'}
                     </p>
                     <p className="mt-1 text-[11px] font-bold text-gray-400">
-                      상태: {toStatusLabel(invitation.status)}
+                      상태: {formatRequestStatusLabel(invitation.status)}
                     </p>
                   </div>
 

@@ -6,25 +6,12 @@ import { useQuery } from '@tanstack/react-query';
 import HeartIcon from '@/assets/icons/heart.png';
 import MeetingCard from '@/entities/meeting/ui/MeetingCard';
 import { getMatchRequests, type MatchRequestSummaryItem } from '@/features/team/api/team.api';
-import { resolveTeamMoodKey, TEAM_MOOD_KEY_TO_LABEL } from '@/shared/lib/personalityKeyword';
-
-const toTeamSizeLabel = (teamSize?: string) => {
-  if (teamSize === 'TWO_ON_TWO') return '2:2';
-  if (teamSize === 'THREE_ON_THREE') return '3:3';
-  if (teamSize === 'FOUR_ON_FOUR') return '4:4';
-  if (teamSize === 'FIVE_ON_FIVE') return '5:5';
-  if (teamSize === 'SIX_ON_SIX') return '6:6';
-  return '팀';
-};
-
-const toTeamSizeCount = (teamSize?: string) => {
-  if (teamSize === 'TWO_ON_TWO') return 2;
-  if (teamSize === 'THREE_ON_THREE') return 3;
-  if (teamSize === 'FOUR_ON_FOUR') return 4;
-  if (teamSize === 'FIVE_ON_FIVE') return 5;
-  if (teamSize === 'SIX_ON_SIX') return 6;
-  return 2;
-};
+import {
+  formatEntryYearRange,
+  formatTeamMoodLabel,
+  formatTeamSizeCount,
+  formatTeamSizeLabel,
+} from '@/shared/lib/teamFormat';
 
 const toMeetingStatus = (status?: string): 'matched' | 'waiting' =>
   status?.toUpperCase() === 'ACCEPTED' ? 'matched' : 'waiting';
@@ -39,15 +26,13 @@ const toStatusRank = (status?: string): number => {
 };
 
 const getMeetingMeta = (request: MatchRequestSummaryItem): string[] => {
-  const moodKey = resolveTeamMoodKey(request.opponentPreferredMood);
-  const moodLabel = moodKey ? TEAM_MOOD_KEY_TO_LABEL[moodKey] : request.opponentPreferredMood;
-  const entryYearLabel =
-    typeof request.opponentPreferredEntryYearMin === 'number' &&
-    typeof request.opponentPreferredEntryYearMax === 'number'
-      ? `${request.opponentPreferredEntryYearMin}~${request.opponentPreferredEntryYearMax}학번`
-      : undefined;
+  const moodLabel = formatTeamMoodLabel(request.opponentPreferredMood);
+  const entryYearLabel = formatEntryYearRange(
+    request.opponentPreferredEntryYearMin,
+    request.opponentPreferredEntryYearMax
+  );
 
-  return [toTeamSizeLabel(request.opponentTeamSize), moodLabel, entryYearLabel].filter(
+  return [formatTeamSizeLabel(request.opponentTeamSize, '팀'), moodLabel, entryYearLabel].filter(
     (value): value is string => Boolean(value)
   );
 };
@@ -122,7 +107,7 @@ export default function MyMeetingSection() {
           status={toMeetingStatus(meeting.status)}
           title={meeting.opponentTeamTitle ?? '미팅 팀'}
           meta={getMeetingMeta(meeting)}
-          members={toTeamSizeCount(meeting.opponentTeamSize)}
+          members={formatTeamSizeCount(meeting.opponentTeamSize)}
           primaryAction={{
             label: toMeetingStatus(meeting.status) === 'matched' ? '채팅하러 가기' : '매칭 요청 확인하기',
             href: toMeetingStatus(meeting.status) === 'matched' ? '/chats' : '/notifications',
