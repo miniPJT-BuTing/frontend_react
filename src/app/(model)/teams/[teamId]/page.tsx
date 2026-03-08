@@ -85,6 +85,7 @@ export default function TeamPage({ params }: { params: Promise<{ teamId: string 
   const [teamData, setTeamData] = useState<TeamData | null>(null);
   const [loading, setLoading] = useState(true);
   const [requesting, setRequesting] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -195,12 +196,60 @@ export default function TeamPage({ params }: { params: Promise<{ teamId: string 
     }
   };
 
+  const handleShare = async () => {
+    if (!teamData || isSharing) return;
+
+    const shareUrl = window.location.href;
+    const shareTitle = `${teamData.title} | 부팅`;
+
+    try {
+      setIsSharing(true);
+
+      if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
+        await navigator.share({
+          title: shareTitle,
+          text: '부팅 팀 프로필을 확인해보세요.',
+          url: shareUrl,
+        });
+        return;
+      }
+
+      if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(shareUrl);
+        alert('팀 링크가 복사되었습니다.');
+        return;
+      }
+
+      const textArea = document.createElement('textarea');
+      textArea.value = shareUrl;
+      textArea.setAttribute('readonly', '');
+      textArea.style.position = 'fixed';
+      textArea.style.opacity = '0';
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      alert('팀 링크가 복사되었습니다.');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : '';
+      if (message.toLowerCase().includes('abort')) return;
+      alert('공유 중 오류가 발생했습니다.');
+    } finally {
+      setIsSharing(false);
+    }
+  };
+
   return (
     <main className="flex min-h-full flex-col">
       <TeamDetailHeader />
 
       <div className="flex-1 pb-4">
-        <TeamTitleSection title={teamData.title} createdAt={teamData.createdAt} />
+        <TeamTitleSection
+          title={teamData.title}
+          createdAt={teamData.createdAt}
+          onShare={handleShare}
+          shareDisabled={isSharing}
+        />
         <TeamMembersRow members={teamData.members} />
         <div className="h-px w-full bg-gray-100 my-2" /> {/* Divider */}
         <TeamSpecs data={teamData.specs} />

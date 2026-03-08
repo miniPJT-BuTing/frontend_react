@@ -5,6 +5,8 @@ import Image from 'next/image';
 
 import StarIcon from '@/assets/icons/star.png';
 import TeamPickCard from '@/entities/team/ui/TeamPickCard';
+import type { MatchingFilters } from '@/features/matching/lib/matchingFilters';
+import { resolveTeamMoodKey } from '@/shared/lib/personalityKeyword';
 import { getMatchingPosts, requestMatching, type MatchingPostItem } from '@/features/team/api/team.api';
 
 const toTeamSizeLabel = (teamSize?: string, targetCount?: number) => {
@@ -24,12 +26,52 @@ const getStatus = (post: MatchingPostItem, requestedTeamIds: Set<number>): 'idle
   return 'idle';
 };
 
-export default function TodayPickSection() {
+const isRangeIncluded = (
+  targetMin: number | undefined,
+  targetMax: number | undefined,
+  filterRange: [number, number] | undefined
+) => {
+  if (!filterRange) return true;
+  if (typeof targetMin !== 'number' || typeof targetMax !== 'number') return false;
+  const normalizedTargetMin = Math.min(targetMin, targetMax);
+  const normalizedTargetMax = Math.max(targetMin, targetMax);
+  const normalizedFilterMin = Math.min(filterRange[0], filterRange[1]);
+  const normalizedFilterMax = Math.max(filterRange[0], filterRange[1]);
+
+  return normalizedTargetMin >= normalizedFilterMin && normalizedTargetMax <= normalizedFilterMax;
+};
+
+type Props = {
+  filters?: MatchingFilters;
+};
+
+export default function TodayPickSection({ filters }: Props) {
   const [posts, setPosts] = useState<MatchingPostItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [requestingTeamId, setRequestingTeamId] = useState<number | null>(null);
   const [requestedTeamIds, setRequestedTeamIds] = useState<Set<number>>(new Set());
+
+  const filteredPosts = useMemo(() => {
+    if (!filters) return posts;
+
+    return posts.filter((post) => {
+      const postMoodKey = resolveTeamMoodKey(post.preferredMood);
+      const matchesMood =
+        filters.moodKeys.length === 0 ? true : postMoodKey !== null && filters.moodKeys.includes(postMoodKey);
+
+      if (!matchesMood) return false;
+
+      const matchesEntryYear = isRangeIncluded(
+        post.preferredEntryYearMin,
+        post.preferredEntryYearMax,
+        filters.entryYearRange
+      );
+      if (!matchesEntryYear) return false;
+
+      return isRangeIncluded(post.preferredAgeMin, post.preferredAgeMax, filters.ageRange);
+    });
+  }, [filters, posts]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -51,7 +93,7 @@ export default function TodayPickSection() {
 
   const mappedCards = useMemo(
     () =>
-      posts.map((post) => {
+      filteredPosts.map((post) => {
         const teamSizeLabel = toTeamSizeLabel(post.teamSize, post.targetMemberCount);
         const university = post.universityName ?? '학교 정보 없음';
         const studentIdLabel =
@@ -71,7 +113,7 @@ export default function TodayPickSection() {
           status: getStatus(post, requestedTeamIds),
         };
       }),
-    [posts, requestedTeamIds]
+    [filteredPosts, requestedTeamIds]
   );
 
   const handleRequest = async (teamId: number) => {

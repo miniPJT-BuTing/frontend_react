@@ -47,6 +47,9 @@ export interface MatchingPostListParams {
 export interface MatchingPostItem {
   teamId: number;
   title: string;
+  leaderMemberId?: number;
+  myRole?: string;
+  isMine?: boolean;
   teamSize?: string;
   preferredMood?: string;
   preferredAgeMin?: number;
@@ -55,8 +58,57 @@ export interface MatchingPostItem {
   preferredEntryYearMax?: number;
   currentMemberCount: number;
   targetMemberCount: number;
+  createdAt?: string;
   universityName?: string;
   status?: string;
+}
+
+export interface MatchRequestSummaryItem {
+  matchRequestId: number;
+  status?: string;
+  requestedAtAgo?: string;
+  opponentTeamTitle?: string;
+  opponentTeamSize?: string;
+  opponentPreferredMood?: string;
+  opponentPreferredEntryYearMin?: number;
+  opponentPreferredEntryYearMax?: number;
+}
+
+export interface MatchRequestListParams {
+  type: 'sent' | 'received';
+  status?: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED';
+}
+
+export interface TeamInvitationSummaryItem {
+  invitationId: number;
+  status?: string;
+  createdAt?: string;
+  teamId?: number;
+  teamTitle?: string;
+  teamSize?: string;
+  preferredMood?: string;
+  preferredAgeMin?: number;
+  preferredAgeMax?: number;
+  preferredEntryYearMin?: number;
+  preferredEntryYearMax?: number;
+  currentMemberCount?: number;
+  targetMemberCount?: number;
+}
+
+export interface MyTeamSummaryItem {
+  teamId: number;
+  role?: 'LEADER' | 'MEMBER' | string;
+  title: string;
+  teamSize?: string;
+  preferredMood?: string;
+  preferredAgeMin?: number;
+  preferredAgeMax?: number;
+  preferredEntryYearMin?: number;
+  preferredEntryYearMax?: number;
+  currentMemberCount?: number;
+  targetMemberCount?: number;
+  isOpen?: boolean;
+  createdAt?: string;
 }
 
 export interface CreateTeamRequest {
