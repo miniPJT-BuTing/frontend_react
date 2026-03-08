@@ -74,6 +74,22 @@ export interface MatchRequestSummaryItem {
   opponentPreferredEntryYearMax?: number;
 }
 
+export interface MatchRequestDetailResponse {
+  matchRequestId: number;
+  status?: string;
+  requestedAt?: string;
+  requestedAtAgo?: string;
+  chatRoomId?: number;
+  opponentTeamId?: number;
+  opponentTeamTitle?: string;
+  opponentTeamSize?: string;
+  opponentPreferredMood?: string;
+  opponentPreferredEntryYearMin?: number;
+  opponentPreferredEntryYearMax?: number;
+  opponentPreferredAgeMin?: number;
+  opponentPreferredAgeMax?: number;
+}
+
 export interface MatchRequestListParams {
   type: 'sent' | 'received';
   status?: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED';
