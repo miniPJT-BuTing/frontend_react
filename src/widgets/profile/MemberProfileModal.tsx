@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect, useMemo } from 'react';
+import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import { X } from 'lucide-react';
 import { getMemberProfileById } from '@/features/member/api/member.api';
 import { PERSONALITY_KEY_TO_LABEL, type PersonalityKeywordKey } from '@/shared/lib/personalityKeyword';
+import { resolveProfileAnimalImage } from '@/shared/lib/profileAnimalImage';
 
 type Props = {
   memberId: number | null;
@@ -38,6 +40,10 @@ export default function MemberProfileModal({ memberId, isOpen, onClose }: Props)
     () => (data?.personalityTypes ?? []).map((keyword) => toKeywordLabel(keyword)).slice(0, 3),
     [data?.personalityTypes]
   );
+  const profileImage = useMemo(
+    () => resolveProfileAnimalImage(data?.gender, data?.faceShape),
+    [data?.gender, data?.faceShape]
+  );
 
   if (!isOpen) return null;
 
@@ -70,8 +76,18 @@ export default function MemberProfileModal({ memberId, isOpen, onClose }: Props)
 
           {!isLoading && !isError && data && (
             <div className="flex flex-col items-center text-center">
-              <div className="mb-3 mt-3 flex h-[92px] w-[92px] items-center justify-center rounded-full border border-gray-300 bg-[#F2F4F8] text-[36px]">
-                🐣
+              <div className="relative mb-3 mt-3 flex h-[92px] w-[92px] items-center justify-center overflow-hidden rounded-full border border-gray-300 bg-[#F2F4F8] text-[36px]">
+                {profileImage ? (
+                  <Image
+                    src={profileImage}
+                    alt="프로필 이미지"
+                    fill
+                    sizes="92px"
+                    className="object-cover scale-[1.22]"
+                  />
+                ) : (
+                  '🐣'
+                )}
               </div>
 
               <h3 className="text-[24px] font-extrabold leading-tight text-[#3F3F74]">
