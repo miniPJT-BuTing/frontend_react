@@ -5,7 +5,10 @@ export interface MyProfileResponse {
   collegeId?: number;
   collegeName?: string;
   age?: number;
+  gender?: string;
+  entryYear?: number;
   mbtiCode?: string;
+  mbtiDescription?: string;
   personalityTypes: string[];
   bio?: string;
   faceShape?: string;
@@ -16,4 +19,9 @@ export interface UpdateMyProfileRequest {
   mbti: string;
   personalityTypes: string[];
   bio?: string;
+}
+
+export interface PersonalityKeywordItem {
+  code: string;
+  description: string;
 }

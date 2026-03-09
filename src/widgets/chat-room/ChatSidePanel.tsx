@@ -1,8 +1,9 @@
 'use client';
 
 import { X, User, Vote, Megaphone, LogOut } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import MemberProfileModal from '@/widgets/profile/MemberProfileModal';
 
 export type ChatDrawerMember = {
   memberId: number;
@@ -28,6 +29,7 @@ export default function ChatSidePanel({ isOpen, onClose, members, votes }: Props
   const router = useRouter();
   const params = useParams();
   const roomId = params.roomId as string;
+  const [selectedMemberId, setSelectedMemberId] = useState<number | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -83,7 +85,13 @@ export default function ChatSidePanel({ isOpen, onClose, members, votes }: Props
                       🐣
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[14px] font-medium text-gray-800">{member.nickname}</span>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedMemberId(member.memberId)}
+                        className="text-[14px] font-medium text-gray-800 underline-offset-2 hover:underline"
+                      >
+                        {member.nickname}
+                      </button>
                       {member.isMe && (
                         <span className="text-[10px] font-bold text-gray-400 border border-gray-200 px-1 rounded">
                           나
@@ -162,6 +170,12 @@ export default function ChatSidePanel({ isOpen, onClose, members, votes }: Props
           </div>
         </div>
       </div>
+
+      <MemberProfileModal
+        memberId={selectedMemberId}
+        isOpen={selectedMemberId !== null}
+        onClose={() => setSelectedMemberId(null)}
+      />
     </>
   );
 }
