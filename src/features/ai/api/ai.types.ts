@@ -1,5 +1,5 @@
 export interface AiAnalysisResult {
-  faceShapeId: number;
+  faceShapeId: number | null;
   name: string;
   nickname: string;
   description: string;

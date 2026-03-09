@@ -47,8 +47,8 @@ export function FaceAnalyze({ onSkip, gender, onComplete }: Props) {
 
       const analyzed = await analyzeFaceApi(gender, file);
       setResult(analyzed);
-      onComplete(analyzed);
       alert('AI 얼굴 분석이 완료되었습니다.');
+      onComplete(analyzed);
     } catch (error) {
       if (error instanceof AxiosError) {
         const message = (error.response?.data as { message?: string } | undefined)?.message;

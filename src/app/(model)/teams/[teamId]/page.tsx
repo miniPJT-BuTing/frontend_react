@@ -13,12 +13,12 @@ import { TeamActionFooter } from '@/widgets/team-detail/TeamActionFooter';
 import { getTeamDetail, deleteTeam, requestMatching } from '@/features/team/api/team.api';
 
 // 임시 테스트용 유저 ID (백엔드 헤더 설정과 동일하게)
-const TEST_USER_ID = '1';
+const TEST_USER_ID = 1;
 
 // UI용 데이터 타입 정의
 interface TeamData {
-  id: string;
-  leaderId: string;
+  id: number;
+  leaderId: number;
   title: string;
   createdAt: string;
   specs: {
@@ -32,7 +32,7 @@ interface TeamData {
   };
   introduction: string;
   members: Array<{
-    id: string;
+    id: number;
     nickname: string;
     isLeader: boolean;
     schoolName: string;
@@ -43,8 +43,8 @@ interface TeamData {
 
 // Mock Data (Fallback)
 const FALLBACK_TEAM_DATA: TeamData = {
-  id: 't1',
-  leaderId: '1',
+  id: 1,
+  leaderId: 1,
   title: '동아대 디자인과랑 4:4 미팅해요! 🎨 (Mock)',
   createdAt: '01.29',
   specs: {
@@ -60,7 +60,7 @@ const FALLBACK_TEAM_DATA: TeamData = {
     'API 호출 실패로 인한 Mock 데이터입니다.\n안녕하세요! 저희는 동아대학교 산업디자인과 재학 중인 4명입니다.',
   members: [
     {
-      id: '1',
+      id: 1,
       nickname: '디자인요정',
       isLeader: true,
       schoolName: '동아대',
@@ -68,7 +68,7 @@ const FALLBACK_TEAM_DATA: TeamData = {
       avatarColor: '#FFE1EE',
     },
     {
-      id: '2',
+      id: 2,
       nickname: '과제지옥',
       isLeader: false,
       schoolName: '동아대',
@@ -94,8 +94,8 @@ export default function TeamPage({ params }: { params: Promise<{ teamId: string 
 
         // API Response -> UI Data 변환
         const formattedData: TeamData = {
-          id: data.teamId.toString(),
-          leaderId: data.leaderInfo.memberId.toString(),
+          id: data.teamId,
+          leaderId: data.leaderInfo.memberId,
           title: data.title,
           createdAt: data.createdAt ? new Date(data.createdAt).toLocaleDateString() : '날짜미상',
           specs: {
@@ -111,7 +111,7 @@ export default function TeamPage({ params }: { params: Promise<{ teamId: string 
           members:
             (data.members || []).length > 0
               ? data.members!.map((m) => ({
-                  id: m.id.toString(),
+                  id: m.id,
                   nickname: m.nickname,
                   isLeader: m.role === 'LEADER',
                   schoolName: m.university,
@@ -121,7 +121,7 @@ export default function TeamPage({ params }: { params: Promise<{ teamId: string 
               : [
                   // 멤버 데이터가 없을 경우 리더 정보라도 표시 (Fallback)
                   {
-                    id: data.leaderInfo.memberId.toString(),
+                    id: data.leaderInfo.memberId,
                     nickname: data.leaderInfo.nickname,
                     isLeader: true,
                     schoolName: data.leaderInfo.universityName,
@@ -159,7 +159,7 @@ export default function TeamPage({ params }: { params: Promise<{ teamId: string 
     try {
       if (requesting) return;
       setRequesting(true);
-      const targetTeamId = Number(teamId) || Number(teamData.id);
+      const targetTeamId = Number(teamId) || teamData.id;
       if (!targetTeamId) {
         alert('유효하지 않은 팀 ID입니다.');
         return;

@@ -64,7 +64,7 @@ export default function Step4Page() {
         personalityTypes: keywords,
         ...(bio ? { bio } : {}),
         collegeId: collegeId!,
-        ...(faceShapeId ? { faceShapeId } : {}),
+        ...(faceShapeId !== null && faceShapeId !== undefined ? { faceShapeId } : {}),
       });
 
       signupState.reset();

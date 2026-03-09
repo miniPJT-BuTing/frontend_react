@@ -2,9 +2,11 @@
 
 import { useEffect, useMemo } from 'react';
 import Image from 'next/image';
-import { useQuery } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { X } from 'lucide-react';
-import { getMemberProfileById } from '@/features/member/api/member.api';
+import { getMemberProfileById, getMyProfile } from '@/features/member/api/member.api';
+import { sendFriendRequestApi } from '@/features/friend/api/friend.api';
 import { PERSONALITY_KEY_TO_LABEL, type PersonalityKeywordKey } from '@/shared/lib/personalityKeyword';
 import { resolveProfileAnimalImage } from '@/shared/lib/profileAnimalImage';
 
@@ -20,10 +22,35 @@ const toKeywordLabel = (keyword: string): string => {
 };
 
 export default function MemberProfileModal({ memberId, isOpen, onClose }: Props) {
+  const queryClient = useQueryClient();
+  const { data: myProfile } = useQuery({
+    queryKey: ['member', 'me'],
+    queryFn: getMyProfile,
+    enabled: isOpen,
+  });
   const { data, isLoading, isError } = useQuery({
     queryKey: ['member', 'profile', memberId],
     queryFn: async () => getMemberProfileById(memberId!),
     enabled: isOpen && !!memberId,
+  });
+  const sendFriendRequestMutation = useMutation({
+    mutationFn: (nickname: string) => sendFriendRequestApi(nickname),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['friends', 'requests'] });
+      alert('친구 요청을 보냈습니다.');
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        const message = (error.response?.data as { message?: string } | undefined)?.message;
+        alert(message || '친구 요청에 실패했습니다.');
+        return;
+      }
+      if (error instanceof Error && error.message) {
+        alert(error.message);
+        return;
+      }
+      alert('친구 요청에 실패했습니다.');
+    },
   });
 
   useEffect(() => {
@@ -54,6 +81,16 @@ export default function MemberProfileModal({ memberId, isOpen, onClose }: Props)
   const mbti = data?.mbtiCode ?? '-';
   const intro = data?.bio ?? '아직 등록된 자기소개가 없어요.';
   const schoolLine = [data?.universityName, data?.collegeName].filter(Boolean).join(' ');
+  const isSelfProfile =
+    typeof data?.memberId === 'number' &&
+    typeof myProfile?.memberId === 'number' &&
+    data.memberId === myProfile.memberId;
+  const friendRequestDisabled = sendFriendRequestMutation.isPending || isSelfProfile;
+  const friendRequestLabel = isSelfProfile
+    ? '내 프로필입니다'
+    : sendFriendRequestMutation.isPending
+      ? '요청 중...'
+      : '친구 추가하기';
 
   return (
     <div className="fixed inset-0 z-[120]">
@@ -127,10 +164,14 @@ export default function MemberProfileModal({ memberId, isOpen, onClose }: Props)
 
               <button
                 type="button"
-                onClick={() => alert('친구 추가 기능은 준비 중입니다.')}
+                onClick={() => {
+                  if (isSelfProfile) return;
+                  sendFriendRequestMutation.mutate(data.nickname);
+                }}
+                disabled={friendRequestDisabled}
                 className="mt-5 w-full rounded-full border border-black bg-[#F5A7CE] py-3 text-[15px] font-extrabold text-[#4A3E59]"
               >
-                친구 추가하기
+                {friendRequestLabel}
               </button>
             </div>
           )}

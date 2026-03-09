@@ -12,13 +12,13 @@ const toStringSafe = (value: unknown): string => {
   return '';
 };
 
-const toNumberSafe = (value: unknown): number => {
+const toNullableNumber = (value: unknown): number | null => {
   if (typeof value === 'number' && Number.isFinite(value)) return value;
   if (typeof value === 'string') {
     const parsed = Number(value);
     if (Number.isFinite(parsed)) return parsed;
   }
-  return 0;
+  return null;
 };
 
 const normalizeAiAnalysisResult = (raw: unknown): AiAnalysisResult => {
@@ -30,7 +30,7 @@ const normalizeAiAnalysisResult = (raw: unknown): AiAnalysisResult => {
       : undefined;
 
   return {
-    faceShapeId: toNumberSafe(result.faceShapeId),
+    faceShapeId: toNullableNumber(result.faceShapeId),
     name: toStringSafe(result.name),
     nickname: toStringSafe(result.nickname),
     description: toStringSafe(result.description),

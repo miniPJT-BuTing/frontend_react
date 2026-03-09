@@ -7,7 +7,7 @@ import MemberProfileModal from '@/widgets/profile/MemberProfileModal';
 // 실제 프로젝트에선 import CrownIcon from '@/assets/icons/crown.png'; 등을 사용 권장
 
 type Member = {
-  id: string;
+  id: number;
   nickname: string;
   avatarColor: string;
   isLeader: boolean;
@@ -31,11 +31,7 @@ export function TeamMembersRow({ members }: Props) {
             <button
               type="button"
               key={member.id}
-              onClick={() => {
-                const numericId = Number(member.id);
-                if (!Number.isFinite(numericId)) return;
-                setSelectedMemberId(numericId);
-              }}
+              onClick={() => setSelectedMemberId(member.id)}
               className="flex w-[80px] shrink-0 flex-col items-center"
             >
               {/* Avatar Container */}
