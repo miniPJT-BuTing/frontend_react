@@ -9,10 +9,12 @@ import MenuItem from './ui/MenuItem';
 import Divider from './ui/Divider';
 import { logoutApi } from '@/features/auth/api/auth.api';
 import { deleteMyAccountApi } from '@/features/member/api/member.api';
+import { useCurrentUserStore } from '@/shared/auth/currentUser.store';
 import { tokenStore } from '@/shared/auth/tokenStore';
 
 export default function ProfileMenuSection() {
   const router = useRouter();
+  const clearCurrentUser = useCurrentUserStore((state) => state.clear);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -31,6 +33,7 @@ export default function ProfileMenuSection() {
         alert('로그아웃 처리 중 오류가 발생했습니다.');
       }
     } finally {
+      clearCurrentUser();
       tokenStore.clear();
       router.replace('/splash');
       setIsLoggingOut(false);
@@ -57,6 +60,7 @@ export default function ProfileMenuSection() {
       setIsDeleting(false);
     }
 
+    clearCurrentUser();
     tokenStore.clear();
     router.replace('/splash');
   };

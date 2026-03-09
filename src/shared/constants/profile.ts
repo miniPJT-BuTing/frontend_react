@@ -1,0 +1,2 @@
+export const PERSONALITY_KEYWORD_LIMIT = 3;
+

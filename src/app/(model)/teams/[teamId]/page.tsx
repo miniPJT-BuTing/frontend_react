@@ -11,9 +11,9 @@ import { TeamIntroduction } from '@/widgets/team-detail/TeamIntroduction';
 import { TeamActionFooter } from '@/widgets/team-detail/TeamActionFooter';
 
 import { getTeamDetail, deleteTeam, requestMatching } from '@/features/team/api/team.api';
-
-// 임시 테스트용 유저 ID (백엔드 헤더 설정과 동일하게)
-const TEST_USER_ID = 1;
+import { getMyProfile } from '@/features/member/api/member.api';
+import { formatDateToMonthDay } from '@/shared/lib/date';
+import { useCurrentUserStore } from '@/shared/auth/currentUser.store';
 
 // UI용 데이터 타입 정의
 interface TeamData {
@@ -81,6 +81,8 @@ const FALLBACK_TEAM_DATA: TeamData = {
 export default function TeamPage({ params }: { params: Promise<{ teamId: string }> }) {
   const router = useRouter();
   const { teamId } = use(params);
+  const myMemberId = useCurrentUserStore((state) => state.memberId);
+  const setMyMemberId = useCurrentUserStore((state) => state.setMemberId);
 
   const [teamData, setTeamData] = useState<TeamData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -91,14 +93,27 @@ export default function TeamPage({ params }: { params: Promise<{ teamId: string 
     const fetchData = async () => {
       try {
         setLoading(true);
-        const data = await getTeamDetail(teamId);
+        const [teamResult, profileResult] = await Promise.allSettled([
+          getTeamDetail(teamId),
+          getMyProfile(),
+        ]);
+
+        if (profileResult.status === 'fulfilled') {
+          setMyMemberId(profileResult.value.memberId);
+        }
+
+        if (teamResult.status !== 'fulfilled') {
+          throw teamResult.reason;
+        }
+
+        const data = teamResult.value;
 
         // API Response -> UI Data 변환
         const formattedData: TeamData = {
           id: data.teamId,
           leaderId: data.leaderInfo.memberId,
           title: data.title,
-          createdAt: data.createdAt ? new Date(data.createdAt).toLocaleDateString() : '날짜미상',
+          createdAt: formatDateToMonthDay(data.createdAt) ?? '날짜미상',
           specs: {
             memberCount: data.currentMemberCount,
             university: data.leaderInfo.universityName,
@@ -142,7 +157,7 @@ export default function TeamPage({ params }: { params: Promise<{ teamId: string 
     };
 
     fetchData();
-  }, [teamId]);
+  }, [setMyMemberId, teamId]);
 
   if (loading) {
     return (
@@ -154,7 +169,7 @@ export default function TeamPage({ params }: { params: Promise<{ teamId: string 
 
   if (!teamData) return null;
 
-  const isMyTeam = teamData.leaderId === TEST_USER_ID;
+  const isMyTeam = myMemberId !== null && teamData.leaderId === myMemberId;
 
   const handleRequest = async () => {
     try {

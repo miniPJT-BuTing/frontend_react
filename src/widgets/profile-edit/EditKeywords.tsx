@@ -6,6 +6,7 @@ import {
   PERSONALITY_KEY_TO_LABEL,
   type PersonalityKeywordKey,
 } from '@/shared/lib/personalityKeyword';
+import { PERSONALITY_KEYWORD_LIMIT } from '@/shared/constants/profile';
 import type { PersonalityKeywordItem } from '@/features/member/api/member.types';
 
 type Props = {
@@ -29,7 +30,7 @@ export function EditKeywords({ value, onChange, options }: Props) {
     if (value.includes(key)) {
       onChange(value.filter((selectedKey) => selectedKey !== key));
     } else {
-      if (value.length >= 3) return;
+      if (value.length >= PERSONALITY_KEYWORD_LIMIT) return;
       onChange([...value, key]);
     }
   };
@@ -43,7 +44,9 @@ export function EditKeywords({ value, onChange, options }: Props) {
         selected={selectedLabels}
         onToggle={toggleKeyword}
       />
-      <p className="text-xs text-right text-gray-500">최대 3개까지 선택할 수 있어요.</p>
+      <p className="text-xs text-right text-gray-500">
+        최대 {PERSONALITY_KEYWORD_LIMIT}개까지 선택할 수 있어요.
+      </p>
     </div>
   );
 }

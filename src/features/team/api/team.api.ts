@@ -4,6 +4,7 @@ import type {
   ActionApiResult,
   CreateTeamRequest,
   CreateTeamResponse,
+  MatchRequestDetailResponse,
   MatchRequestListParams,
   MatchRequestSummaryItem,
   MyTeamSummaryItem,
@@ -19,6 +20,7 @@ export type {
   ActionApiResult,
   CreateTeamRequest,
   CreateTeamResponse,
+  MatchRequestDetailResponse,
   MatchRequestListParams,
   MatchRequestSummaryItem,
   MyTeamSummaryItem,
@@ -142,6 +144,152 @@ const normalizeMatchRequestList = (raw: unknown): MatchRequestSummaryItem[] => {
   }
 
   return normalized;
+};
+
+const pickObject = (source: Record<string, unknown>, keys: string[]): Record<string, unknown> => {
+  for (const key of keys) {
+    const value = source[key];
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+      return value as Record<string, unknown>;
+    }
+  }
+  return {};
+};
+
+const normalizeMatchRequestDetail = (raw: unknown): MatchRequestDetailResponse => {
+  const obj = raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : {};
+
+  const requesterTeam = pickObject(obj, ['requesterTeam', 'requesterTeamInfo', 'requestTeam', 'fromTeam']);
+  const targetTeam = pickObject(obj, ['targetTeam', 'targetTeamInfo', 'receiverTeam', 'toTeam']);
+  const opponentTeam = pickObject(obj, ['opponentTeam', 'opponentTeamInfo']);
+
+  const teamCandidate = Object.keys(opponentTeam).length > 0 ? opponentTeam : requesterTeam;
+
+  return {
+    matchRequestId: toNumber(obj.matchRequestId ?? obj.id) ?? 0,
+    ...(toStringSafe(obj.status) ? { status: String(obj.status) } : {}),
+    ...(toStringSafe(obj.requestedAt) ? { requestedAt: String(obj.requestedAt) } : {}),
+    ...(toStringSafe(obj.requestedAtAgo) ? { requestedAtAgo: String(obj.requestedAtAgo) } : {}),
+    ...(toNumber(obj.chatRoomId) !== undefined ? { chatRoomId: toNumber(obj.chatRoomId) } : {}),
+    ...(toNumber(
+      obj.opponentTeamId ?? teamCandidate.teamId ?? teamCandidate.id ?? requesterTeam.teamId ?? targetTeam.teamId
+    ) !== undefined
+      ? {
+          opponentTeamId: toNumber(
+            obj.opponentTeamId ??
+              teamCandidate.teamId ??
+              teamCandidate.id ??
+              requesterTeam.teamId ??
+              targetTeam.teamId
+          ),
+        }
+      : {}),
+    ...(toStringSafe(
+      obj.opponentTeamTitle ?? teamCandidate.title ?? teamCandidate.teamTitle ?? requesterTeam.title ?? targetTeam.title
+    )
+      ? {
+          opponentTeamTitle: String(
+            obj.opponentTeamTitle ??
+              teamCandidate.title ??
+              teamCandidate.teamTitle ??
+              requesterTeam.title ??
+              targetTeam.title
+          ),
+        }
+      : {}),
+    ...(toStringSafe(
+      obj.opponentTeamSize ??
+        teamCandidate.teamSize ??
+        teamCandidate.targetMemberCount ??
+        requesterTeam.teamSize ??
+        targetTeam.teamSize
+    )
+      ? {
+          opponentTeamSize: String(
+            obj.opponentTeamSize ??
+              teamCandidate.teamSize ??
+              teamCandidate.targetMemberCount ??
+              requesterTeam.teamSize ??
+              targetTeam.teamSize
+          ),
+        }
+      : {}),
+    ...(toStringSafe(
+      obj.opponentPreferredMood ??
+        teamCandidate.preferredMood ??
+        requesterTeam.preferredMood ??
+        targetTeam.preferredMood
+    )
+      ? {
+          opponentPreferredMood: String(
+            obj.opponentPreferredMood ??
+              teamCandidate.preferredMood ??
+              requesterTeam.preferredMood ??
+              targetTeam.preferredMood
+          ),
+        }
+      : {}),
+    ...(toNumber(
+      obj.opponentPreferredEntryYearMin ??
+        teamCandidate.preferredEntryYearMin ??
+        requesterTeam.preferredEntryYearMin ??
+        targetTeam.preferredEntryYearMin
+    ) !== undefined
+      ? {
+          opponentPreferredEntryYearMin: toNumber(
+            obj.opponentPreferredEntryYearMin ??
+              teamCandidate.preferredEntryYearMin ??
+              requesterTeam.preferredEntryYearMin ??
+              targetTeam.preferredEntryYearMin
+          ),
+        }
+      : {}),
+    ...(toNumber(
+      obj.opponentPreferredEntryYearMax ??
+        teamCandidate.preferredEntryYearMax ??
+        requesterTeam.preferredEntryYearMax ??
+        targetTeam.preferredEntryYearMax
+    ) !== undefined
+      ? {
+          opponentPreferredEntryYearMax: toNumber(
+            obj.opponentPreferredEntryYearMax ??
+              teamCandidate.preferredEntryYearMax ??
+              requesterTeam.preferredEntryYearMax ??
+              targetTeam.preferredEntryYearMax
+          ),
+        }
+      : {}),
+    ...(toNumber(
+      obj.opponentPreferredAgeMin ??
+        teamCandidate.preferredAgeMin ??
+        requesterTeam.preferredAgeMin ??
+        targetTeam.preferredAgeMin
+    ) !== undefined
+      ? {
+          opponentPreferredAgeMin: toNumber(
+            obj.opponentPreferredAgeMin ??
+              teamCandidate.preferredAgeMin ??
+              requesterTeam.preferredAgeMin ??
+              targetTeam.preferredAgeMin
+          ),
+        }
+      : {}),
+    ...(toNumber(
+      obj.opponentPreferredAgeMax ??
+        teamCandidate.preferredAgeMax ??
+        requesterTeam.preferredAgeMax ??
+        targetTeam.preferredAgeMax
+    ) !== undefined
+      ? {
+          opponentPreferredAgeMax: toNumber(
+            obj.opponentPreferredAgeMax ??
+              teamCandidate.preferredAgeMax ??
+              requesterTeam.preferredAgeMax ??
+              targetTeam.preferredAgeMax
+          ),
+        }
+      : {}),
+  };
 };
 
 const normalizeReceivedTeamInvitations = (raw: unknown): TeamInvitationSummaryItem[] => {
@@ -321,6 +469,13 @@ export const getMatchRequests = async (params: MatchRequestListParams): Promise<
     params,
   });
   return normalizeMatchRequestList(response.data.result);
+};
+
+export const getMatchRequestDetail = async (
+  matchRequestId: number
+): Promise<MatchRequestDetailResponse> => {
+  const response = await apiInstance.get<ApiResponse<unknown>>(`/v1/match-requests/${matchRequestId}`);
+  return normalizeMatchRequestDetail(response.data.result);
 };
 
 export const respondTeamInvitation = async (
