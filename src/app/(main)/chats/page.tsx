@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import type { Route } from 'next';
+import { RotateCw } from 'lucide-react';
 
 import {
   getChatRooms,
@@ -26,22 +27,22 @@ export default function ChatsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchChatRooms = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const rooms = await getChatRooms();
-        setChatRooms(rooms);
-      } catch {
-        setError('채팅 목록을 불러오지 못했어요.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchChatRooms();
+  const fetchChatRooms = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const rooms = await getChatRooms();
+      setChatRooms(rooms);
+    } catch {
+      setError('채팅 목록을 불러오지 못했어요.');
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchChatRooms();
+  }, [fetchChatRooms]);
 
   useEffect(() => {
     const realtime = createChatRealtimeClient({
@@ -81,7 +82,7 @@ export default function ChatsPage() {
   );
 
   return (
-    <div className="space-y-8 py-4">
+    <div className="flex min-h-full flex-col gap-8 py-4">
       {loading && (
         <div className="rounded-[18px] border border-black bg-white p-4 text-center text-sm text-slate-500">
           채팅 목록을 불러오는 중...
@@ -89,8 +90,16 @@ export default function ChatsPage() {
       )}
 
       {!loading && error && (
-        <div className="rounded-[18px] border border-black bg-white p-4 text-center text-sm text-red-500">
-          {error}
+        <div className="flex flex-1 flex-col items-center justify-center gap-3 text-center">
+          <p className="text-sm text-slate-500">{error}</p>
+          <button
+            type="button"
+            onClick={fetchChatRooms}
+            className="inline-flex items-center gap-2 rounded-full border border-black bg-white px-4 py-2 text-xs font-extrabold text-black active:translate-y-[1px]"
+          >
+            <RotateCw className="h-3.5 w-3.5" />
+            다시 시도
+          </button>
         </div>
       )}
 

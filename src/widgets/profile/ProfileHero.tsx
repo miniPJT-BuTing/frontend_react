@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import { RotateCw } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { getMyProfile } from '@/features/member/api/member.api';
 import { PERSONALITY_KEY_TO_LABEL, type PersonalityKeywordKey } from '@/shared/lib/personalityKeyword';
@@ -11,7 +12,7 @@ const toKeywordLabel = (keyword: string): string => {
 };
 
 export default function ProfileHero() {
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['member', 'me'],
     queryFn: getMyProfile,
   });
@@ -23,7 +24,7 @@ export default function ProfileHero() {
 
   if (isLoading) {
     return (
-      <section className="rounded-[22px] border border-black bg-white p-5 text-center text-sm text-gray-500">
+      <section className="flex min-h-[180px] items-center justify-center text-center text-sm text-slate-500">
         프로필 정보를 불러오는 중...
       </section>
     );
@@ -31,8 +32,16 @@ export default function ProfileHero() {
 
   if (isError || !data) {
     return (
-      <section className="rounded-[22px] border border-black bg-white p-5 text-center text-sm text-red-500">
-        프로필 정보를 불러오지 못했어요.
+      <section className="flex min-h-[180px] flex-col items-center justify-center gap-3 text-center">
+        <p className="text-sm text-slate-500">프로필 정보를 불러오지 못했어요.</p>
+        <button
+          type="button"
+          onClick={() => void refetch()}
+          className="inline-flex items-center gap-2 rounded-full border border-black bg-white px-4 py-2 text-xs font-extrabold text-black active:translate-y-[1px]"
+        >
+          <RotateCw className="h-3.5 w-3.5" />
+          다시 시도
+        </button>
       </section>
     );
   }

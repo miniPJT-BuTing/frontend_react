@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
+import { RotateCw } from 'lucide-react';
 
 import StarIcon from '@/assets/icons/star.png';
 import TeamPickCard from '@/entities/team/ui/TeamPickCard';
@@ -31,23 +32,23 @@ export default function TodayPickSection() {
   const [requestingTeamId, setRequestingTeamId] = useState<number | null>(null);
   const [requestedTeamIds, setRequestedTeamIds] = useState<Set<number>>(new Set());
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const result = await getMatchingPosts();
-        setPosts(result);
-      } catch (e) {
-        console.error('Failed to fetch matching posts:', e);
-        setError('추천 팀 목록을 불러오지 못했어요.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPosts();
+  const fetchPosts = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const result = await getMatchingPosts();
+      setPosts(result);
+    } catch (e) {
+      console.error('Failed to fetch matching posts:', e);
+      setError('추천 팀 목록을 불러오지 못했어요.');
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
 
   const mappedCards = useMemo(
     () =>
@@ -91,8 +92,8 @@ export default function TodayPickSection() {
   };
 
   return (
-    <section>
-      <div className="mb-3 flex items-center justify-center gap-3">
+    <section className="flex h-full min-h-0 w-full flex-1 flex-col">
+      <div className="mt-8 mb-3 flex items-center justify-center gap-3">
         <Image src={StarIcon} alt="star" width={28} height={28} priority />
 
         <h2
@@ -117,8 +118,16 @@ export default function TodayPickSection() {
       )}
 
       {!loading && error && (
-        <div className="rounded-xl border border-black bg-white p-4 text-center text-sm text-red-500">
-          {error}
+        <div className="flex min-h-0 grow flex-col items-center justify-center gap-3 text-center">
+          <p className="text-sm text-slate-500">{error}</p>
+          <button
+            type="button"
+            onClick={fetchPosts}
+            className="inline-flex items-center gap-2 rounded-full border border-black bg-white px-4 py-2 text-xs font-extrabold text-black active:translate-y-[1px]"
+          >
+            <RotateCw className="h-3.5 w-3.5" />
+            다시 시도
+          </button>
         </div>
       )}
 

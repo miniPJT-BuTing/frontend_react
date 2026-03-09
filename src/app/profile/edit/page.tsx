@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, RotateCw } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { EditNickname } from '@/widgets/profile-edit/EditNickname';
 import { EditMbti } from '@/widgets/profile-edit/EditMbti';
@@ -20,7 +20,7 @@ export default function ProfileEditPage() {
   const [bio, setBio] = useState('');
   const [isHydrated, setIsHydrated] = useState(false);
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['member', 'me'],
     queryFn: getMyProfile,
   });
@@ -65,18 +65,26 @@ export default function ProfileEditPage() {
 
       <div className="flex-1 animate-fade-in-up pb-6">
         {isLoading && (
-          <div className="rounded-[16px] border border-black bg-white p-4 text-center text-sm text-gray-500">
+          <div className="flex h-full min-h-0 items-center justify-center text-center text-sm text-slate-500">
             프로필 정보를 불러오는 중...
           </div>
         )}
 
         {isError && (
-          <div className="rounded-[16px] border border-black bg-white p-4 text-center text-sm text-red-500">
-            프로필 정보를 불러오지 못했어요.
+          <div className="flex h-full min-h-0 flex-col items-center justify-center gap-3 text-center">
+            <p className="text-sm text-slate-500">프로필 정보를 불러오지 못했어요.</p>
+            <button
+              type="button"
+              onClick={() => void refetch()}
+              className="inline-flex items-center gap-2 rounded-full border border-black bg-white px-4 py-2 text-xs font-extrabold text-black active:translate-y-[1px]"
+            >
+              <RotateCw className="h-3.5 w-3.5" />
+              다시 시도
+            </button>
           </div>
         )}
 
-        <div className="flex flex-col gap-10">
+        <div className={`flex flex-col gap-10 ${isLoading || isError ? 'hidden' : ''}`}>
           <section className="space-y-6">
             <EditNickname value={nickname} onChange={setNickname} />
             <EditMbti value={mbti} onChange={setMbti} />
