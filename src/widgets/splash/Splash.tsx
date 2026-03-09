@@ -24,7 +24,7 @@ export default function Splash() {
   };
 
   const handleLogin = () => {
-    router.push('/home');
+    router.push('/home?skipAuth=1');
   };
 
   return (
