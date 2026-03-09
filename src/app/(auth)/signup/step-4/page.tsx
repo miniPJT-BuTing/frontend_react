@@ -7,7 +7,14 @@ import { SignupStepLayout } from '@/widgets/signup/SignupStepLayout';
 import { FaceAnalyze, AnimalPicker } from '@/features/signup/ui/steps/step-4';
 import { useSignupStore } from '@/features/signup/model';
 import { completeSignupApi } from '@/features/signup/api/signup.api';
-import type { PersonalityKeywordKey } from '@/shared/lib/personalityKeyword';
+import { PERSONALITY_KEYWORDS, type PersonalityKeywordKey } from '@/shared/lib/personalityKeyword';
+
+const personalityKeywordSet = new Set<PersonalityKeywordKey>(
+  PERSONALITY_KEYWORDS.map((keyword) => keyword.key)
+);
+
+const isPersonalityKeywordKey = (value: string): value is PersonalityKeywordKey =>
+  personalityKeywordSet.has(value as PersonalityKeywordKey);
 
 type Mode = 'analyze' | 'picker';
 type PickSource = 'ai' | 'manual';
@@ -28,7 +35,7 @@ export default function Step4Page() {
     const mbti = signupState.mbti?.trim() ?? '';
     const collegeId = signupState.collegeId;
     const bio = signupState.oneLiner.trim();
-    const keywords = signupState.keywords as PersonalityKeywordKey[];
+    const keywords = signupState.keywords.filter(isPersonalityKeywordKey);
     const faceShapeId = signupState.faceShapeId;
 
     const missingFields: string[] = [];

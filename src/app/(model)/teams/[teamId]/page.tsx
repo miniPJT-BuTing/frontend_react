@@ -14,6 +14,7 @@ import { getTeamDetail, deleteTeam, requestMatching } from '@/features/team/api/
 import { getMyProfile } from '@/features/member/api/member.api';
 import { formatDateToMonthDay } from '@/shared/lib/date';
 import { useCurrentUserStore } from '@/shared/auth/currentUser.store';
+import { useShare } from '@/shared/hooks/useShare';
 
 // UI용 데이터 타입 정의
 interface TeamData {
@@ -87,7 +88,7 @@ export default function TeamPage({ params }: { params: Promise<{ teamId: string 
   const [teamData, setTeamData] = useState<TeamData | null>(null);
   const [loading, setLoading] = useState(true);
   const [requesting, setRequesting] = useState(false);
-  const [isSharing, setIsSharing] = useState(false);
+  const { isSharing, share } = useShare();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -212,45 +213,24 @@ export default function TeamPage({ params }: { params: Promise<{ teamId: string 
   };
 
   const handleShare = async () => {
-    if (!teamData || isSharing) return;
+    if (!teamData) return;
 
     const shareUrl = window.location.href;
     const shareTitle = `${teamData.title} | 부팅`;
 
-    try {
-      setIsSharing(true);
+    const result = await share({
+      url: shareUrl,
+      title: shareTitle,
+      text: '부팅 팀 프로필을 확인해보세요.',
+    });
 
-      if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
-        await navigator.share({
-          title: shareTitle,
-          text: '부팅 팀 프로필을 확인해보세요.',
-          url: shareUrl,
-        });
-        return;
-      }
-
-      if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(shareUrl);
-        alert('팀 링크가 복사되었습니다.');
-        return;
-      }
-
-      const textArea = document.createElement('textarea');
-      textArea.value = shareUrl;
-      textArea.setAttribute('readonly', '');
-      textArea.style.position = 'fixed';
-      textArea.style.opacity = '0';
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
+    if (result === 'copied') {
       alert('팀 링크가 복사되었습니다.');
-    } catch (error) {
-      const message = error instanceof Error ? error.message : '';
-      if (message.toLowerCase().includes('abort')) return;
+      return;
+    }
+
+    if (result === 'error') {
       alert('공유 중 오류가 발생했습니다.');
-    } finally {
-      setIsSharing(false);
     }
   };
 
