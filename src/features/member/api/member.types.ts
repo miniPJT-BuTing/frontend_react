@@ -10,3 +10,10 @@ export interface MyProfileResponse {
   bio?: string;
   faceShape?: string;
 }
+
+export interface UpdateMyProfileRequest {
+  nickname: string;
+  mbti: string;
+  personalityTypes: string[];
+  bio?: string;
+}

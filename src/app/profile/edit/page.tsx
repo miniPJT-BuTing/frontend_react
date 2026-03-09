@@ -3,22 +3,25 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { EditNickname } from '@/widgets/profile-edit/EditNickname';
 import { EditMbti } from '@/widgets/profile-edit/EditMbti';
 import { EditKeywords } from '@/widgets/profile-edit/EditKeywords';
 import { EditBio } from '@/widgets/profile-edit/EditBio';
 import { RetroButton } from '@/shared/ui/button/RetroButton';
-import { getMyProfile } from '@/features/member/api/member.api';
+import { getMyProfile, updateMyProfile } from '@/features/member/api/member.api';
 import { PERSONALITY_KEYWORDS, type PersonalityKeywordKey } from '@/shared/lib/personalityKeyword';
 
 export default function ProfileEditPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [nickname, setNickname] = useState('');
   const [mbti, setMbti] = useState('');
   const [keywords, setKeywords] = useState<PersonalityKeywordKey[]>([]);
   const [bio, setBio] = useState('');
   const [isHydrated, setIsHydrated] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['member', 'me'],
@@ -40,10 +43,49 @@ export default function ProfileEditPage() {
     setIsHydrated(true);
   }, [data, isHydrated]);
 
-  const handleSave = () => {
-    console.log('Saved:', { nickname, mbti, keywords, bio });
-    alert('프로필이 수정되었습니다!');
-    router.back();
+  const handleSave = async () => {
+    if (isSaving || isLoading) return;
+
+    const trimmedNickname = nickname.trim();
+    const normalizedMbti = mbti.trim().toUpperCase();
+
+    if (!trimmedNickname) {
+      alert('닉네임을 입력해주세요.');
+      return;
+    }
+
+    if (normalizedMbti.length !== 4) {
+      alert('MBTI 4글자를 선택해주세요.');
+      return;
+    }
+
+    if (keywords.length === 0) {
+      alert('성격 키워드를 1개 이상 선택해주세요.');
+      return;
+    }
+
+    try {
+      setIsSaving(true);
+      await updateMyProfile({
+        nickname: trimmedNickname,
+        mbti: normalizedMbti,
+        personalityTypes: keywords,
+        bio,
+      });
+
+      await queryClient.invalidateQueries({ queryKey: ['member', 'me'] });
+      alert('프로필이 수정되었습니다!');
+      router.back();
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const message = (error.response?.data as { message?: string } | undefined)?.message;
+        alert(message || '프로필 수정에 실패했습니다.');
+      } else {
+        alert('프로필 수정에 실패했습니다.');
+      }
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -89,8 +131,13 @@ export default function ProfileEditPage() {
       </div>
 
       <div className="fixed bottom-6 left-0 right-0 mx-auto max-w-[480px] px-6 z-10 pb-[env(safe-area-inset-bottom)]">
-        <RetroButton onClick={handleSave} className="w-full" variant="yellow" disabled={isLoading}>
-          수정 완료
+        <RetroButton
+          onClick={handleSave}
+          className="w-full"
+          variant="yellow"
+          disabled={isLoading || isSaving}
+        >
+          {isSaving ? '수정 중...' : '수정 완료'}
         </RetroButton>
       </div>
     </main>

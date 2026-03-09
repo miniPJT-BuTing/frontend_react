@@ -22,7 +22,7 @@ export function EditKeywords({ value, onChange }: Props) {
     if (value.includes(key)) {
       onChange(value.filter((selectedKey) => selectedKey !== key));
     } else {
-      if (value.length >= 5) return;
+      if (value.length >= 3) return;
       onChange([...value, key]);
     }
   };
@@ -36,7 +36,7 @@ export function EditKeywords({ value, onChange }: Props) {
         selected={selectedLabels}
         onToggle={toggleKeyword}
       />
-      <p className="text-xs text-right text-gray-500">최대 5개까지 선택할 수 있어요.</p>
+      <p className="text-xs text-right text-gray-500">최대 3개까지 선택할 수 있어요.</p>
     </div>
   );
 }

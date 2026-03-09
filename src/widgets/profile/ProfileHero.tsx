@@ -3,7 +3,10 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getMyProfile } from '@/features/member/api/member.api';
-import { PERSONALITY_KEY_TO_LABEL, type PersonalityKeywordKey } from '@/shared/lib/personalityKeyword';
+import {
+  PERSONALITY_KEY_TO_LABEL,
+  type PersonalityKeywordKey,
+} from '@/shared/lib/personalityKeyword';
 
 const toKeywordLabel = (keyword: string): string => {
   const mapped = PERSONALITY_KEY_TO_LABEL[keyword as PersonalityKeywordKey];
