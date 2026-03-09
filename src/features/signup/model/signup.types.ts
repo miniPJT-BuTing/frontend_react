@@ -23,6 +23,7 @@ export type SignupPersonality = {
 
 export type SignupAvatar = {
   animal: string | null;
+  faceShapeId: number | null;
 };
 
 export type SignupState = SignupProfile &
