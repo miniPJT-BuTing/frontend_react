@@ -81,6 +81,51 @@ export const TEAM_MOOD_LABEL_TO_KEY = Object.fromEntries(
   TEAM_MOOD_KEYWORDS.map((k) => [k.label, k.key])
 ) as Record<string, TeamMoodKey>;
 
+export const TEAM_MOOD_KEY_TO_LABEL = Object.fromEntries(
+  TEAM_MOOD_KEYWORDS.map((k) => [k.key, k.label])
+) as Record<TeamMoodKey, string>;
+
+const TEAM_MOOD_ALIAS_TO_KEY: Record<string, TeamMoodKey> = {
+  romantictension: 'ROMANTIC_TENSION',
+  friendshiptension: 'FRIENDSHIP_TENSION',
+  flirtytension: 'FLIRTY_TENSION',
+  calmtension: 'CALM_TENSION',
+  hightension: 'HIGH_TENSION',
+  drinkingtension: 'DRINKING_TENSION',
+  emotionaltension: 'EMOTIONAL_TENSION',
+  anymood: 'ANY_MOOD',
+  연애텐션: 'ROMANTIC_TENSION',
+  친구텐션: 'FRIENDSHIP_TENSION',
+  썸텐션: 'FLIRTY_TENSION',
+  차분텐션: 'CALM_TENSION',
+  하이텐션: 'HIGH_TENSION',
+  술텐션: 'DRINKING_TENSION',
+  감성텐션: 'EMOTIONAL_TENSION',
+  상관없음: 'ANY_MOOD',
+};
+
+const normalizeMoodAlias = (value: string) =>
+  value
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '')
+    .replace(/[-_]/g, '');
+
+export const resolveTeamMoodKey = (value: string | null | undefined): TeamMoodKey | null => {
+  if (!value) return null;
+  const raw = value.trim();
+  if (!raw) return null;
+
+  if ((TEAM_MOOD_KEY_TO_LABEL as Record<string, string>)[raw]) {
+    return raw as TeamMoodKey;
+  }
+
+  const byLabel = TEAM_MOOD_LABEL_TO_KEY[raw];
+  if (byLabel) return byLabel;
+
+  return TEAM_MOOD_ALIAS_TO_KEY[normalizeMoodAlias(raw)] ?? null;
+};
+
 
 // 라벨 유니온/배열 (KeywordGrid에 바로 넣을 용도) - Personality 기준
 export type PersonalityKeywordLabel = (typeof PERSONALITY_KEYWORDS)[number]['label'];
