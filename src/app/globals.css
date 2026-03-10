@@ -32,6 +32,10 @@ body {
   overflow-x: hidden;
 }
 
+:root {
+  color-scheme: light;
+}
+
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
@@ -149,4 +153,17 @@ body {
 
 .range-clean::-moz-focus-outer {
   border: 0;
+}
+
+/* Prevent browser autofill tint from changing input background/text colors */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus {
+  -webkit-text-fill-color: #111111;
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
+  box-shadow: 0 0 0 1000px #ffffff inset;
+  transition: background-color 9999s ease-out 0s;
 }

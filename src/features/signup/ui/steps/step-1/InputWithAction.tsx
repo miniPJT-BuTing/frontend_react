@@ -29,7 +29,7 @@ export function InputWithAction({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           disabled={disabled}
-          className="h-14 w-full rounded-full border border-black px-4 pr-24 text-base outline-none transition-colors focus:bg-gray-50 disabled:bg-gray-100"
+          className="h-14 w-full rounded-full border border-black px-4 pr-24 text-base outline-none transition-colors"
         />
 
         <div className="absolute right-3 top-1/2 -translate-y-1/2">
