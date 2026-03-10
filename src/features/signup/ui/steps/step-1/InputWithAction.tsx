@@ -1,9 +1,12 @@
+import type { HTMLInputTypeAttribute } from 'react';
 import { RetroButton } from '@/shared/ui/button';
 
 type Props = {
   label: string;
   placeholder?: string;
   value: string;
+  type?: HTMLInputTypeAttribute;
+  autoComplete?: string;
   buttonText: string;
   disabled?: boolean;
   onChange: (v: string) => void;
@@ -14,6 +17,8 @@ export function InputWithAction({
   label,
   placeholder,
   value,
+  type = 'text',
+  autoComplete,
   buttonText,
   disabled,
   onChange,
@@ -25,9 +30,12 @@ export function InputWithAction({
 
       <div className="relative">
         <input
+          type={type}
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          onInput={(e) => onChange((e.target as HTMLInputElement).value)}
           placeholder={placeholder}
+          autoComplete={autoComplete}
           disabled={disabled}
           className="h-14 w-full rounded-full border border-black px-4 pr-24 text-base outline-none transition-colors"
         />

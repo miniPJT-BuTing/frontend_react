@@ -186,6 +186,8 @@ export function EmailVerifyForm() {
         label="이메일"
         placeholder="이메일 입력"
         value={email}
+        type="email"
+        autoComplete="email"
         buttonText={isSending ? '전송중...' : isEmailSent ? '재전송' : '전송'}
         disabled={isSending}
         onChange={handleEmailChange}
@@ -198,6 +200,7 @@ export function EmailVerifyForm() {
             label="인증번호"
             placeholder="인증번호 6자리"
             value={authCode}
+            autoComplete="one-time-code"
             buttonText={isVerifying ? '확인중...' : '확인'}
             disabled={isVerifying}
             onChange={setAuthCode}

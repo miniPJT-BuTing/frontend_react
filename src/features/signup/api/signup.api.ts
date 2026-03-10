@@ -43,6 +43,6 @@ export async function getMemberAvailabilityApi(
       },
     }
   );
-
+  
   return response.data.result ?? [];
 }
