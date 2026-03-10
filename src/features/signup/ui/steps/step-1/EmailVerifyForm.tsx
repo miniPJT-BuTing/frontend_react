@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AxiosError } from 'axios';
 import { useSignupStore } from '@/features/signup/model';
 import { BottomToast } from '@/shared/ui/BottomToast';
-import { InputWithAction } from '@/features/signup/ui/steps/step-1';
+import { InputWithAction } from './InputWithAction';
 import { sendEmailVerificationApi, verifyEmailCodeApi } from '@/features/auth/api/auth.api';
 import { getMemberAvailabilityApi } from '@/features/signup/api/signup.api';
 
@@ -11,6 +11,13 @@ type ToastState = { visible: boolean; message: string; type: ToastType };
 const SIGNUP_VERIFICATION_TYPE = 'SIGN_UP';
 const INVALID_UNIVERSITY_EMAIL_CODE = 4303;
 const INVALID_UNIVERSITY_EMAIL_MESSAGE = '올바르지 않은 대학 이메일';
+
+function formatSeconds(totalSeconds: number) {
+  const safe = Math.max(0, totalSeconds);
+  const minutes = String(Math.floor(safe / 60)).padStart(2, '0');
+  const seconds = String(safe % 60).padStart(2, '0');
+  return `${minutes}:${seconds}`;
+}
 
 function extractApiErrorMessage(error: unknown, fallback: string) {
   if (error instanceof AxiosError) {
@@ -49,6 +56,8 @@ export function EmailVerifyForm() {
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [resendRemainingSeconds, setResendRemainingSeconds] = useState(0);
+  const [codeRemainingSeconds, setCodeRemainingSeconds] = useState(0);
 
   const [toast, setToast] = useState<ToastState>({
     visible: false,
@@ -71,6 +80,17 @@ export function EmailVerifyForm() {
     }, 2200);
     return () => window.clearTimeout(t);
   }, [toast.visible]);
+
+  useEffect(() => {
+    if (resendRemainingSeconds <= 0 && codeRemainingSeconds <= 0) return;
+
+    const timer = window.setInterval(() => {
+      setResendRemainingSeconds((prev) => (prev > 0 ? prev - 1 : 0));
+      setCodeRemainingSeconds((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [resendRemainingSeconds, codeRemainingSeconds]);
 
   const emailRegex = useMemo(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/, []);
 
@@ -98,6 +118,8 @@ export function EmailVerifyForm() {
         verificationType: SIGNUP_VERIFICATION_TYPE,
       });
       setIsEmailSent(true);
+      setResendRemainingSeconds(result.resendRemainingSeconds);
+      setCodeRemainingSeconds(result.expiredInSeconds);
       showToast(
         result.resendRemainingSeconds > 0
           ? `${result.resendRemainingSeconds}초 후 재전송할 수 있어요.`
@@ -131,6 +153,8 @@ export function EmailVerifyForm() {
       });
       setIsEmailSent(false);
       setAuthCode('');
+      setResendRemainingSeconds(0);
+      setCodeRemainingSeconds(0);
     },
     [setProfile]
   );
@@ -142,6 +166,10 @@ export function EmailVerifyForm() {
     }
     if (!email) {
       showToast('이메일을 먼저 입력해주세요.', 'error');
+      return;
+    }
+    if (codeRemainingSeconds <= 0) {
+      showToast('인증번호가 만료되었습니다. 다시 전송해주세요.', 'error');
       return;
     }
 
@@ -173,29 +201,42 @@ export function EmailVerifyForm() {
         });
         showToast('이메일 인증이 완료되었습니다.', 'success');
       }
+      setCodeRemainingSeconds(0);
     } catch (error) {
       showToast(extractApiErrorMessage(error, '인증번호 검증에 실패했습니다.'), 'error');
     } finally {
       setIsVerifying(false);
     }
-  }, [authCode, email, setProfile, showToast]);
+  }, [authCode, codeRemainingSeconds, email, setProfile, showToast]);
+
+  const isSendDisabled = isSending || resendRemainingSeconds > 0;
+  const sendButtonText = isSending
+    ? '전송중...'
+    : isEmailSent
+      ? resendRemainingSeconds > 0
+        ? `재전송 ${formatSeconds(resendRemainingSeconds)}`
+        : '재전송'
+      : '전송';
 
   return (
     <div className="flex flex-col gap-6">
-      <InputWithAction
-        label="이메일"
-        placeholder="이메일 입력"
-        value={email}
-        type="email"
-        autoComplete="email"
-        buttonText={isSending ? '전송중...' : isEmailSent ? '재전송' : '전송'}
-        disabled={isSending}
-        onChange={handleEmailChange}
-        onAction={handleSendEmail}
-      />
+      <div className="flex flex-col gap-2">
+        <InputWithAction
+          label="이메일"
+          placeholder="이메일 입력"
+          value={email}
+          type="email"
+          autoComplete="email"
+          buttonText={sendButtonText}
+          disabled={isSending}
+          buttonDisabled={isSendDisabled}
+          onChange={handleEmailChange}
+          onAction={handleSendEmail}
+        />
+      </div>
 
       {isEmailSent && (
-        <div className="animate-fade-in-up">
+        <div className="animate-fade-in-up flex flex-col gap-2">
           <InputWithAction
             label="인증번호"
             placeholder="인증번호 6자리"
@@ -203,9 +244,13 @@ export function EmailVerifyForm() {
             autoComplete="one-time-code"
             buttonText={isVerifying ? '확인중...' : '확인'}
             disabled={isVerifying}
+            buttonDisabled={isVerifying || codeRemainingSeconds <= 0}
             onChange={setAuthCode}
             onAction={handleVerifyCode}
           />
+          <p className="text-xs font-semibold text-slate-600 text-right mr-2">
+            인증번호 만료까지 {formatSeconds(codeRemainingSeconds)}
+          </p>
         </div>
       )}
 

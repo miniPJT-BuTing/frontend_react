@@ -9,6 +9,7 @@ type Props = {
   autoComplete?: string;
   buttonText: string;
   disabled?: boolean;
+  buttonDisabled?: boolean;
   onChange: (v: string) => void;
   onAction: () => void;
 };
@@ -21,9 +22,13 @@ export function InputWithAction({
   autoComplete,
   buttonText,
   disabled,
+  buttonDisabled,
   onChange,
   onAction,
 }: Props) {
+  const isInputDisabled = Boolean(disabled);
+  const isActionDisabled = Boolean(buttonDisabled ?? disabled);
+
   return (
     <div className="flex flex-col gap-2">
       <label className="text-base font-bold">{label}</label>
@@ -36,8 +41,11 @@ export function InputWithAction({
           onInput={(e) => onChange((e.target as HTMLInputElement).value)}
           placeholder={placeholder}
           autoComplete={autoComplete}
-          disabled={disabled}
-          className="h-14 w-full rounded-full border border-black px-4 pr-24 text-base outline-none transition-colors"
+          disabled={isInputDisabled}
+          className={[
+            'h-14 w-full rounded-full border border-black px-4 pr-24 text-base outline-none transition-colors',
+            isInputDisabled ? 'bg-gray-100 text-gray-500' : 'bg-white text-black',
+          ].join(' ')}
         />
 
         <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -45,8 +53,8 @@ export function InputWithAction({
             type="button"
             variant="primary"
             onClick={onAction}
-            className="h-9 whitespace-nowrap px-4 text-sm"
-            disabled={disabled}
+            className={`h-9 whitespace-nowrap px-4 text-sm ${isActionDisabled ? 'cursor-not-allowed opacity-60' : ''}`}
+            disabled={isActionDisabled}
           >
             {buttonText}
           </RetroButton>
