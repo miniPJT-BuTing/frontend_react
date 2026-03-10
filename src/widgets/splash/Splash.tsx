@@ -19,12 +19,8 @@ export default function Splash() {
     router.replace('/home');
   }, [router]);
 
-  const handleKakaoSignup = () => {
+  const handleKakaoAuth = () => {
     window.location.href = getOAuthAuthorizationUrl('kakao');
-  };
-
-  const handleLogin = () => {
-    router.push('/home?skipAuth=1');
   };
 
   return (
@@ -53,7 +49,10 @@ export default function Splash() {
         </div>
 
         <div className="px-6 pb-10">
-          <SplashButtons onKakaoSignup={handleKakaoSignup} onLogin={handleLogin} />
+          <SplashButtons
+            onKakaoSignup={handleKakaoAuth}
+            onLogin={handleKakaoAuth}
+          />
         </div>
       </div>
     </div>
