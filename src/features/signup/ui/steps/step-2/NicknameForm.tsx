@@ -1,28 +1,50 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { AxiosError } from 'axios';
 import { useSignupStore } from '@/features/signup/model';
 import { RetroButton } from '@/shared/ui/button/RetroButton';
+import { BottomToast } from '@/shared/ui/BottomToast';
 import { getMemberAvailabilityApi } from '@/features/signup/api/signup.api';
 
 export function NicknameForm() {
   const { nickname, setProfile } = useSignupStore();
   const [checking, setChecking] = useState(false);
-  const [statusMessage, setStatusMessage] = useState('');
-  const [statusTone, setStatusTone] = useState<'default' | 'success' | 'error'>('default');
+  const [toast, setToast] = useState<{
+    visible: boolean;
+    message: string;
+    type: 'success' | 'error' | 'info';
+  }>({
+    visible: false,
+    message: '',
+    type: 'info',
+  });
 
   const nicknameRegex = /^[가-힣a-zA-Z0-9]{2,10}$/;
+  const showToast = useCallback((message: string, type: 'success' | 'error' | 'info' = 'info') => {
+    setToast({ visible: true, message, type });
+  }, []);
+
+  const handleToastClose = useCallback(() => {
+    setToast((prev) => ({ ...prev, visible: false }));
+  }, []);
+
+  useEffect(() => {
+    if (!toast.visible) return;
+    const timer = window.setTimeout(() => {
+      setToast((prev) => ({ ...prev, visible: false }));
+    }, 2200);
+
+    return () => window.clearTimeout(timer);
+  }, [toast.visible]);
 
   const handleCheckNickname = async () => {
     const trimmedNickname = nickname.trim();
     if (!trimmedNickname) {
-      setStatusTone('error');
-      setStatusMessage('닉네임을 입력해주세요.');
+      showToast('닉네임을 입력해주세요.', 'error');
       return;
     }
 
     if (!nicknameRegex.test(trimmedNickname)) {
-      setStatusTone('error');
-      setStatusMessage('닉네임은 2~10자 한글/영문/숫자만 가능해요.');
+      showToast('닉네임은 2~10자 한글/영문/숫자만 가능해요.', 'error');
       return;
     }
 
@@ -32,21 +54,17 @@ export function NicknameForm() {
       const nicknameResult = result.find((item) => item.type === 'NICKNAME');
 
       if (!nicknameResult || !nicknameResult.isAvailable) {
-        setStatusTone('error');
-        setStatusMessage('이미 사용 중인 닉네임입니다.');
+        showToast('이미 사용 중인 닉네임입니다.', 'error');
         return;
       }
 
-      setStatusTone('success');
-      setStatusMessage('사용 가능한 닉네임입니다.');
+      showToast('사용 가능한 닉네임입니다.', 'success');
     } catch (error) {
       if (error instanceof AxiosError) {
         const message = (error.response?.data as { message?: string } | undefined)?.message;
-        setStatusTone('error');
-        setStatusMessage(message || '닉네임 확인에 실패했습니다.');
+        showToast(message || '닉네임 확인에 실패했습니다.', 'error');
       } else {
-        setStatusTone('error');
-        setStatusMessage('닉네임 확인에 실패했습니다.');
+        showToast('닉네임 확인에 실패했습니다.', 'error');
       }
     } finally {
       setChecking(false);
@@ -62,8 +80,6 @@ export function NicknameForm() {
           value={nickname}
           onChange={(e) => {
             setProfile({ nickname: e.target.value });
-            setStatusMessage('');
-            setStatusTone('default');
           }}
           placeholder="닉네임을 입력해주세요"
           className="h-14 w-full rounded-full border border-black px-4 pr-24 text-base outline-none focus:bg-gray-50"
@@ -81,20 +97,12 @@ export function NicknameForm() {
           </RetroButton>
         </div>
       </div>
-
-      {statusMessage ? (
-        <p
-          className={`text-xs ${
-            statusTone === 'success'
-              ? 'text-emerald-600'
-              : statusTone === 'error'
-                ? 'text-red-500'
-                : 'text-gray-500'
-          }`}
-        >
-          {statusMessage}
-        </p>
-      ) : null}
+      <BottomToast
+        message={toast.message}
+        isVisible={toast.visible}
+        type={toast.type}
+        onClose={handleToastClose}
+      />
     </div>
   );
 }
